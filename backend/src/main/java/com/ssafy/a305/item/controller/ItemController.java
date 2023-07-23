@@ -6,7 +6,6 @@ import com.ssafy.a305.item.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -16,7 +15,7 @@ public class ItemController {
     private final ItemService itemService;
 
     @GetMapping("/items")
-    public ResponseEntity<ItemsResDTO> getItems(@RequestParam ItemsReqDTO dto) {
+    public ResponseEntity<ItemsResDTO> getItems(ItemsReqDTO dto) {
         return ResponseEntity.ok(itemService.getItems(dto));
     }
 }
