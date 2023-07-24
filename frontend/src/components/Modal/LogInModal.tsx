@@ -1,10 +1,10 @@
 import styles from './Modal.module.css';
 
-interface SignUpModalPageProps {
+interface LogInModalPageProps {
     setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 // 모달창 컴포넌트
-const SignUpModal :React.FC<SignUpModalPageProps> = ({ setModalOpen }) => {
+const LogInModal :React.FC<LogInModalPageProps> = ({ setModalOpen }) => {
     
     const closeModal = (event: React.MouseEvent<HTMLButtonElement>) => {
         event?.stopPropagation();
@@ -17,9 +17,9 @@ const SignUpModal :React.FC<SignUpModalPageProps> = ({ setModalOpen }) => {
             <button className={styles.close} onClick={closeModal}>
                 X
             </button>
-            <p className={styles.title}>회원 가입</p>
+            <p className={styles.title}>로그인</p>
         </div>
     )
 }
 
-export default SignUpModal;
+export default LogInModal;
