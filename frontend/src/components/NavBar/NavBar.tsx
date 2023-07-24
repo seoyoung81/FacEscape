@@ -8,10 +8,6 @@ import LogIn from "./LogIn";
 // css
 import styles from './NavBar.module.css';
 
-// react-bootstrap
-import { Container, Row, Col } from 'react-bootstrap';
-
-
 const NavBar = () => {
     return (
         <>
