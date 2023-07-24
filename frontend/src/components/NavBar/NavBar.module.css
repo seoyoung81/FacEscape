@@ -7,6 +7,7 @@ div {
     display: flex;
     margin: 32px;
     justify-content: space-between;
+    position: relative;
 
 }
 
@@ -16,7 +17,10 @@ div {
 
 .nav-bar-right {
     display: flex;
-    justify-content: flex-end;
+    position: absolute;
+    top: 0;
+    right: 0;
+
 }
 
 .nav-bar-left > *:not(:last-child) {
