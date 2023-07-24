@@ -1,5 +1,7 @@
 package com.ssafy.a305.member.service;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.NoSuchElementException;
 
 import org.springframework.stereotype.Service;
@@ -24,7 +26,9 @@ public class MemberService {
 	public MemberInfoResDTO getMemberInfo(Integer id) {
 		//id로 검색 시 존재하지 않는 회원일 경우 예외 throw
 		Member member = memberRepository.findById(id).orElseThrow(NoSuchElementException::new);
+		Timestamp timestamp = member.getRecentLogin();
+		String formattedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(timestamp);
 		return new MemberInfoResDTO(member.getEmail(), member.getNickname(), member.getMileage(),
-			member.getRecentLogin());
+			formattedDate);
 	}
 }
