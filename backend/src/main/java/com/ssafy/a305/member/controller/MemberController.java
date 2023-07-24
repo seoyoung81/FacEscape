@@ -2,11 +2,14 @@ package com.ssafy.a305.member.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.a305.member.dto.MemberInfoResDTO;
+import com.ssafy.a305.member.dto.MemberInfoUpdateReqDTO;
 import com.ssafy.a305.member.dto.UniqueEmailCheckResDTO;
 import com.ssafy.a305.member.service.MemberService;
 
@@ -31,5 +34,12 @@ public class MemberController {
 		Integer id = 0;
 
 		return ResponseEntity.ok(memberService.getMemberInfo(id));
+	}
+
+	@PatchMapping("/member")
+	public ResponseEntity<Void> updateMemberInfo(@RequestBody MemberInfoUpdateReqDTO dto) {
+		Integer id = 0;
+		memberService.updateMemberInfo(id, dto);
+		return ResponseEntity.ok().build();
 	}
 }
