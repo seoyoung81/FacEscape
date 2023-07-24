@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.ssafy.a305.member.domain.Member;
 import com.ssafy.a305.member.dto.MemberInfoResDTO;
+import com.ssafy.a305.member.dto.MemberInfoUpdateReqDTO;
 import com.ssafy.a305.member.dto.UniqueEmailCheckResDTO;
 import com.ssafy.a305.member.repository.MemberRepository;
 
@@ -30,5 +31,17 @@ public class MemberService {
 		String formattedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(timestamp);
 		return new MemberInfoResDTO(member.getEmail(), member.getNickname(), member.getMileage(),
 			formattedDate);
+	}
+
+	public void updateMemberInfo(Integer id, MemberInfoUpdateReqDTO dto) {
+		Member member = memberRepository.findById(id).orElseThrow(NoSuchElementException::new);
+		String nickname = dto.getNickname();
+		String password = dto.getPassword();
+		if (nickname != null) {
+			member.updateNickname(nickname);
+		} else if (password != null) {
+			member.updatePassword(password);
+		}
+		memberRepository.save(member);
 	}
 }
