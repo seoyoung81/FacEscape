@@ -1,3 +1,4 @@
+import LogInForm from '../User/LoginForm';
 import styles from './Modal.module.css';
 
 interface LogInModalPageProps {
@@ -18,6 +19,9 @@ const LogInModal :React.FC<LogInModalPageProps> = ({ setModalOpen }) => {
                 X
             </button>
             <p className={styles.title}>로그인</p>
+            <div className={styles.modal}>
+                <LogInForm/>
+            </div>
         </div>
     )
 }

@@ -21,8 +21,10 @@
   /* 모달창 내부 X버튼 */
   .close {
     position: absolute;
-    right: 10px;
-    top: 10px;
+    right: 30px;
+    top: 20px;
+    border: none;
+    background: none;
   }
 
   .title {
@@ -30,4 +32,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 40px;
+    margin-bottom: 50px;
   }
+
+ 
