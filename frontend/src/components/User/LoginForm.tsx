@@ -24,7 +24,7 @@ const LogInForm: React.FC = () => {
                     required: '아이디를 입력해주세요.',
                     pattern: {
                         value: /^[a-zA-Z0-9+-\_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
-                        message: '이메일 형식 틀림'
+                        message: '정확한 이메일 주소를 입력하세요'
                     }
                     }}
                 render={({ field }) => 

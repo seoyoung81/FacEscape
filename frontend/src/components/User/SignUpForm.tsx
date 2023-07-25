@@ -5,7 +5,7 @@ type FormData = {
     email: string;
     password: string;
     nickname: string;
-
+    confirmPassword: string
 }
 
 const SignUpForm: React.FC = () => {
@@ -16,74 +16,109 @@ const SignUpForm: React.FC = () => {
       }; 
 
     return (
-        <div>
-            <div className={styles.form}>
+        <div className={styles.container}>
+                <div className={styles.labels}>
+                    <p className={styles.label}>닉네임</p>
+                    <p className={styles.label}>이메일</p>
+                    <p className={styles.label}>비밀번호</p>
+                    <p className={styles.label}>비밀번호<br/>확인</p>
+                </div>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <div>
-                    <label>닉네임</label>
-                    <Controller
-                        name="nickname"
-                        control={control}
-                        rules={{ 
-                            required: '아이디를 입력해주세요.',
-                            
-                            }}
-                        render={({ field }) => 
-                                
-                                <input 
-                                    {...field} 
-                                    type="text" 
-                                    className={styles.logininput}
-                                />  
+                <Controller
+                    name="nickname"
+                    control={control}
+                    rules={{ 
+                        required: '닉네임을 입력해주세요.',
+                        pattern: {
+                            value: /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]+$/,
+                            message: '닉네임에는 특수문자를 포함할 수 없습니다.'
+                        },
+                        maxLength: {
+                            value: 8,
+                            message: '1자 이상, 8자 이하의 닉네임을 입력해주세요.'
+                          },
+                        minLength: {
+                            value: 1,
+                            message: '1자 이상, 8자 이하의 닉네임을 입력해주세요.',
                         }
+                        }}
+                    render={({ field }) => 
+                            <input 
+                                {...field} 
+                                type="text" 
+                                className={styles.logininput}
+                            />  
+                    }
+                />
+                {errors.nickname ? ( 
+                    <p className={styles.error}>{errors.nickname.message}</p>) : (
+                        <p className={styles.error}>&nbsp;</p>
+                    )
+                }
+
+                <Controller
+                    name="email"
+                    control={control}
+                    rules={{ 
+                        required: '이메일을 입력해주세요.',
+                        pattern: {
+                            value: /^[a-zA-Z0-9+-\_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+                            message: '정확한 이메일 주소를 입력하세요.'
+                        },
+                        maxLength: {
+                            value: 320,
+                            message: '이메일 글자수를 확인해주세요.'
+                          },
+                        minLength: {
+                            value: 8,
+                            message: '이메일 글자수를 확인해주세요.',
+                        }
+                    }}
+                    // 회원가입된 유저인지 확인 여부 code ...
+                    render={({ field }) => 
+                        <input 
+                            {...field} 
+                            type="text" 
+                            className={styles.logininput}
+                        />}
                     />
-                    {errors?.nickname && <p className={styles.error}>{errors.nickname.message}</p>}
-                </div>
-                <div>
-                    <label>이메일</label>
-                    <Controller
-                        name="email"
-                        control={control}
-                        rules={{ required: '비밀번호를 입력해주세요.' }}
-                        render={({ field }) => 
-                            <input 
-                                {...field} 
-                                type="email" 
-                                className={styles.logininput}
-                            />}
-                        />
-                        {errors.email && <p className={styles.error}>{errors.email.message}</p>}
-                </div>
-                <div>
-                    <label>비밀번호</label>
-                    <Controller
-                        name="password"
-                        control={control}
-                        rules={{ required: '비밀번호를 입력해주세요.' }}
-                        render={({ field }) => 
-                            <input 
-                                {...field} 
-                                type="password" 
-                                className={styles.logininput}
-                            />}
-                        />
-                        {errors.password && <p className={styles.error}>{errors.password.message}</p>}
-                </div>
-                <div>
-                    <label>비밀번호 확인</label>
-                    <Controller
-                        name="password"
-                        control={control}
-                        rules={{ required: '비밀번호를 입력해주세요.' }}
-                        render={({ field }) => 
-                            <input 
-                                {...field} 
-                                type="password" 
-                                className={styles.logininput}
-                            />}
-                        />
-                        {errors.password && <p className={styles.error}>{errors.password.message}</p>}
-                </div>
+                {errors.email ? ( 
+                    <p className={styles.error}>{errors.email.message}</p>) : (
+                        <p className={styles.error}>&nbsp;</p>
+                    )
+                }                
+                <Controller
+                    name="password"
+                    control={control}
+                    rules={{ required: '비밀번호를 입력해주세요.' }}
+                    render={({ field }) => 
+                        <input 
+                            {...field} 
+                            type="password" 
+                            className={styles.logininput}
+                        />}
+                    />
+                {errors.password ? ( 
+                    <p className={styles.error}>{errors.password.message}</p>) : (
+                        <p className={styles.error}>&nbsp;</p>
+                    )
+                }                  
+                <Controller
+                    name="confirmPassword"
+                    control={control}
+                    rules={{ required: '비밀번호를 입력해주세요.' }}
+                    render={({ field }) => 
+                        <input 
+                            {...field} 
+                            type="password" 
+                            className={styles.logininput}
+                        />}
+                    />
+                {errors.password ? ( 
+                    <p className={styles.error}>{errors.password.message}</p>) : (
+                        <p className={styles.error}>&nbsp;</p>
+                    )
+                }                   
                     <button 
                         type="submit"
                         className={styles.submit}
@@ -91,8 +126,8 @@ const SignUpForm: React.FC = () => {
                             회원가입
                     </button>
             </form>  
-            </div>
         </div>
+ 
     )
 
 }

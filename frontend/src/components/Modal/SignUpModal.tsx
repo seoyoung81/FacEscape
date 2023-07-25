@@ -14,7 +14,7 @@ const SignUpModal :React.FC<SignUpModalPageProps> = ({ setModalOpen }) => {
     }
 
     return (
-        <div className={styles.container}>
+        <div className={styles.container} style={{ width: '815px' }}>
             <button className={styles.close} onClick={closeModal}>
                 X
             </button>
