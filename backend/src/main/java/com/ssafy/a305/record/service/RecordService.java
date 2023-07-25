@@ -47,7 +47,7 @@ public class RecordService {
 				// 참여자 정보 중 db에 존재하는 회원을 game_participant 테이블 저장(비회원은 member_id를 null로 저장)
 				GameParticipant gameParticipant = GameParticipant.builder()
 					.member(member)
-					.gemeRecord(gameRecord)
+					.gameRecord(gameRecord)
 					.nickname(participant.getNickname())
 					.build();
 				gameParticipantRepository.save(gameParticipant);

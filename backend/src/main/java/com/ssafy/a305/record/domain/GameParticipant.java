@@ -31,7 +31,7 @@ public class GameParticipant {
 	private Member member;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "game_record_id")
-	private GameRecord gemeRecord;
+	private GameRecord gameRecord;
 	@Column(name = "nickname", nullable = false, length = 8)
 	private String nickname;
 }
