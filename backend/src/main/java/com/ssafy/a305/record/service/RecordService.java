@@ -1,6 +1,7 @@
 package com.ssafy.a305.record.service;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -38,7 +39,8 @@ public class RecordService {
 		gameRecord = gameRecordRepository.save(gameRecord);
 
 		//게임에 참가한 game_participant 생성 및 저장
-		for (MemberInfoForRecordDTO participant : dto.getMembers()) {
+		List<MemberInfoForRecordDTO> participants = dto.getMembers();
+		for (MemberInfoForRecordDTO participant : participants) {
 			Member member = memberRepository.findById(participant.getMemberId())
 				.orElse(null);
 			if (member != null
