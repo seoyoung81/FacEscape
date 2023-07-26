@@ -1,0 +1,62 @@
+/* 폰트 문제 padding 15px */
+.item-price {
+    width: 131px;
+    height: 43px;
+    padding: 0px 10px 0px 15px;
+    text-align: center;
+    line-height: normal;
+    justify-content: center;
+
+    border-radius: 5px;
+    background: #DB7500;
+    color: white;
+    border: none;
+
+    font-size: 32px;
+    letter-spacing: 6.4px;
+
+    left: -10px;
+    position: relative;
+    z-index: 1;
+}
+
+.mileage {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #3479AD;
+
+    color: white;
+    font-size: 24px;
+
+    text-align: center;
+    padding-left: 2px;
+    z-index: 2;
+}
+
+.item-price:hover {
+    transform: translateY(-2px);  
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset;
+}
+
+.item-price:active {
+    box-shadow: none;
+    transform: translateY(0);
+}
+
+
+.mileage-container {
+    display: flex;
+    align-items: center;
+}
+
+.price-back {
+    background-color: #FDFF8A;
+    width: 188px;
+    height: 56px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+   
+    position: absolute;
+    z-index: 0;
+}
