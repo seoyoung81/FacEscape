@@ -1,5 +1,6 @@
 import './App.css';
 import './index.css';
+import React from 'react';
 import { Routes, Route } from "react-router-dom";
 
 // router
@@ -8,9 +9,14 @@ import RankingPage from './pages/RankingPage';
 import MyPage from './pages/MyPage';
 import MarketPage from './pages/MarketPage';
 
+// background image
+import BackgroundImage from '../src/assets/images/background_img.png';
+
 const App: React.FC = () => {
   return (
-    <div>
+    <div className='app-container'>
+      <div className="background-image" style={{ backgroundImage: `url(${BackgroundImage})` }}>
+      </div>
       
       <Routes>
         <Route path='/' element={<MainPage />} />
