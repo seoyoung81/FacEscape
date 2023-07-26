@@ -1,11 +1,12 @@
 import styles from './RankingPageComponent.module.css';
+import RankSVG from '../../assets/images/rank.svg'
 
 const RankingItem :React.FC = () => {
     return (
         <div className={styles['ranking-item-container']}>
                 <img 
                     className={styles['rank-icon']}
-                    src={require("../../assets/images/rank.svg")} 
+                    src={RankSVG} 
                     alt="logo"
                 />
                 
@@ -15,7 +16,7 @@ const RankingItem :React.FC = () => {
                     </div> 
 
                     <div>
-                    사람1 사람2 사람3 사람4 사람5 사람6
+                        사람1 사람2 사람3 사람4 사람5 사람6
                     </div> 
 
                     <div>

@@ -5,10 +5,10 @@ import RankingItem from './RankingItem';
 const RankingView = () => {
     return (
         <div className={styles['ranking-view-container']}>
-            <div className={styles['ranking-title']}>
-                Ranking
+            <div className={styles['ranking-header']}>
+                    Ranking
             </div>
-
+            
             <div className={styles['ranking-body']}>
                 <RankingItem />
                 <RankingItem />
