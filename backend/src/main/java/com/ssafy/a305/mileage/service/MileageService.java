@@ -17,10 +17,10 @@ public class MileageService {
     private final MileageHistoryRepository mileageHistoryRepository;
     private final MemberRepository memberRepository;
 
-    public void changeMileage(Integer memberId, int mileageChange) {
+    public void changeMileage(Integer memberId, Integer mileageChange) {
         Member member = memberRepository.findById(memberId).orElseThrow(NoSuchElementException::new);
-        int currentMileage = member.getMileage();
-        int updatedMileage = currentMileage + mileageChange;
+        Integer currentMileage = member.getMileage();
+        Integer updatedMileage = currentMileage + mileageChange;
         member.setMileage(updatedMileage);
         memberRepository.save(member);
 
