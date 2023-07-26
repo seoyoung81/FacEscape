@@ -1,11 +1,11 @@
+import LogInForm from '../User/LoginForm';
 import styles from './Modal.module.css';
-import SignUpForm from '../User/SignUpForm';
 
-interface SignUpModalPageProps {
+interface LogInModalPageProps {
     setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 // 모달창 컴포넌트
-const SignUpModal :React.FC<SignUpModalPageProps> = ({ setModalOpen }) => {
+const LogInModal :React.FC<LogInModalPageProps> = ({ setModalOpen }) => {
     
     const closeModal = (event: React.MouseEvent<HTMLButtonElement>) => {
         event?.stopPropagation();
@@ -14,16 +14,16 @@ const SignUpModal :React.FC<SignUpModalPageProps> = ({ setModalOpen }) => {
     }
 
     return (
-        <div className={styles.container} style={{ width: '815px' }}>
+        <div className={styles.container}>
             <button className={styles.close} onClick={closeModal}>
                 X
             </button>
-            <p className={styles.title}>회원 가입</p>
+            <p className={styles.title}>로그인</p>
             <div className={styles.modal}>
-                <SignUpForm />
+                <LogInForm/>
             </div>
         </div>
     )
 }
 
-export default SignUpModal;
+export default LogInModal;
