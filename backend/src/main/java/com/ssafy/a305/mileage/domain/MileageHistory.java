@@ -9,19 +9,20 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.sql.Timestamp;
 
-@Entity(name = "Mileage")
+// 1. name을 Mileage라고 해야하나 MileageHistory라고 해야하나
+@Entity(name = "MileageHistory")
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Mileage {
+public class MileageHistory {
 
     @Id
     @Column(name = "mileage_history_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer mileageHistoryId;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
