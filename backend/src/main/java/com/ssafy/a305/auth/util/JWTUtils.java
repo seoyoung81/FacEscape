@@ -60,7 +60,7 @@ public class JWTUtils {
 			.parseClaimsJws(accessToken)
 			.getBody();
 
-		Integer memberId = (Integer)claims.get("id");
+		Integer memberId = Integer.parseInt((String) claims.get("id"));
 		Collection<? extends GrantedAuthority> authorities =
 			Arrays.stream(claims.get("role").toString().split(","))
 				.map(SimpleGrantedAuthority::new)
