@@ -4,11 +4,14 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.NoSuchElementException;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.ssafy.a305.member.domain.LoginType;
 import com.ssafy.a305.member.domain.Member;
 import com.ssafy.a305.member.dto.MemberInfoResDTO;
 import com.ssafy.a305.member.dto.MemberInfoUpdateReqDTO;
+import com.ssafy.a305.member.dto.SignUpReqDTO;
 import com.ssafy.a305.member.dto.UniqueEmailCheckResDTO;
 import com.ssafy.a305.member.repository.MemberRepository;
 
@@ -19,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class MemberService {
 
 	private final MemberRepository memberRepository;
+	private final PasswordEncoder passwordEncoder;
 
 	public UniqueEmailCheckResDTO checkPreExistEmail(String email) {
 		return new UniqueEmailCheckResDTO(!memberRepository.existsByEmail(email));
@@ -42,6 +46,17 @@ public class MemberService {
 		} else if (password != null) {
 			member.updatePassword(password);
 		}
+		memberRepository.save(member);
+	}
+
+	public void signUpMember(SignUpReqDTO dto) {
+		Member member = Member.builder()
+			.email(dto.getEmail())
+			.password(passwordEncoder.encode(dto.getPassword()))
+			.nickname(dto.getNickname())
+			.loginType(LoginType.LOCAL)
+			.build();
+
 		memberRepository.save(member);
 	}
 }
