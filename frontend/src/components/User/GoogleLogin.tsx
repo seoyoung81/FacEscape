@@ -1,9 +1,16 @@
 import styles from './User.module.css'
 
 const GoogleLogin :React.FC = () => {
+    const googleLogin = () => {
+        // 구글 로그인 코드
+    }
     return (
         <div>
-            <button className={styles.google}>Google Login</button>
+            <button 
+                type='button'
+                className={styles.google}
+                onClick={googleLogin}
+            >Google Login</button>
         </div>
     )
 }

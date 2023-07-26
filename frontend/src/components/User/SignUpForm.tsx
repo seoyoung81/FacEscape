@@ -1,19 +1,50 @@
 import { useForm, Controller } from 'react-hook-form';
 import styles from './User.module.css';
+import axios from 'axios';
 
 type FormData = {
     email: string;
     password: string;
     nickname: string;
-    confirmPassword: string
+    confirmPassword: string;
 }
 
 const SignUpForm: React.FC = () => {
-    const { control, handleSubmit, formState: { errors }} = useForm<FormData>();
+    const { control, handleSubmit, formState: { errors }, watch } = useForm<FormData>();
+    
+    // 비밀번호 추적
+    const watchPassword :string = watch('password', '');
 
     const onSubmit = (data: FormData) => {
-        console.log(data);
-      }; 
+        const { confirmPassword, ...dataWithoutConfirmPassword } = data;
+        console.log(dataWithoutConfirmPassword);
+
+        // 이메일 중복 확인
+        axios.get('/check-email', {
+            params: {
+                email: data.email
+            }
+        })
+            .then((response) => {
+                console.log(response.data.inUniqueEmail);
+                // 성공하면 회원가입 로직을 실행 할 것
+            })
+            .catch((error) => console.error('이메일 중복 체크 에러 Error occured:', error));
+        
+
+        // 회원가입 로직
+        axios.post('/member', dataWithoutConfirmPassword)
+            // 성공
+            .then((response) => {
+                console.log(response);
+
+            })
+            // 실패
+            .catch((error) => {
+                console.error('Error occurred:', error);
+                alert('회원가입 실패');
+            })
+    };
 
     return (
         <div className={styles.container}>
@@ -106,7 +137,12 @@ const SignUpForm: React.FC = () => {
                 <Controller
                     name="confirmPassword"
                     control={control}
-                    rules={{ required: '비밀번호를 입력해주세요.' }}
+                    rules={{ 
+                        required: '비밀번호를 입력해주세요.',
+                        validate: (value) => (
+                            value === watchPassword || '비밀번호가 일치하지 않습니다.'
+                        )
+                    }}
                     render={({ field }) => 
                         <input 
                             {...field} 
@@ -114,8 +150,8 @@ const SignUpForm: React.FC = () => {
                             className={styles.logininput}
                         />}
                     />
-                {errors.password ? ( 
-                    <p className={styles.error}>{errors.password.message}</p>) : (
+                {errors.confirmPassword ? ( 
+                    <p className={styles.error}>{errors.confirmPassword.message}</p>) : (
                         <p className={styles.error}>&nbsp;</p>
                     )
                 }                   
@@ -130,6 +166,6 @@ const SignUpForm: React.FC = () => {
  
     )
 
-}
+};
 
 export default SignUpForm;
