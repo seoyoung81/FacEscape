@@ -1,9 +1,15 @@
 import NavBar from "../components/NavBar/NavBar";
-const RankingPage = () => {
+import styles from "./RankingPage.module.css";
+import { useState } from 'react';
+import RankingView from "../components/RankingPage/RankingView"
+
+const RankingPage :React.FC = () => {
     return (
-        <div>
+        <div className={styles['wrap-container']}>
             <NavBar />
-            RankingPage
+            <div className={styles['main-container']}>
+                <RankingView />
+            </div>
         </div>
     )
 }
