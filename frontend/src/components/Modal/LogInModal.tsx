@@ -7,20 +7,22 @@ interface LogInModalPageProps {
 // 모달창 컴포넌트
 const LogInModal :React.FC<LogInModalPageProps> = ({ setModalOpen }) => {
     
-    const closeModal = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const closeModal = (event: React.MouseEvent<HTMLDivElement | HTMLButtonElement>): void => {
         event?.stopPropagation();
         setModalOpen(false);
 
     }
 
     return (
-        <div className={styles.container}>
-            <button className={styles.close} onClick={closeModal}>
-                X
-            </button>
-            <p className={styles.title}>로그인</p>
-            <div className={styles.modal}>
-                <LogInForm/>
+        <div className={styles.overlay} onClick={closeModal}>
+            <div className={styles.container}>
+                <button className={styles.close} onClick={closeModal}>
+                    X
+                </button>
+                <p className={styles.title}>로그인</p>
+                <div className={styles.modal}>
+                    <LogInForm/>
+                </div>
             </div>
         </div>
     )

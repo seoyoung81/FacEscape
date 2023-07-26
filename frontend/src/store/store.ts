@@ -1,12 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-type UserState = {
+export type UserState = {
   token: string | null;
 };
 
 const initialState: UserState = {
   token: null,
 };
+
 
 const userReducer = (state = initialState, action: any) => {
   switch (action.type) {
@@ -38,7 +39,8 @@ export type UserActionTypes = {
     payload: string;
   };
   
-  export const setToken = (token: string): UserActionTypes => ({
-    type: 'SET_TOKEN',
-    payload: token,
-  });
+export const setToken = (token: string): UserActionTypes => ({
+  type: 'SET_TOKEN',
+  payload: token,
+});
+
