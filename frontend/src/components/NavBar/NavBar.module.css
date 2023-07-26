@@ -3,12 +3,11 @@ div {
 }
 
 .nav-bar {
-    height: 100%;
     display: flex;
     margin: 32px;
     justify-content: space-between;
     position: relative;
-
+    min-width: 1200px;
 }
 
 .nav-bar-left {
@@ -17,10 +16,6 @@ div {
 
 .nav-bar-right {
     display: flex;
-    position: absolute;
-    top: 0;
-    right: 0;
-
 }
 
 .nav-bar-left > *:not(:last-child) {
