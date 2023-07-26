@@ -17,6 +17,16 @@ public class MileageService {
     private final MileageHistoryRepository mileageHistoryRepository;
     private final MemberRepository memberRepository;
 
+    public void changeMileage(Integer memberId, int mileageChange) {
+        Member member = memberRepository.findById(memberId).orElseThrow(NoSuchElementException::new);
+        int currentMileage = member.getMileage();
+        int updatedMileage = currentMileage + mileageChange;
+        member.setMileage(updatedMileage);
+        memberRepository.save(member);
+
+        // 마일리지 변화가 생길 때마다 MileageHistory를 생성
+        createMileageHistory(memberId, mileageChange);
+    }
 
     public void createMileageHistory(Integer memberId, Integer amount) {
         Member member = memberRepository.findById(memberId).orElseThrow(NoSuchElementException::new);
@@ -26,15 +36,6 @@ public class MileageService {
         mileageHistory.setAmount(amount);
         mileageHistory.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         mileageHistoryRepository.save(mileageHistory);
-    }
-
-
-    public void changeMileage(Integer memberId, int mileageChange) {
-        Member member = memberRepository.findById(memberId).orElseThrow(NoSuchElementException::new);
-        int currentMileage = member.getMileage();
-        int updatedMileage = currentMileage + mileageChange;
-        member.setMileage(updatedMileage);
-        memberRepository.save(member);
     }
 
 }

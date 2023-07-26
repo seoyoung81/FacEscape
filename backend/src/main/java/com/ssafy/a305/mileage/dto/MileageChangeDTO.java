@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class MileageChangeDTO {
 
     private Integer member;
-    private Boolean isPlus;
+//    private Boolean isPlus;
     private Integer amount;
 
 
