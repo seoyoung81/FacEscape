@@ -6,15 +6,14 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 
-
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class MileageHistoryDTO {
 
-    private Integer id;
-    private Integer member;
-    private Integer amount;
-    private Timestamp createdAt;
+	private Integer id;
+	private Integer member;
+	private Integer amount;
+	private Timestamp createdAt;
 
 }

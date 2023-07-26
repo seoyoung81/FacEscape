@@ -4,13 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class MileageChangeDTO {
 
-    private Integer member;
-    private Integer amount;
+	private Integer member;
+	private Integer amount;
 
 }
