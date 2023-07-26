@@ -4,15 +4,19 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
+
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MileageChangeDTO {
+public class MileageHistoryDTO {
 
+    private Integer id;
     private Integer member;
     private Boolean isPlus;
     private Integer amount;
+    private Timestamp createdAt;
 
 
 
