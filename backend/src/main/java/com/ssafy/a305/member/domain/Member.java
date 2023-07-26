@@ -56,4 +56,6 @@ public class Member {
 	public void updatePassword(String password) {
 		this.password = password;
 	}
+
+	public void updateMileage(Integer mileage) { this.mileage = mileage; }
 }

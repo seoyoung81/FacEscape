@@ -14,11 +14,7 @@ public class MileageHistoryDTO {
 
     private Integer id;
     private Integer member;
-//    private Boolean isPlus;
     private Integer amount;
     private Timestamp createdAt;
-
-
-
 
 }
