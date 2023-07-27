@@ -11,7 +11,7 @@ const MarketPage = () => {
         <div>
             <NavBar />
             <div className={styles['market-container']}>
-                <div>
+                <div className={styles['left-container']}>
                     <SearchItem />
                     <Category />
                 </div>

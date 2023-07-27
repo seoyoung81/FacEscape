@@ -1,38 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
+import categoryReducer from './categorySlice';
 
 export type UserState = {
   token: string | null;
 };
-
-const initialState: UserState = {
-  token: null,
-};
-
-
-const userReducer = (state = initialState, action: any) => {
-  switch (action.type) {
-    case 'SET_TOKEN':
-      return {
-        ...state,
-        token: action.payload,
-      };
-    // case 'CLEAR_TOKEN':
-    //   return {
-    //     ...state,
-    //     token: null,
-    //   };
-    default:
-      return state;
-  }
-};
-
-const store = configureStore({
-    reducer: {
-        user: userReducer,
-    }
-});
-
-export default store;
 
 export type UserActionTypes = {
     type: 'SET_TOKEN';
@@ -43,4 +14,35 @@ export const setToken = (token: string): UserActionTypes => ({
   type: 'SET_TOKEN',
   payload: token,
 });
+
+const initialState: UserState = {
+  token: null,
+};
+
+// 회원관리
+const userReducer = (state = initialState, action: any) => {
+  switch (action.type) {
+    case 'SET_TOKEN':
+      return {
+        ...state,
+        token: action.payload,
+      };
+    default:
+      return state;
+  }
+};
+
+const store = configureStore({
+    reducer: {
+      // user 회원관리
+        user: userReducer,
+      // category 상점관리
+        setItemType: categoryReducer,
+    }
+});
+
+// RootState 타입 정의
+export type RootState = ReturnType<typeof store.getState>;
+
+export default store;
 

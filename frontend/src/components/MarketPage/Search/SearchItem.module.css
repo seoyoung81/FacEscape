@@ -14,10 +14,15 @@
 .search-container {
     display: flex;
     align-items: center;
+    position: relative;
+    flex-direction: row-reverse;
 }
 
 .search-icon {
     width: 40px;
     height: 40px;
     z-index: 1;
+
+    position: absolute;
+
 }

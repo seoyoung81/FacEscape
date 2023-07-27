@@ -1,6 +1,6 @@
 .category-container {
     width: 336px;
-    height: 500px;
+    height: 550px;
     border-radius: 5px;
     border: 1px solid;
 
@@ -12,26 +12,60 @@
     display: flex;
 }
 
-.category-component {
+
+
+.radio-buttons {
+    display: flex;
+    flex-direction: column;
+    margin: 63px 0 0 48px;
+  }
+  
+  .radio-button {
     display: flex;
     align-items: center;
-    margin: 63px 0 25px 48px;
-}
-
-.checkbox {
+    margin-bottom: 25px;
+    cursor: pointer;
+  }
+  
+  .radio-button input[type="radio"] {
+    display: none;
+  }
+  
+  .radio-circle {
     width: 40px;
     height: 40px;
-    background-color: white;
-    border: 2px grey dashed;
+    border: 2px dashed black;
+    position: relative;
     margin-right: 36px;
-}
-
-.item-name {
+  }
+  
+  .radio-circle::before {
+    content: "";
+    display: block;
+    width: 35px;
+    height: 35px;
+    background-color: #E9E9E9;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .radio-button input[type="radio"]:checked + .radio-circle::before {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  
+  .radio-label {
+    font-size: 32px;
     font-family: 'MyFont';
-}
-
-
-/* 말풍선이 true일 때의 스타일 */
-.active {
-    background: #E9E9E9;
-}
+  }
+  
+  .radio-button:hover .radio-circle {
+    border-color: #E9E9E9;;
+  }
+  
+  .radio-button:hover input[type="radio"]:checked + .radio-circle::before {
+    background-color: #555;
+  }
+  
