@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberBuyDTO {
+	// 미사용 삭제 예정
+	// 미사용 삭제 예정
 	private Integer memberId;
 	private Integer itemId;
 	private String name;

@@ -7,10 +7,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemberItemDTO {
-	// 미사용 삭제 예정
-	// 미사용 삭제 예정
-	private Integer memberId;
+public class MemberItemReqDTO {
 	private Integer itemId;
-	private Boolean usedYN;
 }

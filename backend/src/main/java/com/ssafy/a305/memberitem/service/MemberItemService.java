@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.a305.item.domain.Item;
@@ -11,8 +12,9 @@ import com.ssafy.a305.item.repository.ItemRepository;
 import com.ssafy.a305.member.domain.Member;
 import com.ssafy.a305.member.repository.MemberRepository;
 import com.ssafy.a305.memberitem.domain.MemberItem;
-import com.ssafy.a305.memberitem.dto.MemberBuyDTO;
+import com.ssafy.a305.memberitem.dto.MemberItemReqDTO;
 import com.ssafy.a305.memberitem.repository.MemberItemRepository;
+import com.ssafy.a305.mileage.service.MileageService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,15 +23,21 @@ import lombok.RequiredArgsConstructor;
 public class MemberItemService {
 
 	private final MemberItemRepository memberItemRepository;
-	private final MemberRepository memberRepository;
 	private final ItemRepository itemRepository;
+	private final MileageService mileageService;
+	private final MemberRepository memberRepository;
 
 	// 회원이 마일리지를 소모하여 아이템을 구매하는 메서드
 	@Transactional
-	public void buyItem(MemberBuyDTO dto) {
-		// item id와 member id를 찾는다.
-		Item item = itemRepository.findById(dto.getItemId()).orElseThrow(() -> new IllegalArgumentException("해당 아이템을 찾을 수 없습니다."));
-		Member member = memberRepository.findById(dto.getMemberId()).orElseThrow(() -> new IllegalArgumentException("해당 회원을 찾을 수 없습니다."));
+	public void buyItem(MemberItemReqDTO dto, Authentication authentication) {
+		// item id와 member id를 통해 각 객체를 찾는다.
+		Integer itemId = dto.getItemId();
+		Item item = itemRepository.findById(itemId)
+			.orElseThrow(() -> new IllegalArgumentException("해당 아이템을 찾을 수 없습니다."));
+
+		Integer memberId = Integer.parseInt(authentication.getName());
+		Member member = memberRepository.findById(memberId)
+			.orElseThrow(() -> new IllegalArgumentException("해당 회원을 찾을 수 없습니다."));
 
 		// item price와 member mileage를 찾는다.
 		int price = item.getPrice();
@@ -41,7 +49,7 @@ public class MemberItemService {
 		}
 
 		// 마일리지를 차감한다.
-		member.updateMileage(mileage - price);
+		mileageService.changeMileage(memberId, mileage - price);
 
 		// memberitem에 보유 목록을 저장한다.
 		MemberItem memberItem = MemberItem.builder()
@@ -60,9 +68,12 @@ public class MemberItemService {
 
 	// 회원이 아이템을 장착하고 해제하는 메서드
 	@Transactional
-	public void equipItem(Integer memberId, Integer itemId) {
+	public void equipItem(MemberItemReqDTO dto, Authentication authentication) {
+		Integer memberId = Integer.parseInt(authentication.getName());
+
 		// memberId와 itemId로 MemberItem을 조회
-		MemberItem memberItem = memberItemRepository.findByMemberIdAndItemId(memberId, itemId).orElseThrow(() -> new IllegalArgumentException("해당 회원이 해당 아이템을 보유하고 있지 않습니다."));
+		MemberItem memberItem = memberItemRepository.findByMemberIdAndItemId(memberId, dto.getItemId())
+			.orElseThrow(() -> new IllegalArgumentException("해당 회원이 해당 아이템을 보유하고 있지 않습니다."));
 
 		// usedYN 값을 변경
 		boolean currentUsedYN = memberItem.getUsedYN();

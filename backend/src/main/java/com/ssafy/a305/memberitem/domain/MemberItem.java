@@ -9,8 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import org.hibernate.annotations.ColumnDefault;
-
 import com.ssafy.a305.item.domain.Item;
 import com.ssafy.a305.member.domain.Member;
 
