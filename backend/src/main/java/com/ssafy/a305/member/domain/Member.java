@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +23,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@DynamicInsert
 public class Member {
 
 	@Id
@@ -57,5 +59,7 @@ public class Member {
 		this.password = password;
 	}
 
-	public void updateMileage(Integer mileage) { this.mileage = mileage; }
+	public void updateMileage(Integer mileage) {
+		this.mileage = mileage;
+	}
 }
