@@ -37,7 +37,6 @@ public class MemberItem {
 	@JoinColumn(name = "item_id")
 	private Item item;
 
-	// tinyint는 Boolean으로?
 	@Column(name = "used_yn", nullable = false)
 	private Boolean usedYN;
 

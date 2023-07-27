@@ -1,5 +1,7 @@
 package com.ssafy.a305.memberitem.domain;
 
+import java.sql.Timestamp;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -42,4 +44,7 @@ public class MemberBuy {
 
 	@Column(name = "price", nullable = false)
 	private Integer price;
+
+	@Column(name = "created_at", nullable = false)
+	private Timestamp createdAt;
 }
