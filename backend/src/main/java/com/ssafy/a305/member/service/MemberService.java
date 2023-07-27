@@ -33,7 +33,7 @@ public class MemberService {
 		Member member = memberRepository.findById(id).orElseThrow(NoSuchElementException::new);
 		Timestamp timestamp = member.getRecentLogin();
 		String formattedDate = null;
-		if(timestamp != null) {
+		if (timestamp != null) {
 			formattedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(timestamp);
 		}
 
@@ -62,5 +62,10 @@ public class MemberService {
 			.build();
 
 		memberRepository.save(member);
+	}
+
+	public void deleteMember(Integer id) {
+		Member member = memberRepository.findById(id).orElseThrow(NoSuchElementException::new);
+		memberRepository.delete(member);
 	}
 }
