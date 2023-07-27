@@ -1,12 +1,12 @@
 package com.ssafy.a305.member.controller;
 
 import java.net.URI;
-import java.security.Principal;
 
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,5 +49,11 @@ public class MemberController {
 	public ResponseEntity<Void> signUpMember(@RequestBody @Valid SignUpReqDTO dto) {
 		memberService.signUpMember(dto);
 		return ResponseEntity.created(URI.create("/member")).build();
+	}
+
+	@DeleteMapping("/member")
+	public ResponseEntity<Void> deleteMember(Authentication authentication) {
+		memberService.deleteMember(Integer.parseInt(authentication.getName()));
+		return ResponseEntity.ok().build();
 	}
 }
