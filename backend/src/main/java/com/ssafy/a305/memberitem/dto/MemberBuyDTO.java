@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberBuyDTO {
-	private String member;
-	private String item;
+	private Integer memberId;
+	private Integer itemId;
 	private String name;
 	private Integer price;
 }

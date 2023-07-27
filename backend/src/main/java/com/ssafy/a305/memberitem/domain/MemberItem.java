@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import com.ssafy.a305.item.domain.Item;
 import com.ssafy.a305.member.domain.Member;
 
@@ -37,7 +39,12 @@ public class MemberItem {
 	@JoinColumn(name = "item_id")
 	private Item item;
 
-	@Column(name = "used_yn", nullable = false)
 	// tinyint는 Boolean으로?
+	@Column(name = "used_yn", nullable = false)
 	private Boolean usedYN;
+
+	public void updateUsedYN(Boolean usedYN) {
+		this.usedYN = usedYN;
+	}
+
 }

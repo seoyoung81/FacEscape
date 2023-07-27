@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberItemDTO {
-	private String member;
-	private String item;
+	private Integer memberId;
+	private Integer itemId;
 	private Boolean usedYN;
 }
