@@ -2,6 +2,7 @@ package com.ssafy.a305.memberitem.service;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.transaction.Transactional;
 
@@ -15,6 +16,8 @@ import com.ssafy.a305.member.repository.MemberRepository;
 import com.ssafy.a305.memberitem.domain.MemberBuy;
 import com.ssafy.a305.memberitem.domain.MemberItem;
 import com.ssafy.a305.memberitem.dto.MemberItemReqDTO;
+import com.ssafy.a305.memberitem.exception.ItemAlreadyPurchasedException;
+import com.ssafy.a305.memberitem.exception.MileageInsufficientException;
 import com.ssafy.a305.memberitem.repository.MemberBuyRepository;
 import com.ssafy.a305.memberitem.repository.MemberItemRepository;
 import com.ssafy.a305.mileage.service.MileageService;
@@ -36,12 +39,10 @@ public class MemberItemService {
 	public void buyItem(MemberItemReqDTO dto, Authentication authentication) {
 		// item id와 member id를 통해 각 객체를 찾는다.
 		Integer itemId = dto.getItemId();
-		Item item = itemRepository.findById(itemId)
-			.orElseThrow(() -> new IllegalArgumentException("해당 아이템을 찾을 수 없습니다."));
+		Item item = itemRepository.findById(itemId).orElseThrow(NoSuchElementException::new);
 
 		Integer memberId = Integer.parseInt(authentication.getName());
-		Member member = memberRepository.findById(memberId)
-			.orElseThrow(() -> new IllegalArgumentException("해당 회원을 찾을 수 없습니다."));
+		Member member = memberRepository.findById(memberId).orElseThrow(NoSuchElementException::new);
 
 		// item price와 member mileage를 찾는다.
 		int price = item.getPrice();
@@ -50,13 +51,13 @@ public class MemberItemService {
 		// 구매가능 조건을 판별한다.
 		// 1. 보유 마일리지 확인
 		if (mileage < price) {
-			throw new IllegalStateException("마일리지가 부족하여 구매할 수 없습니다.");
+			throw new MileageInsufficientException();
 		}
 		// 2. 해당 아이템을 보유 여부 확인
 		List<MemberItem> purchasedItems = showItem(memberId);
 		for (MemberItem purchasedItem : purchasedItems) {
 			if (purchasedItem.getItem().getId().equals(itemId)) {
-				throw new IllegalStateException("이미 구매한 아이템입니다.");
+				throw new ItemAlreadyPurchasedException();
 			}
 		}
 
@@ -95,7 +96,7 @@ public class MemberItemService {
 
 		// memberId와 itemId로 MemberItem을 조회
 		MemberItem memberItem = memberItemRepository.findByMemberIdAndItemId(memberId, dto.getItemId())
-			.orElseThrow(() -> new IllegalArgumentException("해당 회원이 해당 아이템을 보유하고 있지 않습니다."));
+			.orElseThrow(NoSuchElementException::new);
 
 		// usedYN 값을 변경
 		boolean currentUsedYN = memberItem.getUsedYN();
