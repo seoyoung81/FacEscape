@@ -1,0 +1,37 @@
+.category-container {
+    width: 336px;
+    height: 500px;
+    border-radius: 5px;
+    border: 1px solid;
+
+    margin-top: 8px;
+
+    font-size: 32px;
+    letter-spacing: 3.2px;  
+
+    display: flex;
+}
+
+.category-component {
+    display: flex;
+    align-items: center;
+    margin: 63px 0 25px 48px;
+}
+
+.checkbox {
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border: 2px grey dashed;
+    margin-right: 36px;
+}
+
+.item-name {
+    font-family: 'MyFont';
+}
+
+
+/* 말풍선이 true일 때의 스타일 */
+.active {
+    background: #E9E9E9;
+}

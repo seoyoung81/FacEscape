@@ -1,5 +1,6 @@
 import LogInForm from '../User/LoginForm';
 import styles from './Modal.module.css';
+import Modal from 'react-bootstrap/Modal';
 
 interface LogInModalPageProps {
     setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -13,9 +14,14 @@ const LogInModal :React.FC<LogInModalPageProps> = ({ setModalOpen }) => {
 
     }
 
+    const stopPropagation = (event: React.MouseEvent<HTMLDivElement>) => {
+        event.stopPropagation();
+    }
+
+
     return (
         <div className={styles.overlay} onClick={closeModal}>
-            <div className={styles.container}>
+            <div className={styles.container} onClick={stopPropagation}>
                 <button className={styles.close} onClick={closeModal}>
                     X
                 </button>
@@ -25,6 +31,7 @@ const LogInModal :React.FC<LogInModalPageProps> = ({ setModalOpen }) => {
                 </div>
             </div>
         </div>
+
     )
 }
 

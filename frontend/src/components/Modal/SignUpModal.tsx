@@ -10,12 +10,15 @@ const SignUpModal :React.FC<SignUpModalPageProps> = ({ setModalOpen }) => {
     const closeModal = (event: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => {
         event?.stopPropagation();
         setModalOpen(false);
-
+    };
+    const stopPropagation = (event: React.MouseEvent<HTMLDivElement>) => {
+        event.stopPropagation();
     }
+    
 
     return (
         <div className={styles.overlay} onClick={closeModal}>
-            <div className={styles.container} style={{ width: '815px' }}>
+            <div className={styles.container} style={{ width: '815px' }} onClick={stopPropagation}>
                 <button className={styles.close} onClick={closeModal}>
                     X
                 </button>

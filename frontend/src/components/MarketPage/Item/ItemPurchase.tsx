@@ -1,13 +1,17 @@
 import styles from './Item.module.css';
 
-const ItemPurchase :React.FC = () => {
+interface priceProps {
+    itemPrice: number;
+}
+
+const ItemPurchase :React.FC<priceProps> = ({ itemPrice }) => {
     return (
         <div>
-            <div className={styles['mileage-container']}>
+            <div className={styles['price-back']}>
                 <div className={styles.mileage}>M</div>
-                <button className={styles['item-price']}>100</button>
-                <div className={styles['price-back']}></div>
+                <button className={styles['item-price']}>{itemPrice}</button>
             </div>
+           
         </div>
     )
 };
