@@ -68,8 +68,10 @@ public class SecurityConfig {
 			.accessDeniedHandler(new CustomAccessDeniedHandler());
 		// 사용자 로그인이 필요한 API는 필터가 적용되도록 별도 설정해준다.
 		http.authorizeRequests()
-			.antMatchers("/logout", "/member", "/member/equipment", "/member/item")
-			.authenticated()
+			.antMatchers("/logout", "/member/equipment", "/member/item").authenticated()
+			.antMatchers(HttpMethod.DELETE,"/member").authenticated()
+			.antMatchers(HttpMethod.PATCH,"/member").authenticated()
+			.antMatchers(HttpMethod.GET,"/member").authenticated()
 			.anyRequest().permitAll();
 		// http Session을 사용하지 않을 것이므로 Policy를 stateless로 설정한다.
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

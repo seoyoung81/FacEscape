@@ -32,7 +32,11 @@ public class MemberService {
 		//id로 검색 시 존재하지 않는 회원일 경우 예외 throw
 		Member member = memberRepository.findById(id).orElseThrow(NoSuchElementException::new);
 		Timestamp timestamp = member.getRecentLogin();
-		String formattedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(timestamp);
+		String formattedDate = null;
+		if(timestamp != null) {
+			formattedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(timestamp);
+		}
+
 		return new MemberInfoResDTO(member.getEmail(), member.getNickname(), member.getMileage(),
 			formattedDate);
 	}
