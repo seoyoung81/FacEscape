@@ -1,8 +1,22 @@
 import styles from './RankingPageComponent.module.css';
 import RankingItem from './RankingItem';
 import DropDownIcon from '../../assets/images/i-dropdown.svg'
+import type {Rankings} from '../../services/ranking';
 
-const RankingView = () => {
+
+type RankingViewProps = {
+    currentStage: number,
+    handlerStage: (num: number) => void,
+    rankInfos: Rankings[]
+}
+
+const RankingView = ({currentStage, handlerStage, rankInfos}: RankingViewProps) => {
+    const stageOnclickHandler = (event: React.MouseEvent<HTMLDivElement>) => {
+        event.preventDefault();
+        const stage = Number(event.currentTarget.getAttribute("data-stage"));
+        handlerStage(stage);
+    }
+
     return (
         <div className={styles['ranking-view-container']}>
             <div className={styles['ranking-header']}>
@@ -13,40 +27,31 @@ const RankingView = () => {
                 <div className={styles['ranking-stage-dropdown']}>
                     <div className={styles['ranking-stage-dropdown-selector']}>
                         <div>
-                            STAGE
+                            STAGE {currentStage}
                         </div>
                         <img className={styles['rank-icon']} src={DropDownIcon} alt="dropdown" />
                     </div>
 
                     <div className={styles['ranking-stage-dropdown-group']}>
-                        <div>
+                        <div className={styles['ranking-stage-dropdown-item']} data-stage={1} onClick={stageOnclickHandler}>
                             stage1
                         </div>
-                        <div>
+                        <div className={styles['ranking-stage-dropdown-item']} data-stage={2} onClick={stageOnclickHandler}>
                             stage2
                         </div>
-                        <div>
+                        <div className={styles['ranking-stage-dropdown-item']} data-stage={3} onClick={stageOnclickHandler}>
                             stage3
-                        </div>
-                        <div>
-                            stage4
                         </div>
                     </div>
                 </div>
             </div>
             
             <div className={styles['ranking-body']}>
-                <RankingItem />
-                <RankingItem />
-                <RankingItem />
-                <RankingItem />
-                <RankingItem />
-                <RankingItem />
-                <RankingItem />
-                <RankingItem />
-                <RankingItem />
-                <RankingItem />
-                <RankingItem />
+                {
+                    rankInfos.map((rankInfo)=>{
+                        return <RankingItem rankInfo={rankInfo}/>
+                    })
+                }
             </div>
         </div>
     )

@@ -1,7 +1,12 @@
 import styles from './RankingPageComponent.module.css';
 import RankSVG from '../../assets/images/rank.svg'
+import type {Rankings} from '../../services/ranking';
 
-const RankingItem :React.FC = () => {
+type RankingItemProps = {
+    rankInfo: Rankings
+}
+
+const RankingItem = ({rankInfo}: RankingItemProps) => {
     return (
         <div className={styles['ranking-item-container']}>
                 <img 
