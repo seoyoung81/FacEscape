@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.a305.member.domain.LoginType;
 import com.ssafy.a305.member.domain.Member;
@@ -25,10 +26,12 @@ public class MemberService {
 	private final MemberRepository memberRepository;
 	private final PasswordEncoder passwordEncoder;
 
+	@Transactional(readOnly = true)
 	public UniqueEmailCheckResDTO checkPreExistEmail(String email) {
 		return new UniqueEmailCheckResDTO(!memberRepository.existsByEmail(email));
 	}
 
+	@Transactional(readOnly = true)
 	public MemberInfoResDTO getMemberInfo(Integer id) {
 		//id로 검색 시 존재하지 않는 회원일 경우 예외 throw
 		Member member = memberRepository.findById(id).orElseThrow(NoSuchElementException::new);
@@ -42,6 +45,7 @@ public class MemberService {
 			formattedDate);
 	}
 
+	@Transactional
 	public void updateMemberInfo(Integer id, MemberInfoUpdateReqDTO dto) {
 		Member member = memberRepository.findById(id).orElseThrow(NoSuchElementException::new);
 		String nickname = dto.getNickname();
@@ -51,9 +55,9 @@ public class MemberService {
 		} else if (password != null) {
 			member.updatePassword(password);
 		}
-		memberRepository.save(member);
 	}
 
+	@Transactional
 	public void signUpMember(SignUpReqDTO dto) {
 		//중복된 이메일 있는지 검증
 		if (memberRepository.existsByEmail(dto.getEmail())) {
@@ -69,6 +73,7 @@ public class MemberService {
 		memberRepository.save(member);
 	}
 
+	@Transactional
 	public void deleteMember(Integer id) {
 		Member member = memberRepository.findById(id).orElseThrow(NoSuchElementException::new);
 		memberRepository.delete(member);

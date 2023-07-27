@@ -7,9 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
-
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.a305.member.domain.Member;
 import com.ssafy.a305.member.repository.MemberRepository;

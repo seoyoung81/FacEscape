@@ -4,10 +4,9 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import javax.transaction.Transactional;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.a305.item.domain.Item;
 import com.ssafy.a305.item.repository.ItemRepository;
@@ -85,6 +84,7 @@ public class MemberItemService {
 
 	// 회원이 구매한 모든 아이템을 반환하는 메서드
 	// memberId가 일치하는 item 보유 목록을 리스트로 반환
+	@Transactional(readOnly = true)
 	public List<MemberItem> showItem(Integer memberId) {
 		return memberItemRepository.findByMemberId(memberId);
 	}
@@ -108,6 +108,7 @@ public class MemberItemService {
 
 	// 회원이 장착한 모든 아이템을 반환하는 메서드
 	// memberId가 일치하고 usedYN이 true인 item 목록을 리스트로 반환
+	@Transactional(readOnly = true)
 	public List<MemberItem> showEquippedItem(Integer memberId) {
 		return memberItemRepository.findByMemberIdAndUsedYN(memberId, true);
 	}
