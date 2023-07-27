@@ -39,9 +39,9 @@ public class MemberController {
 	}
 
 	@PatchMapping("/member")
-	public ResponseEntity<Void> updateMemberInfo(@RequestBody MemberInfoUpdateReqDTO dto) {
-		Integer id = 1;
-		memberService.updateMemberInfo(id, dto);
+	public ResponseEntity<Void> updateMemberInfo(@RequestBody MemberInfoUpdateReqDTO dto,
+		Authentication authentication) {
+		memberService.updateMemberInfo(Integer.parseInt(authentication.getName()), dto);
 		return ResponseEntity.ok().build();
 	}
 
