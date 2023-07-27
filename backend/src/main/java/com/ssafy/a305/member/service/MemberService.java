@@ -13,6 +13,7 @@ import com.ssafy.a305.member.dto.MemberInfoResDTO;
 import com.ssafy.a305.member.dto.MemberInfoUpdateReqDTO;
 import com.ssafy.a305.member.dto.SignUpReqDTO;
 import com.ssafy.a305.member.dto.UniqueEmailCheckResDTO;
+import com.ssafy.a305.member.exception.DuplicatedEmailException;
 import com.ssafy.a305.member.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -54,6 +55,10 @@ public class MemberService {
 	}
 
 	public void signUpMember(SignUpReqDTO dto) {
+		//중복된 이메일 있는지 검증
+		if (memberRepository.existsByEmail(dto.getEmail())) {
+			throw new DuplicatedEmailException();
+		}
 		Member member = Member.builder()
 			.email(dto.getEmail())
 			.password(passwordEncoder.encode(dto.getPassword()))
