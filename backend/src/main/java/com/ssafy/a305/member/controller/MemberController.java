@@ -39,7 +39,7 @@ public class MemberController {
 	}
 
 	@PatchMapping("/member")
-	public ResponseEntity<Void> updateMemberInfo(@RequestBody MemberInfoUpdateReqDTO dto,
+	public ResponseEntity<Void> updateMemberInfo(@RequestBody @Valid MemberInfoUpdateReqDTO dto,
 		Authentication authentication) {
 		memberService.updateMemberInfo(Integer.parseInt(authentication.getName()), dto);
 		return ResponseEntity.ok().build();
