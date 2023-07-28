@@ -1,4 +1,4 @@
-package com.ssafy.a305.member.dto;
+package com.ssafy.a305.global.advice.dto;
 
 import java.util.List;
 

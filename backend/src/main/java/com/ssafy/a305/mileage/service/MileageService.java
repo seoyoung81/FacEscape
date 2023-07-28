@@ -1,19 +1,17 @@
 package com.ssafy.a305.mileage.service;
 
+import java.sql.Timestamp;
+import java.util.NoSuchElementException;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.ssafy.a305.member.domain.Member;
 import com.ssafy.a305.member.repository.MemberRepository;
 import com.ssafy.a305.mileage.domain.MileageHistory;
 import com.ssafy.a305.mileage.repository.MileageHistoryRepository;
 
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.stereotype.Service;
-
-import java.sql.Timestamp;
-import java.util.NoSuchElementException;
-
-import javax.transaction.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +21,7 @@ public class MileageService {
 	private final MemberRepository memberRepository;
 
 	// 마일리지 변화
+	@Transactional
 	public void changeMileage(Integer memberId, Integer mileageChange) {
 		Member member = memberRepository.findById(memberId).orElseThrow(NoSuchElementException::new);
 		member.updateMileage(mileageChange);
@@ -33,6 +32,7 @@ public class MileageService {
 	}
 
 	// 마일리지 기록 생성 & 저장
+	@Transactional
 	public void createMileageHistory(Integer memberId, Integer amount) {
 		Member member = memberRepository.findById(memberId).orElseThrow(NoSuchElementException::new);
 		MileageHistory mileageHistory = MileageHistory.builder()
