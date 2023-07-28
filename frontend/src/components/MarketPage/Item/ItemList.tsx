@@ -3,9 +3,10 @@ import axios, { AxiosResponse } from 'axios';
 import Item from './Item';
 import styles from './Item.module.css';
 
-// 카테고리
+// 카테고리 & 검색
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
+
 
 export interface ItemType {
     ItemId: number;
@@ -26,22 +27,18 @@ export interface ApiResponse {
 const ItemList: React.FC = () => {
     const [itemData, setItemData] = useState<ItemType[] | null>(null);
 
-    // 필요한 것
     // 카테고리
     const itemType = useSelector((state: RootState) => state.setItemType);
-    // 페이지
-    // 페이지 사이즈
+
     // 키워드
+    const keyword = useSelector((state: RootState) => state.setKeyword);
     
-    console.log('지금 눌린 카테고리는', itemType);
     
     useEffect(() => {
         axios.get("https://jsonplaceholder.typicode.com/users", {
             params: {
-               // page: page,
-               // size: pageSize,
                itemType: itemType,
-               // keyword: keyword
+               keyword: keyword,
             }
         })
             .then((response: AxiosResponse<ApiResponse[]>) => {
@@ -49,7 +46,7 @@ const ItemList: React.FC = () => {
                 setItemData(allItems);
             })
             .catch((error) => console.error('에러났음', error))
-    }, [itemType]);
+    }, [itemType, keyword]);
 
   return (
     <div className={styles.container}>

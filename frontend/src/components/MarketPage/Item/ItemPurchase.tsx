@@ -5,11 +5,19 @@ interface priceProps {
 }
 
 const ItemPurchase :React.FC<priceProps> = ({ itemPrice }) => {
+    const onPurchase = () => {
+        alert(`${ itemPrice }`)
+    }
     return (
         <div>
             <div className={styles['price-back']}>
                 <div className={styles.mileage}>M</div>
-                <button className={styles['item-price']}>{itemPrice}</button>
+                <button 
+                    className={styles['item-price']}
+                    onClick={onPurchase}
+                >
+                    {itemPrice}
+                </button>
             </div>
            
         </div>

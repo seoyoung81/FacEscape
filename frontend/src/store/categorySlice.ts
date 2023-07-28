@@ -1,10 +1,10 @@
-import { createSlice, PayloadAction, configureStore } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface ItemTypeSate {
+interface ItemTypeState {
     itemType: string;
 };
 
-const initialState: ItemTypeSate = {
+const initialState: ItemTypeState = {
     itemType: "",
 };
 

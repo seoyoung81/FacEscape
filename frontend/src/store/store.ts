@@ -1,5 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import categoryReducer from './categorySlice';
+import searchReducer from './searchSlice';
+
 
 export type UserState = {
   token: string | null;
@@ -38,7 +40,9 @@ const store = configureStore({
         user: userReducer,
       // category 상점관리
         setItemType: categoryReducer,
-    }
+      // keyword 상점관리
+        setKeyword: searchReducer,
+    },
 });
 
 // RootState 타입 정의

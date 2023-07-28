@@ -1,6 +1,5 @@
 import LogInForm from '../User/LoginForm';
 import styles from './Modal.module.css';
-import Modal from 'react-bootstrap/Modal';
 
 interface LogInModalPageProps {
     setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;

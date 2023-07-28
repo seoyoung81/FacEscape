@@ -26,3 +26,8 @@
     position: absolute;
 
 }
+
+.search-icon:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+}
