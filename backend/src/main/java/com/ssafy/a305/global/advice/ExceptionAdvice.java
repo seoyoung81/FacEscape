@@ -12,8 +12,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.ssafy.a305.member.dto.ValidationErrorDTO;
-import com.ssafy.a305.member.dto.ValidationFailedResDTO;
+import com.ssafy.a305.global.advice.dto.ValidationErrorDTO;
+import com.ssafy.a305.global.advice.dto.ValidationFailedResDTO;
 import com.ssafy.a305.member.exception.DuplicatedEmailException;
 
 import lombok.extern.slf4j.Slf4j;

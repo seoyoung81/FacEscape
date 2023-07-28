@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.a305.auth.domain.MemberDetails;
 import com.ssafy.a305.member.domain.Member;
@@ -23,6 +24,7 @@ public class CustomUserDetailService implements UserDetailsService {
 	private final MemberRepository memberRepository;
 
 	@Override
+	@Transactional(readOnly = true)
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Supplier<NoSuchElementException> notExistMemberLogSupplier = () -> {
 			log.info("Member name: {} not exist", username);
