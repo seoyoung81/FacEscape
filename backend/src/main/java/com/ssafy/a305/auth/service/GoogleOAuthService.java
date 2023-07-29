@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,7 @@ public class GoogleOAuthService {
 	private final MemberRepository memberRepository;
 	private final AuthenticationManager authenticationManager;
 	private final JWTUtils jwtUtils;
+	private final PasswordEncoder passwordEncoder;
 
 	public String getGoogleLoginUrl() {
 		return googleOAuthUtils.getGoogleLoginUrl();
@@ -42,7 +44,7 @@ public class GoogleOAuthService {
 		if (!memberRepository.existsByEmail(googleUser.getEmail())) {
 			memberRepository.save(Member.builder()
 				.email(googleUser.getEmail())
-				.password("")
+				.password(passwordEncoder.encode(""))
 				.nickname(googleUser.getName())
 				.loginType(LoginType.OAUTH)
 				.build());
