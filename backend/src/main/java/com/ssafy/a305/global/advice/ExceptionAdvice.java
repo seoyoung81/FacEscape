@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+import com.ssafy.a305.auth.exception.LoginException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -53,5 +54,11 @@ public class ExceptionAdvice {
 		List<ValidationErrorDTO> errorList = new ArrayList<>();
 		errorList.add(new ValidationErrorDTO("email", "이미 회원가입된 회원입니다."));
 		return new ResponseEntity<>(new ValidationFailedResDTO(errorList), HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(LoginException.class)
+	public ResponseEntity LoginException(LoginException e) {
+		log.error("exception : ", e);
+		return new ResponseEntity(HttpStatus.BAD_REQUEST);
 	}
 }
