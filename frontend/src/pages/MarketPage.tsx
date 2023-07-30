@@ -8,7 +8,7 @@ import styles from "./MarketPage.module.css";
 
 const MarketPage = () => {
     return (
-        <div>
+        <div className={styles['wrap-container']}>
             <NavBar />
             <div className={styles['market-container']}>
                 <div className={styles['left-container']}>

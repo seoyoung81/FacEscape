@@ -57,6 +57,7 @@ const ItemList: React.FC = () => {
                         itemName={item.name} 
                         itemImg={item.image} 
                         itemPrice={item.price} 
+                        itemId={item.ItemId}
                     />
                 </div>
             ))

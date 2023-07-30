@@ -1,12 +1,20 @@
 import styles from './Item.module.css';
+import { useState } from 'react';
+import PurchaseCheckModal from '../../Modal/PurchaseCheckModal';
 
-interface priceProps {
+export interface priceProps {
     itemPrice: number;
+    itemId: number;
+    itemImg: string;
+    itemName: string;
 }
 
-const ItemPurchase :React.FC<priceProps> = ({ itemPrice }) => {
+
+
+const ItemPurchase :React.FC<priceProps> = ({ itemPrice, itemId, itemImg, itemName }) => {
+    const [openPurchaseModal, setOpenPurchaseModal] = useState<boolean>(false);
     const onPurchase = () => {
-        alert(`${ itemPrice }`)
+        setOpenPurchaseModal(true);
     }
     return (
         <div>
@@ -19,7 +27,14 @@ const ItemPurchase :React.FC<priceProps> = ({ itemPrice }) => {
                     {itemPrice}
                 </button>
             </div>
-           
+            {openPurchaseModal ? 
+            <PurchaseCheckModal 
+                itemPrice={itemPrice}
+                itemId={itemId}
+                itemImg={itemImg}
+                itemName={itemName}
+                setOpenPurchaseModal={setOpenPurchaseModal}
+            /> : null}
         </div>
     )
 };
