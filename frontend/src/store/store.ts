@@ -1,13 +1,27 @@
 import { configureStore } from '@reduxjs/toolkit';
+import categoryReducer from './categorySlice';
+import searchReducer from './searchSlice';
 
-type UserState = {
+
+export type UserState = {
   token: string | null;
 };
+
+export type UserActionTypes = {
+    type: 'SET_TOKEN';
+    payload: string;
+  };
+  
+export const setToken = (token: string): UserActionTypes => ({
+  type: 'SET_TOKEN',
+  payload: token,
+});
 
 const initialState: UserState = {
   token: null,
 };
 
+// 회원관리
 const userReducer = (state = initialState, action: any) => {
   switch (action.type) {
     case 'SET_TOKEN':
@@ -15,11 +29,6 @@ const userReducer = (state = initialState, action: any) => {
         ...state,
         token: action.payload,
       };
-    // case 'CLEAR_TOKEN':
-    //   return {
-    //     ...state,
-    //     token: null,
-    //   };
     default:
       return state;
   }
@@ -27,18 +36,17 @@ const userReducer = (state = initialState, action: any) => {
 
 const store = configureStore({
     reducer: {
+      // user 회원관리
         user: userReducer,
-    }
+      // category 상점관리
+        setItemType: categoryReducer,
+      // keyword 상점관리
+        setKeyword: searchReducer,
+    },
 });
+
+// RootState 타입 정의
+export type RootState = ReturnType<typeof store.getState>;
 
 export default store;
 
-export type UserActionTypes = {
-    type: 'SET_TOKEN';
-    payload: string;
-  };
-  
-  export const setToken = (token: string): UserActionTypes => ({
-    type: 'SET_TOKEN',
-    payload: token,
-  });
