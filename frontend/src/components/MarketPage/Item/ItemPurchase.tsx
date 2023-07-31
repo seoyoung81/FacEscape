@@ -2,13 +2,12 @@ import styles from './Item.module.css';
 import { useState } from 'react';
 import PurchaseCheckModal from '../../Modal/PurchaseCheckModal';
 
-export interface priceProps {
+interface priceProps {
     itemPrice: number;
     itemId: number;
     itemImg: string;
     itemName: string;
 }
-
 
 
 const ItemPurchase :React.FC<priceProps> = ({ itemPrice, itemId, itemImg, itemName }) => {

@@ -2,27 +2,11 @@ import React, { useState, useEffect } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import Item from './Item';
 import styles from './Item.module.css';
+import type {ItemType, ApiResponse} from '../../../services/market/utils/types';
 
 // 카테고리 & 검색
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
-
-
-export interface ItemType {
-    ItemId: number;
-    name: string;
-    image: string;
-    price: number;
-    items: ItemType[]
-}
- 
-export interface ApiResponse {
-    items: ItemType[];
-    currentPage: number;
-    totalPages: number;
-    isLastPage: boolean;
-}
-
 
 const ItemList: React.FC = () => {
     const [itemData, setItemData] = useState<ItemType[] | null>(null);
