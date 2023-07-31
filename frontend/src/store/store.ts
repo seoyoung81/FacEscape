@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import categoryReducer from './categorySlice';
 import searchReducer from './searchSlice';
-
+import isLogInReducer from './authSlice';
 
 export type UserState = {
   token: string | null;
@@ -57,6 +57,8 @@ const store = configureStore({
         setItemType: categoryReducer,
       // keyword 상점관리
         setKeyword: searchReducer,
+      // 로그인 여부 관리
+        setIsLogIn: isLogInReducer,
     },
 });
 
