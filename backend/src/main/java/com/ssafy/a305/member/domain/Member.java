@@ -79,11 +79,9 @@ public class Member {
 
 	@PreRemove
 	public void preRemove() {
-		System.out.println("22");
 		List<GameParticipant> gameParticipants = this.getParticipants();
 		for (GameParticipant participant : gameParticipants) {
 			participant.deleteMember();
 		}
-		System.out.println("33");
 	}
 }
