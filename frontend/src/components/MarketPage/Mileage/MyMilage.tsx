@@ -1,26 +1,41 @@
 import axios, { AxiosResponse } from 'axios';
 import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import  { UserState } from '../../../store/store';
+import { useDispatch  } from 'react-redux';
+import { initToken } from '../../../services/Token/token';
 import styles from './MyMilage.module.css';
 
 
 const MyMilage :React.FC = () => {
     const [myMileage, setMyMileage] = useState<number | null>(null);
-    
-    const token = useSelector((state: UserState) => state.token);
-    console.log('토큰:', token);
+    const dispatch = useDispatch();
 
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    useEffect(() => {
+        initToken(dispatch);
+    }, [dispatch]);
 
     useEffect(() => {
         axios.get('/member')
             .then((response: AxiosResponse) => {
                 console.log(response.data.mileage);
-                setMyMileage(response.data.mileage);
+                
             })
             .catch(error => console.error('Error: ', error));
     }, [])
+
+    useEffect(() => {
+        const fetchData = async () => {
+
+            try {
+                const response = await axios.get('/member');
+                setMyMileage(response.data.mileage);
+                console.log(response);
+            } catch (error) {
+                console.log('mileage Error', error)
+            }
+        };
+
+        fetchData();
+    }, [myMileage]);
 
     return (
         <div>

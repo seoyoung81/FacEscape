@@ -2,8 +2,9 @@ import { useForm, Controller } from 'react-hook-form';
 import GoogleLogin from './GoogleLogin';
 import styles from './User.module.css';
 import axios from 'axios';
-import { setToken } from '../../store/store';
 import { useDispatch } from 'react-redux';
+import { initToken } from '../../services/Token/token';
+import { useEffect } from 'react';
 
 type FormData = {
   email: string;
@@ -14,24 +15,20 @@ const LogInForm: React.FC = () => {
   const { control, handleSubmit, formState: { errors } } = useForm<FormData>();
   const dispatch = useDispatch();
 
-  const onSubmit = (data: FormData) => {
+    useEffect(() => {
+        initToken(dispatch);
+    }, [dispatch]);
+
+  const onSubmit = async (data: FormData) => {
     console.log(data);
 
-    axios.post('/login', data )
-        .then((response) => {
-            const token = response.data.accessToken;
-            dispatch(setToken(token));
-            console.log(response);
-            // 로그인 성공 시 로직
-        })
-        .catch((error) => {
-            console.error('로그인 실패', error);
-        })
-
+    try {
+        const response = await axios.post('/login', data);
+        console.log(response);
+    } catch (error) {
+        console.error('Login failed', error);
+    }
   }; 
-
-  
-
 
   return (
     <div className={styles.container}>
