@@ -8,6 +8,7 @@ import MainPage from './pages/MainPage';
 import RankingPage from './pages/RankingPage';
 import MyPage from './pages/MyPage';
 import MarketPage from './pages/MarketPage';
+import BeforeEnteringPage from './pages/BeforeEnteringPage';
 
 // background image
 import BackgroundImage from '../src/assets/images/background_img.png';
@@ -23,6 +24,7 @@ const App: React.FC = () => {
         <Route path='/rank' element={<RankingPage />} />
         <Route path='/mypage' element={<MyPage />} />
         <Route path='/market' element={<MarketPage />} />
+        <Route path='/before' element={<BeforeEnteringPage />} />
       </Routes>
     </div>
   );

@@ -1,0 +1,13 @@
+.phrases {
+    width: 619px;
+    height: 63px;
+    flex-shrink: 0;
+    color: #000;
+    font-family: 'MyFont';
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: 4.8px;
+    margin-bottom: 21px;
+}
