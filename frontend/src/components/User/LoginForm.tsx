@@ -3,7 +3,7 @@ import GoogleLogin from './GoogleLogin';
 import styles from './User.module.css';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { initToken } from '../../services/Token/token';
+import { initToken } from '../../services/Token/Token';
 import { useEffect } from 'react';
 
 type FormData = {

@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { useState, useEffect } from 'react';
 import { useDispatch  } from 'react-redux';
-import { initToken } from '../../../services/Token/token';
+import { initToken } from '../../../services/Token/Token';
 import styles from './MyMilage.module.css';
 
 
