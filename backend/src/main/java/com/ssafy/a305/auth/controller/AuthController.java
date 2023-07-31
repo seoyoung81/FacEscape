@@ -14,6 +14,8 @@ import com.ssafy.a305.auth.dto.LoginReqDTO;
 import com.ssafy.a305.auth.dto.LoginResDTO;
 import com.ssafy.a305.auth.util.JWTUtils;
 
+import javax.validation.Valid;
+
 @RestController
 public class AuthController {
 
@@ -30,7 +32,7 @@ public class AuthController {
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<LoginResDTO> login(@RequestBody LoginReqDTO loginReqDTO) {
+	public ResponseEntity<LoginResDTO> login(@RequestBody @Valid LoginReqDTO loginReqDTO) {
 		Authentication authenticate = authenticationManager.authenticate(
 			new UsernamePasswordAuthenticationToken(loginReqDTO.getEmail(), loginReqDTO.getPassword()));
 
