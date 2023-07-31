@@ -2,22 +2,6 @@ import ItemPurchase from "./ItemPurchase";
 import ItemImg from "./ItemImg";
 import styles from './Item.module.css';
 
-
-export interface ItemType {
-    ItemId: number;
-    name: string;
-    image: string;
-    price: number;
-    items: ItemType[]
-}
- 
-export interface ApiResponse {
-    items: ItemType[];
-    currentPage: number;
-    totalPages: number;
-    isLastPage: boolean;
-}
-
 interface ChildProps {
     itemImg: string;
     itemName: string;
