@@ -12,6 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.ssafy.a305.auth.exception.LoginException;
 import com.ssafy.a305.global.advice.dto.ValidationErrorDTO;
 import com.ssafy.a305.global.advice.dto.ValidationFailedResDTO;
 import com.ssafy.a305.member.exception.DuplicatedEmailException;
@@ -48,10 +49,16 @@ public class ExceptionAdvice {
 	}
 
 	@ExceptionHandler(DuplicatedEmailException.class)
-	public ResponseEntity DuplicatedEmailException(DuplicatedEmailException e) {
+	public ResponseEntity duplicatedEmailException(DuplicatedEmailException e) {
 		log.error("exception : ", e);
 		List<ValidationErrorDTO> errorList = new ArrayList<>();
 		errorList.add(new ValidationErrorDTO("email", "이미 회원가입된 회원입니다."));
 		return new ResponseEntity<>(new ValidationFailedResDTO(errorList), HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(LoginException.class)
+	public ResponseEntity loginException(LoginException e) {
+		log.error("exception : ", e);
+		return new ResponseEntity(HttpStatus.BAD_REQUEST);
 	}
 }
