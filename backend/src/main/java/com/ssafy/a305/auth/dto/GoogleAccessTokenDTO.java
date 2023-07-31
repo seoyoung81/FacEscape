@@ -1,5 +1,8 @@
 package com.ssafy.a305.auth.dto;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,10 +10,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 @NoArgsConstructor
+@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class GoogleAccessTokenDTO {
-	private String access_token;
-	private int expires_in;
+	private String accessToken;
+	private int expiresIn;
 	private String scope;
-	private String token_type;
-	private String id_token;
+	private String tokenType;
+	private String idToken;
 }

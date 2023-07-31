@@ -90,8 +90,8 @@ public class GoogleOAuthUtils {
 	//액세스 토큰으로 구글 사용자 정보 받는 메서드
 	public GoogleUserInfoDTO getUserInfo(GoogleAccessTokenDTO accessToken) throws JsonProcessingException {
 		HttpHeaders headers = new HttpHeaders();
-		headers.set("Authorization", "Bearer " + accessToken.getAccess_token());
-		System.out.println(accessToken.getAccess_token());
+		headers.set("Authorization", "Bearer " + accessToken.getAccessToken());
+		System.out.println(accessToken.getAccessToken());
 
 		HttpEntity<Object> entity = new HttpEntity<>(headers);
 		ResponseEntity<String> response = restTemplate.exchange(GOOGLE_RESOURCE_URL, HttpMethod.GET, entity,
