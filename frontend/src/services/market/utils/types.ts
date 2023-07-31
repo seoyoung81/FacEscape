@@ -6,10 +6,4 @@ export interface ItemType {
     items: ItemType[]
 }
  
-export interface ApiResponse {
-    items: ItemType[];
-    currentPage: number;
-    totalPages: number;
-    isLastPage: boolean;
-}
 
