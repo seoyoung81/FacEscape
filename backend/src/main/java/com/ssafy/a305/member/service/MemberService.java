@@ -78,4 +78,5 @@ public class MemberService {
 		Member member = memberRepository.findById(id).orElseThrow(NoSuchElementException::new);
 		memberRepository.delete(member);
 	}
+
 }

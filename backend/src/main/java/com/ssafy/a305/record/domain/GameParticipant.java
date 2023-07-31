@@ -34,4 +34,8 @@ public class GameParticipant {
 	private GameRecord gameRecord;
 	@Column(name = "nickname", nullable = false, length = 8)
 	private String nickname;
+
+	public void deleteMember() {
+		this.member = null;
+	}
 }
