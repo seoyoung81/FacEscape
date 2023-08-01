@@ -8,7 +8,7 @@ const BeforeEnteringPage: React.FC = () => {
         <div className={styles['enter-container']}>
             <div>
                 <div className={styles.phrases}>입장 전 테스트</div>
-                <div>
+                <div className={styles['control-container']}>
                     <VideoCheck />
                     <InputNickname />
                 </div>

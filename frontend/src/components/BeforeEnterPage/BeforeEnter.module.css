@@ -41,6 +41,7 @@
 .icon {
     display: flex;
     gap: 32px;
+    
 }
 
 .nickname-input {

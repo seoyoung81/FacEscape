@@ -1,0 +1,207 @@
+.nickname-container {
+    width: 619px;
+    display: flex;
+    justify-content: left;
+    margin-left: 10px;
+}
+
+.nickname {
+    color: #000;
+    font-size: 48px;
+    letter-spacing: 4.8px;
+    white-space: nowrap;
+}
+
+.waitroom {
+    color: #000;
+    font-family: 'MyFont';
+    font-size: 48px;
+    letter-spacing: 4.8px;
+    white-space: nowrap;
+}
+
+.copy-btn {
+    width: 100px;
+    height: 50px;
+    border-radius: 5px;
+    background: #3479AD;
+    color: #FFF;
+    font-size: 32px;
+    letter-spacing: 3.2px;
+    font-family: 'MyFont';
+    border: none;
+}
+
+.copy-btn:hover {
+    transform: translateY(-2px);  
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset;
+}
+
+.code {
+    width: 400px; 
+    height: 50px;
+    background: rgba(255, 255, 255, 0.76);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+    border: none;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    color: #838383;
+    font-family: 'MyFont';
+    font-size: 28px;
+    letter-spacing: 5.6px;
+    padding-left: 5px;
+}
+
+.code-container {
+    width: 500px;
+    align-items: center;
+    display: flex;
+    justify-content: right;
+    margin-right: 10px;
+    gap: 10px;
+}
+
+
+.box {
+    width: 358px;
+    height: 240px;
+    border-radius: 5px;
+    background: rgba(160, 160, 160, 0.64);
+}
+
+.box-container {
+    width: 1136px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.inventory:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+.chat-input {
+    display: flex;
+    width: 500px;
+    height: 75px;
+    padding: 10px;
+    align-items: center;
+    border-radius: 5px;
+    background: rgba(233, 233, 233, 0.76);
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    border: none;
+    color: black;
+    font-family: 'MyFont';
+    font-size: 32px;
+    font-weight: 400;
+    letter-spacing: 1.6px;
+}
+
+.chat-layout {
+    display: flex;
+    width: 1117px;
+    align-items: center;
+}
+
+.chat-input {
+    width: 350px;
+    height: 75px;
+}
+
+.input-container {
+    display: flex;
+    gap: 20px;
+    width: 480px;
+}
+
+.enter-btn {
+    width: 110px;
+    height: 75px;
+    padding: 10px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    background: #3479AD;
+    color: #FFF;
+    font-size: 40px;
+    letter-spacing: 4px;
+    border: none;
+    font-family: 'MyFont';
+}
+
+.enter-btn:hover {
+    transform: translateY(-2px);  
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset;
+}
+
+
+/* stage */
+:focus {
+    border-color: #DB7500;
+    color: white;
+   
+}
+
+.stage div {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+    justify-content: center;
+    gap: 10px;
+}
+
+.stage input[type="radio"] {
+    clip: rect(0 0 0 0);
+    clip-path: inset(100%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+}
+
+label span {
+    width: 75px;
+    height: 75px;
+    display: flex;
+    cursor: pointer;
+    background-color: #FDFF8A;
+    position: relative;
+
+    letter-spacing: .05em;
+    color: #DB7500;
+    transition: background-color .5s ease;
+    border-radius: 5px;
+
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+
+    padding-left: 3px;
+}
+
+.stage input[type="radio"]:checked + span {
+    background-color: #DB7500;
+    z-index: 1;
+    color: white;
+ }
+
+.stage-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.icon {
+    cursor: pointer;
+}
+
+.icon:hover {
+    color: grey;
+}
+

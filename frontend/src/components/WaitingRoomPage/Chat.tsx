@@ -1,25 +1,18 @@
-import styles from './BeforeEnter.module.css';
+import ControlIcon from "../Common/ControlIcon";
+import styles from './WaitingRoom.module.css';
 import { useState, ChangeEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { setNickName } from '../../store/nickNameSlice';
-import ControlIcon from '../Common/ControlIcon';
+import StageSelect from "./StageSelect";
 
-const InputNickname: React.FC = () => {
+const Chat: React.FC = () => {
     const [value, setValue] = useState<string>("");
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
 
     const onChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const newNickName: string = event.target.value;
-        setValue(newNickName);
-        dispatch(setNickName(newNickName));
-    }
+        setValue(event.target.value);
+    };
     const handleClick = () => {
         console.log(value);
-        navigate('/waiting');
-        setNickName("");
-    }
+        setValue("");
+    };
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
@@ -31,20 +24,24 @@ const InputNickname: React.FC = () => {
             <div>
                 <ControlIcon />
             </div>
+            <div className={styles['stage-layout']}>
+                <StageSelect />
+            </div>
             <div className={styles['input-container']}>
                 <input 
                     type="text" 
-                    placeholder='닉네임을 입력하세요'
-                    className={styles['nickname-input']}
+                    placeholder='채팅을 입력하세요'
+                    className={styles['chat-input']}
                     value={value}
                     onChange={onChange}
                     onKeyDown={handleKeyDown}
                 />
-                <button className={styles['enter-btn']} onClick={handleClick}>입장</button>
+                <button className={styles['enter-btn']} onClick={handleClick}>전송</button>
             </div>
 
         </div>
     )
-}
+};
 
-export default InputNickname;
+export default Chat;
+

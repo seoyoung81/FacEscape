@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import categoryReducer from './categorySlice';
 import searchReducer from './searchSlice';
 import isLogInReducer from './authSlice';
+import nickNameReducer from './nickNameSlice';
 
 export type UserState = {
   token: string | null;
@@ -59,6 +60,8 @@ const store = configureStore({
         setKeyword: searchReducer,
       // 로그인 여부 관리
         setIsLogIn: isLogInReducer,
+      // 닉네임
+        nickName: nickNameReducer,
     },
 });
 
