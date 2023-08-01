@@ -16,6 +16,7 @@ import com.ssafy.a305.member.dto.SignUpReqDTO;
 import com.ssafy.a305.member.dto.UniqueEmailCheckResDTO;
 import com.ssafy.a305.member.exception.DuplicatedEmailException;
 import com.ssafy.a305.member.repository.MemberRepository;
+import com.ssafy.a305.record.repository.GameParticipantRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +26,7 @@ public class MemberService {
 
 	private final MemberRepository memberRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final GameParticipantRepository gameParticipantRepository;
 
 	@Transactional(readOnly = true)
 	public UniqueEmailCheckResDTO checkPreExistEmail(String email) {
@@ -76,6 +78,7 @@ public class MemberService {
 	@Transactional
 	public void deleteMember(Integer id) {
 		Member member = memberRepository.findById(id).orElseThrow(NoSuchElementException::new);
+		gameParticipantRepository.bulkUpdateMemberToNull(member);
 		memberRepository.delete(member);
 	}
 

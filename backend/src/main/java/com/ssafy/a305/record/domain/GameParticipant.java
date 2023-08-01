@@ -16,7 +16,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity(name = "game_participant")
+@Entity(name = "GameParticipant")
 @Getter
 @Builder
 @NoArgsConstructor
@@ -35,7 +35,4 @@ public class GameParticipant {
 	@Column(name = "nickname", nullable = false, length = 8)
 	private String nickname;
 
-	public void deleteMember() {
-		this.member = null;
-	}
 }
