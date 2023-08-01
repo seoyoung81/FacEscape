@@ -66,4 +66,5 @@ public class Member {
 	public void updateRecentLogin() {
 		this.recentLogin = new Timestamp(System.currentTimeMillis());
 	}
+
 }
