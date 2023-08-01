@@ -5,10 +5,14 @@ import InputNickname from '../components/BeforeEnterPage/InputNickname';
 
 const BeforeEnteringPage: React.FC = () => {
     return (
-        <div>
-            <div className={styles.phrases}>입장 전 테스트</div>
-            <VideoCheck />
-            <InputNickname />
+        <div className={styles['enter-container']}>
+            <div>
+                <div className={styles.phrases}>입장 전 테스트</div>
+                <div>
+                    <VideoCheck />
+                    <InputNickname />
+                </div>
+            </div>
         </div>
     )
 }
