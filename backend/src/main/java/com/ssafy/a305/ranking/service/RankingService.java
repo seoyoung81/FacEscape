@@ -10,6 +10,8 @@ import java.util.stream.IntStream;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ssafy.a305.member.domain.Member;
+import com.ssafy.a305.memberitem.repository.MemberItemRepository;
 import com.ssafy.a305.ranking.dto.MemberInfoForRankingDTO;
 import com.ssafy.a305.ranking.dto.RankingElementDTO;
 import com.ssafy.a305.ranking.dto.RankingResDTO;
@@ -25,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class RankingService {
 	private final GameRecordRepository gameRecordRepository;
 	private final GameParticipantRepository gameParticipantRepository;
+	private final MemberItemRepository memberItemRepository;
 
 	@Transactional(readOnly = true)
 	public RankingResDTO getRankings(Integer stage) {
@@ -65,8 +68,28 @@ public class RankingService {
 
 	private List<MemberInfoForRankingDTO> getMemberInfosWithGameParticipantsList(
 		List<GameParticipant> gameParticipants) {
-		//각 member 별 아이콘 가져오는 로직 필요
-		String icon = "임시";
+		//게임 참여자 리스트로부터 멤버 id 리스트 추출
+		List<Integer> memberIds = gameParticipants.stream()
+			.map(gameParticipant -> {
+				Member member = gameParticipant.getMember();
+				if (member != null) {
+					return member.getId();
+				}
+				return -1;
+			})
+			.filter(id -> id != -1)
+			.collect(Collectors.toList());
+
+		//멤버 id 리스트로 [멤버 id, 멤버가 장착한 아이콘 이미지 링크]의 리스트 얻기
+		List<Object[]> iconImages = memberItemRepository.findIconImageByMemberIdsIn(memberIds);
+
+		//<멤버의 id - 아이콘아이템이미지링크>로 구성된 맵 생성
+		Map<Integer, String> iconImagesMap = iconImages
+			.stream()
+			.collect(Collectors.toMap(
+				arr -> (Integer)arr[0],
+				arr -> (String)arr[1]
+			));
 
 		return gameParticipants.stream()
 			.map(gameParticipant -> {
@@ -76,7 +99,7 @@ public class RankingService {
 				}
 				Integer id = gameParticipant.getMember().getId();
 				return new MemberInfoForRankingDTO(id,
-					gameParticipant.getNickname(), icon);
+					gameParticipant.getNickname(), iconImagesMap.get(id));
 			})
 			.collect(Collectors.toList());
 	}
