@@ -34,13 +34,28 @@ public class RankingService {
 		//스테이지별 clearTime 순으로 GameRecord의 리스트 생성
 		List<GameRecord> gameRecords = gameRecordRepository.findAllByStageOrderByClearTime(stage);
 
-		//gameRecords에 속하는 기록 내의 참가자 리스트 생성
+		//gameRecords에 속하는 기록 내의 모든 참가자 리스트 생성
 		List<GameParticipant> gameParticipants = gameParticipantRepository.findByGameRecordIn(gameRecords);
 
+		//참가자 리스트로 참가자별 아이콘 리스트 생성
+		Map<Integer, String> iconsMap = getIconsMapWithGameParticipantsList(gameParticipants);
+
 		//<게임 기록의 id - 참가자리스트>로 구성된 맵 생성
-		Map<Integer, List<GameParticipant>> memberInfosMap = gameParticipants
+		Map<Integer, List<GameParticipant>> participantsMap = gameParticipants
 			.stream()
 			.collect(Collectors.groupingBy(gameParticipant -> gameParticipant.getGameRecord().getId()));
+
+		//<게임 기록 id - 참가자 정보 리스트>
+		Map<Integer, List<MemberInfoForRankingDTO>> memberInfosMap = gameParticipants
+			.stream()
+			.collect(Collectors.groupingBy(
+				gameParticipant -> gameParticipant.getGameRecord().getId(),
+				Collectors.mapping(gameParticipant -> {
+					Member member = gameParticipant.getMember();
+					Integer id = (member != null) ? member.getId() : -1;
+					return new MemberInfoForRankingDTO(id, gameParticipant.getNickname(), iconsMap.get(id));
+				}, Collectors.toList())
+			));
 
 		//랭킹 구성 요소의 리스트로 변환
 		List<RankingElementDTO> rankingElements = IntStream.range(0, gameRecords.size())
@@ -48,7 +63,7 @@ public class RankingService {
 				GameRecord gameRecord = gameRecords.get(rank);
 				return new RankingElementDTO(rank + 1, convertClearTimeToString(gameRecord.getClearTime()),
 					convertClearDateToString(gameRecord.getClearDate()),
-					getMemberInfosWithGameParticipantsList(memberInfosMap.get(gameRecord.getId())));
+					memberInfosMap.get(gameRecord.getId()));
 			})
 			.collect(Collectors.toList());
 
@@ -66,7 +81,7 @@ public class RankingService {
 		return new SimpleDateFormat("yyyy-MM-dd").format(clearDate);
 	}
 
-	private List<MemberInfoForRankingDTO> getMemberInfosWithGameParticipantsList(
+	private Map<Integer, String> getIconsMapWithGameParticipantsList(
 		List<GameParticipant> gameParticipants) {
 		//게임 참여자 리스트로부터 멤버 id 리스트 추출
 		List<Integer> memberIds = gameParticipants.stream()
@@ -84,23 +99,11 @@ public class RankingService {
 		List<Object[]> iconImages = memberItemRepository.findIconImageByMemberIdsIn(memberIds);
 
 		//<멤버의 id - 아이콘아이템이미지링크>로 구성된 맵 생성
-		Map<Integer, String> iconImagesMap = iconImages
+		return iconImages
 			.stream()
 			.collect(Collectors.toMap(
 				arr -> (Integer)arr[0],
 				arr -> (String)arr[1]
 			));
-
-		return gameParticipants.stream()
-			.map(gameParticipant -> {
-				if (gameParticipant.getMember() == null) {
-					return new MemberInfoForRankingDTO(-1,
-						gameParticipant.getNickname(), null);
-				}
-				Integer id = gameParticipant.getMember().getId();
-				return new MemberInfoForRankingDTO(id,
-					gameParticipant.getNickname(), iconImagesMap.get(id));
-			})
-			.collect(Collectors.toList());
 	}
 }
