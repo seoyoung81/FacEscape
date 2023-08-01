@@ -1,14 +1,25 @@
 package com.ssafy.a305.mileage.domain;
 
+import java.sql.Timestamp;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import com.ssafy.a305.member.domain.Member;
 
-import lombok.*;
-
-import org.hibernate.annotations.ColumnDefault;
-
-import javax.persistence.*;
-
-import java.sql.Timestamp;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity(name = "MileageHistory")
 @Getter
@@ -23,6 +34,7 @@ public class MileageHistory {
 	private Integer mileageHistoryId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JoinColumn(name = "member_id")
 	private Member member;
 

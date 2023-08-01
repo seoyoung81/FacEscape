@@ -11,6 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import com.ssafy.a305.item.domain.Item;
 import com.ssafy.a305.member.domain.Member;
 
@@ -32,6 +35,7 @@ public class MemberBuy {
 	private Integer id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JoinColumn(name = "member_id")
 	private Member member;
 
