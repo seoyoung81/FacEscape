@@ -40,11 +40,6 @@ public class RankingService {
 		//참가자 리스트로 참가자별 아이콘 리스트 생성
 		Map<Integer, String> iconsMap = getIconsMapWithGameParticipantsList(gameParticipants);
 
-		//<게임 기록의 id - 참가자리스트>로 구성된 맵 생성
-		Map<Integer, List<GameParticipant>> participantsMap = gameParticipants
-			.stream()
-			.collect(Collectors.groupingBy(gameParticipant -> gameParticipant.getGameRecord().getId()));
-
 		//<게임 기록 id - 참가자 정보 리스트>
 		Map<Integer, List<MemberInfoForRankingDTO>> memberInfosMap = gameParticipants
 			.stream()
@@ -87,10 +82,7 @@ public class RankingService {
 		List<Integer> memberIds = gameParticipants.stream()
 			.map(gameParticipant -> {
 				Member member = gameParticipant.getMember();
-				if (member != null) {
-					return member.getId();
-				}
-				return -1;
+				return member != null ? member.getId() : -1;
 			})
 			.filter(id -> id != -1)
 			.collect(Collectors.toList());
