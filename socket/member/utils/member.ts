@@ -10,11 +10,22 @@ export class Member {
     private _room: Room | undefined;
     private _socket: Socket
 
-    constructor(ip: string, socket: Socket) {
-        this._ip = ip;
-        this._memberId = -1;
-        this._nickname = "";
-        this._socket = socket;
+    constructor(ipOrMember: string | Member, socket?: Socket) {
+        if (typeof ipOrMember === 'string' && socket instanceof Socket) {
+            this._ip = ipOrMember;
+            this._memberId = -1;
+            this._nickname = "";
+            this._socket = socket;
+        } else if(ipOrMember instanceof Member) {
+            const member = ipOrMember;
+            this._memberId = member._memberId;
+            this._ip = member._ip;
+            this._nickname = member._nickname;
+            this._room = member._room;
+            this._socket = member._socket;
+        } else {
+            throw new Error("Invalid args");
+        }
     }
 
     get ip(): string {

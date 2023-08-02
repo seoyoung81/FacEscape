@@ -1,7 +1,7 @@
 import { Socket } from "socket.io";
 import { memberManager } from "../../member/memberManager"
 import { roomManager } from "../../room/roomManager";
-import { MemberResponseEvent, ExitEvent, MemberActionEvent } from "./eventType";
+import { MemberResponseEvent, ExitEvent, MemberActionEvent, GameResponseEvent } from "./eventType";
 import { RoomInfoResponse } from "./roomInfoResponse";
 
 const createOrUpdateMemberByIp = (socket: Socket) => {
@@ -81,4 +81,30 @@ export const memberNickNameEventHandler = (socket: Socket, data: NickNameEventDa
         const response = new RoomInfoResponse(roomId, room.host, member.ip, room.members)
         socket.emit(MemberActionEvent.updateNickName, JSON.stringify(response));
     }
+}
+
+export const gameStartEventhandler = (socket: Socket, roomId:string) => {
+    const ip = socket.handshake.address;
+    const member = memberManager.getMember(ip);
+    const room = roomManager.getRoom(roomId);
+    console.log(room)
+    console.log(member)
+    if(room?.host != member?.ip){
+        socket.emit(GameResponseEvent.startFail, `방장이 게임을 시작할 수 있습니다.`);
+        return;
+    }
+
+    if(!room) {
+        socket.emit(GameResponseEvent.startFail, `존재하지 않는 방입니다.`);
+        return;
+    }
+
+    if(!room.isFull()) {
+        socket.emit(GameResponseEvent.startFail, `인원이 부족합니다.`);
+        return;
+    }
+    
+    room.state = "PLAY";
+    room.setInGameMember(room.members);
+    socket.emit(GameResponseEvent.startSuccess, room.inGameMember);
 }

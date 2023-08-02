@@ -10,7 +10,7 @@ export class Room {
     private _state: RoomState;
     private _host: string|undefined;
     private _members: Map<string, Member>; // 방에 입장한 유저
-    private _inGameMember: Map<String, Member>; // 게임 시작 시점에 있던 유저, 시작 이후 해당 유저들만 재입장이 가능하다.
+    private _inGameMember: Map<string, Member>; // 게임 시작 시점에 있던 유저, 시작 이후 해당 유저들만 재입장이 가능하다.
 
     constructor(roomId: string) {
         this._roomId = roomId;
@@ -36,6 +36,10 @@ export class Room {
         return this._members;
     }
 
+    get inGameMember(): Map<string, Member>{
+        return this._inGameMember;
+    }
+
     set state(state: RoomState) {
         this._state = state;
     }
@@ -46,6 +50,12 @@ export class Room {
 
     set host(ip: string) {
         this._host = ip;
+    }
+
+    setInGameMember(map: Map<string,Member>){
+        for (const [key, value] of map) {
+            this._inGameMember.set(key, new Member(value));
+        }
     }
 
     checkInGameMember(ip: string) {

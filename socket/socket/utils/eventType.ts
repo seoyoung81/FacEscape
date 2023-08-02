@@ -21,3 +21,12 @@ export enum ExitEvent {
     leave = "leaveRoom",
     disconnect = "disconnect"
 };
+
+export enum GameActionEvent {
+    start = "start"
+}
+
+export enum GameResponseEvent {
+    startSuccess = "startSuccess",
+    startFail = "startFail"
+}
