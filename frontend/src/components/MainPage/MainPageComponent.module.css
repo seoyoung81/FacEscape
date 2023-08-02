@@ -1,6 +1,11 @@
 .game-name {
     font-size: 96px;
     text-align: center;
+    letter-spacing: 10px;
+}
+
+.E {
+    color: #3479AD;
 }
 
 .code-container {
@@ -19,6 +24,11 @@
     border: none;
     border-radius: 5px;
     margin-right: 8px;
+    color: black;
+}
+
+.code-input:focus {
+    color: black;
 }
 
 .code-btn {

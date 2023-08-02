@@ -1,0 +1,20 @@
+.phrases {
+    width: 619px;
+    height: 50px;
+    flex-shrink: 0;
+    color: #000;
+    font-family: 'MyFont';
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: 4.8px;
+    margin-top: 20px;
+}
+
+.enter-container {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    min-width: 500px;
+}

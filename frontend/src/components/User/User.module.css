@@ -26,6 +26,10 @@
     font-family: MyFont;
 }
 
+.logininput:focus {
+    color: black;
+}
+
 .error {
     font-family: MyFont;
     font-size: 18px;
