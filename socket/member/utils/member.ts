@@ -21,12 +21,20 @@ export class Member {
         return this._ip;
     }
 
+    get memberId(): number {
+        return this._memberId;
+    }
+
+    get nickname(): string {
+        return this._nickname;
+    }
+
     updateSocket(socket: Socket) {
         // 동일 IP로 동일한 방에 여러 개의 연결을 할 수 없도록, 기존 접속c을 끊고 새로운 연결을 만든다.
-        if(this._socket && this._room) {
-            this._socket.leave(this._room.roomId);
-            this._socket.emit("kick", "다른 클라이언트에서 접속하여 접속이 종료됩니다.");
-        }
+        // if(this._socket && this._room) {
+        //     this._socket.leave(this._room.roomId);
+        //     this._socket.emit("kick", "다른 클라이언트에서 접속하여 접속이 종료됩니다.");
+        // }
 
         this._socket = socket;
         if(this._room) {

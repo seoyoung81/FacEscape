@@ -28,6 +28,14 @@ export class Room {
         return this._state;
     }
 
+    get host(): string|undefined{
+        return this._host;
+    }
+
+    get members(): Map<string, Member>{
+        return this._members;
+    }
+
     set state(state: RoomState) {
         this._state = state;
     }
@@ -45,7 +53,8 @@ export class Room {
     }
 
     joinMember(member: Member) {
-        this._members.set(member.ip, member);
+        //this._members.set(member.ip, member);
+        this._members.set(member.ip+Math.random(), member);
     }
 
     removeMember(member: Member) {

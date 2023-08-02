@@ -2,6 +2,7 @@ import { Socket } from "socket.io";
 import { memberManager } from "../../member/memberManager"
 import { roomManager } from "../../room/roomManager";
 import { MemberResponseEvent, ExitEvent } from "./eventType";
+import { JoinRoomResponse } from "./joinRoomResponse";
 
 const createOrUpdateMemberByIp = (socket: Socket) => {
     const ip = socket.handshake.address;
@@ -19,8 +20,10 @@ const createOrUpdateMemberByIp = (socket: Socket) => {
 export const createRoomEventHandler = (socket: Socket) => {
     const room = roomManager.createRoom();
     const member = createOrUpdateMemberByIp(socket);
+    room.host = member.ip;
     member.enterRoom(room);
-    socket.emit(MemberResponseEvent.joinSuccess, `${room.roomId}`);
+    const joinResponse = new JoinRoomResponse(room.roomId, room.host, member.ip, room.members)
+    socket.emit(MemberResponseEvent.joinSuccess, JSON.stringify(joinResponse));
 };
 
 export const joinRoomEventHandler = (roomId:string, socket: Socket) => {
@@ -43,7 +46,8 @@ export const joinRoomEventHandler = (roomId:string, socket: Socket) => {
     }
 
     member.enterRoom(room);
-    socket.emit(MemberResponseEvent.joinSuccess, `${roomId}`);
+    const joinResponse = new JoinRoomResponse(roomId, room.host, member.ip, room.members)
+    socket.emit(MemberResponseEvent.joinSuccess, JSON.stringify(joinResponse));
 }
 
 export const exitEventHandler = (event: ExitEvent, socket: Socket) => {
