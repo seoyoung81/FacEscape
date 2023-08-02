@@ -1,6 +1,11 @@
 .game-name {
     font-size: 96px;
     text-align: center;
+    letter-spacing: 10px;
+}
+
+.E {
+    color: #3479AD;
 }
 
 .code-container {

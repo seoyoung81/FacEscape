@@ -1,4 +1,4 @@
-import styles from './GamePage.module.css';
+// import styles from './GamePage.module.css';
 
 const GamePage: React.FC = () => {
     return (
