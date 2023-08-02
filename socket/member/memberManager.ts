@@ -11,6 +11,8 @@ class MemberManager {
     createMember(ip: string, socket: Socket) {
         const newMember = new Member(ip, socket);
         //this._members.set(ip, newMember);
+        console.log(this._members)
+        console.log("memSize:" + this._members.size)
         this._members.set(ip+this._members.size, newMember);
         return newMember;
     }

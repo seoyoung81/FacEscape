@@ -62,40 +62,39 @@ export const memberChatEventHandler = (socket: Socket, msg: string, callBack: (r
 }
 
 interface NickNameEventData {
-    roomId: string
     memberId: number;
     nickname: string;
 }
 
 export const memberNickNameEventHandler = (socket: Socket, data: NickNameEventData) => {
-    const roomId = data.roomId;
     const memberid = data.memberId;
     const nickname = data.nickname;
     const ip = socket.handshake.address;
-    const room = roomManager.getRoom(roomId);
     //const member = memberManager.getMember(ip);
-    const member = memberManager.getMember(ip+room?.members.size);
+    const member = memberManager.getMember(ip + 0);
+    const room = member?.room;
     
     if(room && member){
         member.updateUserInfo(memberid, nickname);
-        const response = new RoomInfoResponse(roomId, room.host, member.ip, room.members)
+        const response = new RoomInfoResponse(room.roomId, room.host, member.ip, room.members)
         socket.emit(MemberActionEvent.updateNickName, JSON.stringify(response));
     }
 }
 
-export const gameStartEventhandler = (socket: Socket, roomId:string) => {
+export const gameStartEventhandler = (socket: Socket) => {
     const ip = socket.handshake.address;
-    const member = memberManager.getMember(ip);
-    const room = roomManager.getRoom(roomId);
-    console.log(room)
-    console.log(member)
-    if(room?.host != member?.ip){
-        socket.emit(GameResponseEvent.startFail, `방장이 게임을 시작할 수 있습니다.`);
+    //const member = memberManager.getMember(ip);
+    const member = memberManager.getMember(ip +0);
+    const room = member?.room;
+    console.log("mem: " + member);
+    console.log("room: " + room);
+    if (!room) {
+        socket.emit(GameResponseEvent.startFail, `존재하지 않는 방입니다.`);
         return;
     }
 
-    if(!room) {
-        socket.emit(GameResponseEvent.startFail, `존재하지 않는 방입니다.`);
+    if (room.host != ip) {
+        socket.emit(GameResponseEvent.startFail, `방장이 게임을 시작할 수 있습니다.`);
         return;
     }
 
@@ -103,8 +102,10 @@ export const gameStartEventhandler = (socket: Socket, roomId:string) => {
         socket.emit(GameResponseEvent.startFail, `인원이 부족합니다.`);
         return;
     }
-    
+    console.log("=============================")
     room.state = "PLAY";
+    console.log(room.members)
     room.setInGameMember(room.members);
-    socket.emit(GameResponseEvent.startSuccess, room.inGameMember);
+    console.log(room.inGameMember)
+    socket.emit(GameResponseEvent.startSuccess, "게임 시작!");
 }

@@ -40,6 +40,10 @@ export class Member {
         return this._nickname;
     }
 
+    get room(): Room | undefined{
+        return this._room;
+    }
+
     updateSocket(socket: Socket) {
         // 동일 IP로 동일한 방에 여러 개의 연결을 할 수 없도록, 기존 접속c을 끊고 새로운 연결을 만든다.
         // if(this._socket && this._room) {
@@ -59,6 +63,7 @@ export class Member {
     }
 
     enterRoom(room: Room) {
+        console.log(room);
         this._room = room;
         room.joinMember(this);
         this._socket.join(room.roomId);

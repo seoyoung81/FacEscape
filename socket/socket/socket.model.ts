@@ -1,5 +1,5 @@
 import { Server } from "socket.io";
-import { ConnectEvent, JoinEvent, ExitEvent, MemberActionEvent, GameActionEvent } from "../socket/utils/eventType";
+import { ConnectEvent, JoinEvent, ExitEvent, MemberActionEvent, GameActionEvent, GameResponseEvent } from "../socket/utils/eventType";
 import { createRoomEventHandler, joinRoomEventHandler, exitEventHandler, memberChatEventHandler, memberNickNameEventHandler, gameStartEventhandler } from "./utils/roomSocketEventHandler"
 
 const socketMapper = (httpServer: any) => {
@@ -40,14 +40,12 @@ const socketMapper = (httpServer: any) => {
           });
         });
 
-        socket.on(MemberActionEvent.updateNickName, (data)=>{
+        socket.on(MemberActionEvent.updateNickName, (data: any)=>{
           memberNickNameEventHandler(socket, data);
         });
 
         socket.on(GameActionEvent.start, ()=>{
-          gameStartEventhandler(socket, (roomId:string, chat: string) => {
-            return io.to(roomId).emit(MemberActionEvent.chat, chat);
-          });
+          gameStartEventhandler(socket);
         })
     });
 
