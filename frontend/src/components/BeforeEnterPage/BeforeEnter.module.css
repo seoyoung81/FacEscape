@@ -61,6 +61,10 @@
     letter-spacing: 1.6px;
 }
 
+.nickname-input:focus {
+    color: black;
+}
+
 .enter-btn {
     display: flex;
     width: 340px;

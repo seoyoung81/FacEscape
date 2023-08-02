@@ -22,6 +22,10 @@
     color: black;
 }
 
+.code-input:focus {
+    color: black;
+}
+
 .code-btn {
     width: 118px;
     height: 63px;

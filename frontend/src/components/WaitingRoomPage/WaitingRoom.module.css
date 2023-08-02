@@ -3,6 +3,7 @@
     display: flex;
     justify-content: left;
     margin-left: 10px;
+    margin-top: 20px;
 }
 
 .nickname {
@@ -85,7 +86,7 @@
 
 .chat-input {
     display: flex;
-    width: 500px;
+    width: 350px;
     height: 75px;
     padding: 10px;
     align-items: center;
@@ -101,14 +102,16 @@
 }
 
 .chat-layout {
+    flex-shrink: 1;
     display: flex;
     width: 1117px;
     align-items: center;
+    gap: 30px;
+    margin-left: 10px;
 }
 
-.chat-input {
-    width: 350px;
-    height: 75px;
+.chat-input:focus {
+    color: black;
 }
 
 .input-container {
@@ -138,70 +141,34 @@
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset;
 }
 
-
-/* stage */
-:focus {
-    border-color: #DB7500;
-    color: white;
-   
-}
-
-.stage div {
-    display: flex;
-    flex-wrap: wrap;
-    margin-top: 0.5rem;
-    justify-content: center;
-    gap: 10px;
-}
-
-.stage input[type="radio"] {
-    clip: rect(0 0 0 0);
-    clip-path: inset(100%);
-    height: 1px;
-    overflow: hidden;
-    position: absolute;
-    white-space: nowrap;
-    width: 1px;
-}
-
-label span {
-    width: 75px;
-    height: 75px;
-    display: flex;
-    cursor: pointer;
-    background-color: #FDFF8A;
-    position: relative;
-
-    letter-spacing: .05em;
-    color: #DB7500;
-    transition: background-color .5s ease;
-    border-radius: 5px;
-
-    text-align: center;
-    align-items: center;
-    justify-content: center;
-    font-size: 36px;
-
-    padding-left: 3px;
-}
-
-.stage input[type="radio"]:checked + span {
-    background-color: #DB7500;
-    z-index: 1;
-    color: white;
- }
-
-.stage-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 .icon {
     cursor: pointer;
 }
 
 .icon:hover {
     color: grey;
+}
+
+.start-btn {
+    display: flex;
+    width: 350px;
+    height: 75px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    background: #DB7500;
+    color: #FFF;
+    text-align: center;
+    font-size: 44px;
+    line-height: normal;
+    letter-spacing: 20px;
+    border: none;
+    padding-left: 20px;
+    margin-left: 30px;
+}
+
+.start-btn:hover {
+    transform: translateY(-2px);  
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset;
 }
 

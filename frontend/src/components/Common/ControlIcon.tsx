@@ -1,4 +1,5 @@
 import styles from '../BeforeEnterPage/BeforeEnter.module.css';
+import { useState } from 'react';
 
 import { 
     BsFillMicFill, 
@@ -8,12 +9,29 @@ import {
 } from 'react-icons/bs';
 
 const ControlIcon: React.FC = () => {
+    const [micControl, setMicControl] = useState<boolean>(true);
+    const [cameraControl, setCameraControl] = useState<boolean>(true);
+
+    const onCamera = () => {
+        setCameraControl(!cameraControl);
+    };
+
+    const onMic = () => {
+        setMicControl(!micControl);
+    }
     return (
         <div className={styles.icon}>
-            <BsFillCameraVideoFill size={80} />
-            {/* <BsFillCameraVideoOffFill /> */}
-            <BsFillMicFill size={80} />
-            {/* <BsFillMicMuteFill /> */}
+            {cameraControl ? 
+                <BsFillCameraVideoFill size={80} onClick={onCamera} /> 
+                : 
+                <BsFillCameraVideoOffFill size={80} onClick={onCamera} />
+            }
+            {micControl ? 
+                <BsFillMicFill size={80} onClick={onMic} /> 
+                : 
+                <BsFillMicMuteFill size={80} onClick={onMic} />
+            }
+            
         </div>
     )
 }

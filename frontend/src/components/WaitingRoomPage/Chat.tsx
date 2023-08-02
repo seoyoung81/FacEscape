@@ -1,7 +1,7 @@
 import ControlIcon from "../Common/ControlIcon";
 import styles from './WaitingRoom.module.css';
 import { useState, ChangeEvent } from 'react';
-import StageSelect from "./StageSelect";
+import StartBtn from "./StartBtn";
 
 const Chat: React.FC = () => {
     const [value, setValue] = useState<string>("");
@@ -24,9 +24,6 @@ const Chat: React.FC = () => {
             <div>
                 <ControlIcon />
             </div>
-            <div className={styles['stage-layout']}>
-                <StageSelect />
-            </div>
             <div className={styles['input-container']}>
                 <input 
                     type="text" 
@@ -38,6 +35,10 @@ const Chat: React.FC = () => {
                 />
                 <button className={styles['enter-btn']} onClick={handleClick}>전송</button>
             </div>
+            <div>
+                <StartBtn />
+            </div>
+        
 
         </div>
     )
