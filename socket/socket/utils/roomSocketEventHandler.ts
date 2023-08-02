@@ -2,7 +2,7 @@ import { Socket } from "socket.io";
 import { memberManager } from "../../member/memberManager"
 import { roomManager } from "../../room/roomManager";
 import { MemberResponseEvent, ExitEvent, MemberActionEvent } from "./eventType";
-import { JoinRoomResponse } from "./joinRoomResponse";
+import { RoomInfoResponse } from "./roomInfoResponse";
 
 const createOrUpdateMemberByIp = (socket: Socket) => {
     const ip = socket.handshake.address;
@@ -22,8 +22,8 @@ export const createRoomEventHandler = (socket: Socket) => {
     const member = createOrUpdateMemberByIp(socket);
     room.host = member.ip;
     member.enterRoom(room);
-    const joinResponse = new JoinRoomResponse(room.roomId, room.host, member.ip, room.members)
-    socket.emit(MemberResponseEvent.joinSuccess, JSON.stringify(joinResponse));
+    const response = new RoomInfoResponse(room.roomId, room.host, member.ip, room.members)
+    socket.emit(MemberResponseEvent.joinSuccess, JSON.stringify(response));
 };
 
 export const joinRoomEventHandler = (roomId:string, socket: Socket) => {
@@ -46,8 +46,8 @@ export const joinRoomEventHandler = (roomId:string, socket: Socket) => {
     }
 
     member.enterRoom(room);
-    const joinResponse = new JoinRoomResponse(roomId, room.host, member.ip, room.members)
-    socket.emit(MemberResponseEvent.joinSuccess, JSON.stringify(joinResponse));
+    const response = new RoomInfoResponse(roomId, room.host, member.ip, room.members)
+    socket.emit(MemberResponseEvent.joinSuccess, JSON.stringify(response));
 }
 
 export const exitEventHandler = (event: ExitEvent, socket: Socket) => {
@@ -78,7 +78,7 @@ export const memberNickNameEventHandler = (socket: Socket, data: NickNameEventDa
     
     if(room && member){
         member.updateUserInfo(memberid, nickname);
-        const joinResponse = new JoinRoomResponse(roomId, room.host, member.ip, room.members)
-        socket.emit(MemberActionEvent.updateNickName, JSON.stringify(joinResponse));
+        const response = new RoomInfoResponse(roomId, room.host, member.ip, room.members)
+        socket.emit(MemberActionEvent.updateNickName, JSON.stringify(response));
     }
 }
