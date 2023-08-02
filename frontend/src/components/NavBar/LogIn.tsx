@@ -3,7 +3,7 @@ import { useState } from 'react';
 import LogInModal from '../Modal/LogInModal';
 
 // 모달을 노출시키는 컴포넌트
-const LogIn :React.FC = () => {
+const LogIn: React.FC = () => {
     const [modalOpen, setModalOpen] = useState<boolean>(false);
 
     const showModal = () => {
