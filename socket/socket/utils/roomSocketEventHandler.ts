@@ -1,7 +1,7 @@
 import { Socket } from "socket.io";
 import { memberManager } from "../../member/memberManager"
 import { roomManager } from "../../room/roomManager";
-import { MemberResponseEvent, ExitEvent } from "./eventType";
+import { MemberResponseEvent, ExitEvent, MemberActionEvent } from "./eventType";
 import { JoinRoomResponse } from "./joinRoomResponse";
 
 const createOrUpdateMemberByIp = (socket: Socket) => {
@@ -59,4 +59,26 @@ export const memberChatEventHandler = (socket: Socket, msg: string, callBack: (r
     const ip = socket.handshake.address;
     const member = memberManager.getMember(ip);
     member?.sendChat(msg, callBack);
+}
+
+interface NickNameEventData {
+    roomId: string
+    memberId: number;
+    nickname: string;
+}
+
+export const memberNickNameEventHandler = (socket: Socket, data: NickNameEventData) => {
+    const roomId = data.roomId;
+    const memberid = data.memberId;
+    const nickname = data.nickname;
+    const ip = socket.handshake.address;
+    const room = roomManager.getRoom(roomId);
+    //const member = memberManager.getMember(ip);
+    const member = memberManager.getMember(ip+room?.members.size);
+    
+    if(room && member){
+        member.updateUserInfo(memberid, nickname);
+        const joinResponse = new JoinRoomResponse(roomId, room.host, member.ip, room.members)
+        socket.emit(MemberActionEvent.updateNickName, JSON.stringify(joinResponse));
+    }
 }

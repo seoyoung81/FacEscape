@@ -1,6 +1,6 @@
 import { Server } from "socket.io";
 import { ConnectEvent, JoinEvent, ExitEvent, MemberActionEvent } from "../socket/utils/eventType";
-import { createRoomEventHandler, joinRoomEventHandler, exitEventHandler, memberChatEventHandler } from "./utils/roomSocketEventHandler"
+import { createRoomEventHandler, joinRoomEventHandler, exitEventHandler, memberChatEventHandler, memberNickNameEventHandler } from "./utils/roomSocketEventHandler"
 
 const socketMapper = (httpServer: any) => {
     const io = new Server(httpServer, {
@@ -39,6 +39,10 @@ const socketMapper = (httpServer: any) => {
             return io.to(roomId).emit(MemberActionEvent.chat, chat);
           });
         });
+
+        socket.on(MemberActionEvent.updateNickName, (data)=>{
+          memberNickNameEventHandler(socket, data);
+        })
     });
 
     return io;
