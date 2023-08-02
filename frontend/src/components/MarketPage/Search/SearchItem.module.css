@@ -11,6 +11,10 @@
     letter-spacing: 1.6px;
 } 
 
+.search-input:focus {
+    color: black;
+}
+
 .search-container {
     display: flex;
     align-items: center;
