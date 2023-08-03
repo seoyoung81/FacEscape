@@ -17,32 +17,30 @@ const SignUpForm: React.FC = () => {
 
     const onSubmit = (data: FormData) => {
         const { confirmPassword, ...dataWithoutConfirmPassword } = data;
-        console.log(dataWithoutConfirmPassword);
 
         // 이메일 중복 확인
-        axios.get('/check-email', {
-            params: {
-                email: data.email
-            }
-        })
-            .then((response) => {
-                console.log(response.data.inUniqueEmail);
-                // 성공하면 회원가입 로직을 실행 할 것
-            })
-            .catch((error) => console.error('이메일 중복 체크 에러 Error occured:', error));
+        // axios.get('http://localhost:8080/check-email', {
+        //     params: {
+        //         email: data.email
+        //     }
+        // })
+        //     .then((response) => {
+        //         console.log('이메일 중복 확인 응답', response.data.inUniqueEmail);
+        //         // 성공하면 회원가입 로직을 실행 할 것
+        //     })
+        //     .catch((error) => console.error('이메일 중복 체크 에러 Error occured:', error));
         
 
         // 회원가입 로직
-        axios.post('/member', dataWithoutConfirmPassword)
+        axios.post('http://localhost:8080/member', dataWithoutConfirmPassword)
             // 성공
             .then((response) => {
-                console.log(response);
+                console.log('회원가입 성공', response);
 
             })
             // 실패
             .catch((error) => {
-                console.error('Error occurred:', error);
-                alert('회원가입 실패');
+                console.error('회원가입 실패:', error);
             })
     };
 

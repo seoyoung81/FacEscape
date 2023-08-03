@@ -2,9 +2,10 @@ import { useForm, Controller } from 'react-hook-form';
 import GoogleLogin from './GoogleLogin';
 import styles from './User.module.css';
 import axios from 'axios';
-import { useDispatch } from 'react-redux';
-import { initToken } from '../../services/Token/Token';
-import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+// import { initToken } from '../../services/Token/Token';
+import { useEffect, useState } from 'react';
+import { RootState } from '../../store/store';
 
 type FormData = {
   email: string;
@@ -13,21 +14,36 @@ type FormData = {
 
 const LogInForm: React.FC = () => {
   const { control, handleSubmit, formState: { errors } } = useForm<FormData>();
-  const dispatch = useDispatch();
+//   const dispatch = useDispatch();
+//   const isLogin = useSelector((state: RootState) => state.setIsLogIn.isLogIn);
+//   // 회원 정보 잘 가져왔나 그냥 확인하는 용도
+//   const [nickname, setNickname] = useState<string>('');
 
-    useEffect(() => {
-        initToken(dispatch);
-    }, [dispatch]);
+    // useEffect(() => {
+    //     initToken(dispatch);
+    // }, [dispatch]);
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = (data: FormData) => {
     console.log(data);
 
-    try {
-        const response = await axios.post('http://localhost:8080/login', data);
-        console.log(response);
-    } catch (error) {
-        console.error('Login failed', error);
-    }
+    axios.post('http://localhost:8080/login', data)
+        .then((response) => {
+            console.log('로그인 성공', response);
+        })
+        .catch(error => {
+            console.log('로그인 실패', error);
+            console.log('실패 코드', error.config)
+        })
+
+    // try {
+    //     const response = await axios.post('http://localhost:8080/login', data);
+    //     console.log('로그인 성공', response);
+    //     console.log('로그인 한 사람 이름', response.data.nickname);
+    //     setNickname(response.data.nickname);
+
+    // } catch (error) {
+    //     console.error('Login failed', error);
+    // }
   }; 
 
   return (
@@ -49,6 +65,7 @@ const LogInForm: React.FC = () => {
                             type="text" 
                             placeholder='이메일'
                             className={styles.logininput}
+                            defaultValue={""}
                         />  
                 }
                 />
@@ -68,6 +85,7 @@ const LogInForm: React.FC = () => {
                         type="password" 
                         placeholder='비밀번호'
                         className={styles.logininput}
+                        defaultValue={""}
                     />}
                 />
                 {errors.password ? ( 
@@ -84,6 +102,7 @@ const LogInForm: React.FC = () => {
                 </button>
             <GoogleLogin />            
         </form>
+   
     </div>
   );
 };

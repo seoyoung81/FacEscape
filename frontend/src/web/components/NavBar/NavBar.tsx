@@ -16,7 +16,7 @@ import { RootState } from '../../store/store';
 
 const NavBar = () => {
     const isLogIn = useSelector((state: RootState) => state.setIsLogIn.isLogIn);
-    console.log(isLogIn);
+    console.log('현재 로그인 상태(nav 바 확인용): ',isLogIn);
     return (
         <>
         <div className={styles['nav-bar']}>
