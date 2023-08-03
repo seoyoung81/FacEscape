@@ -11,6 +11,7 @@ class MemberManager {
     createMember(ip: string, socket: Socket) {
         const newMember = new Member(ip, socket);
         this._members.set(ip, newMember);
+        //this._members.set(ip+this._members.size, newMember);
         return newMember;
     }
 
