@@ -14,7 +14,9 @@ export enum JoinEvent {
 
 export enum MemberResponseEvent {
     joinSuccess = "joinSuccess",
-    joinFail = "joinFail"
+    joinFail = "joinFail",
+    othersJoin = "othersJoin",
+    kick = "kick"
 }
 
 export enum ExitEvent {

@@ -48,8 +48,8 @@ export class Room {
         this._stage = stage;
     }
 
-    set host(ip: string) {
-        this._host = ip;
+    set host(uuid: string) {
+        this._host = uuid;
     }
 
     setInGameMember(map: Map<string,Member>){
@@ -69,6 +69,9 @@ export class Room {
 
     removeMember(member: Member) {
         this._members.delete(member.ip);
+        if(this._host === member.gameUuid){
+            this.changeHost();
+        }
     }
 
     getMemberSize() {
@@ -81,5 +84,14 @@ export class Room {
 
     isEmpty() {
         return this._members.size === 0;
+    }
+
+    changeHost(){
+        this._members.forEach((member) => {
+            if(this._host != member.gameUuid){
+                this._host = member.gameUuid;
+                return; 
+            }
+        })
     }
 }
