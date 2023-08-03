@@ -4,7 +4,7 @@ div {
 
 .nav-bar {
     display: flex;
-    margin: 32px;
+    margin: 32px 32px 8px 32px;
     justify-content: space-between;
     position: relative;
     min-width: 1200px;
@@ -29,10 +29,17 @@ div {
 .logo-img {
     width: 338px;
     height: 59px;
-    border: 1px solid black;
     display: flex;
     justify-content: center; 
     align-items: center; 
+    color: black;
+
+    font-size: 45px;
+    letter-spacing: 4.8px;
+}
+
+.logo-img span {
+    color: #3479AD;
 }
 
 
@@ -40,7 +47,6 @@ div {
     width: 107px;
     height: 59px;
     font-size: 32px;
-    border: 1px solid black;
     display: flex;
     justify-content: center; 
     align-items: center; 
@@ -51,9 +57,19 @@ div {
     width: 222px;
     height: 59px;
     font-size: 32px;
-    border: 1px solid black;
     display: flex;
     justify-content: center; 
     align-items: center; 
     cursor: pointer;
 }
+
+.ranking, .market {
+    color: #838383;
+}
+
+.ranking:hover, .market:hover {
+    color: black;
+    transition: color 0.3s ease;
+}
+
+
