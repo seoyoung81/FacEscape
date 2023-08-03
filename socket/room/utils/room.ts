@@ -63,8 +63,8 @@ export class Room {
     }
 
     joinMember(member: Member) {
-        //this._members.set(member.ip, member);
-        this._members.set(member.ip+this.members.size, member);
+        this._members.set(member.ip, member);
+        //this._members.set(member.ip+this.members.size, member);
     }
 
     removeMember(member: Member) {

@@ -64,7 +64,7 @@ export const exitEventHandler = (event: ExitEvent, socket: Socket) => {
     
     if(room){
         const response = new RoomInfoResponse(room.members, room.host);
-        socket.broadcast.to(room.roomId).emit(MemberResponseEvent.kick, JSON.stringify(response));
+        socket.broadcast.to(room.roomId).emit(MemberResponseEvent.othersExit, JSON.stringify(response));
     }
 }
 
