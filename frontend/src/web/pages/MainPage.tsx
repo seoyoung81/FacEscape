@@ -1,9 +1,9 @@
-import NavBar from "../components/NavBar/NavBar";
+import NavBar from "../../components/NavBar/NavBar";
 import styles from "./MainPage.module.css";
-import CodeInput from "../components/MainPage/CodeInput";
-import NewGame from "../components/MainPage/NewGame";
+import CodeInput from "../../components/MainPage/CodeInput";
+import NewGame from "../../components/MainPage/NewGame";
 // components
-import GameName from "../components/MainPage/GameName";
+import GameName from "../../components/MainPage/GameName";
 
 const MainPage = () => {
     return (

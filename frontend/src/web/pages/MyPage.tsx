@@ -1,6 +1,6 @@
-import UserInfo from "../components/MyPage/UserInfo/UserInfo";
-import UserItem from "../components/MyPage/UserItem/UserItem";
-import NavBar from "../components/NavBar/NavBar";
+import UserInfo from "../../components/MyPage/UserInfo/UserInfo";
+import UserItem from "../../components/MyPage/UserItem/UserItem";
+import NavBar from "../../components/NavBar/NavBar";
 import styles from './MyPage.module.css';
 
 const MyPage = () => {

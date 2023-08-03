@@ -1,4 +1,4 @@
-import useFetchItemList from '../../../hook/useFetchItemList';
+import useFetchItemList from '../../../web/hook/useFetchItemList';
 import Item from './Item';
 import styles from './Item.module.css';
 import { ItemType } from '../../../services/market/utils';

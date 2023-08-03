@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { RootState } from '../../store/store';
+import { RootState } from '../../web/store/store';
 import styles from './WaitingRoom.module.css';
 
 const NickName = () => {

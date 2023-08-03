@@ -11,7 +11,7 @@ import { useSelector } from 'react-redux';
 
 // css
 import styles from './NavBar.module.css';
-import { RootState } from '../../store/store';
+import { RootState } from '../../web/store/store';
 
 
 const NavBar = () => {
