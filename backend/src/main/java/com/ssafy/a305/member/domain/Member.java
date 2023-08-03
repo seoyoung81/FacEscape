@@ -63,8 +63,9 @@ public class Member {
 		this.mileage = mileage;
 	}
 
-	public void updateRecentLogin() {
+	public Timestamp updateRecentLogin() {
 		this.recentLogin = new Timestamp(System.currentTimeMillis());
+		return this.recentLogin;
 	}
 
 }
