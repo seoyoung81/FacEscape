@@ -1,0 +1,172 @@
+{
+    "stages": [
+        {
+            "id": "1",
+            "sceneName": "Stage01",
+            "y": 90,
+            "x": 100,
+            "hasInteract": true,
+            "texture": "stageBtn"
+        },        
+        {
+            "id": "2",
+            "sceneName": "Stage02",
+            "y": 90,
+            "x": 250,
+            "hasInteract": true,
+            "texture": "stageBtn"
+        },
+        {
+            "id": "3",
+            "sceneName": "Stage02",
+            "y": 90,
+            "x": 400,
+            "hasInteract": true,
+            "texture": "stageBtn"
+        },
+        {
+            "id": "-1",
+            "sceneName": "none",
+            "y": 90,
+            "x": 550,
+            "hasInteract": false,
+            "texture": "lockBtn"
+        },
+        {
+            "id": "-1",
+            "sceneName": "none",
+            "y": 90,
+            "x": 700,
+            "hasInteract": false,
+            "texture": "lockBtn"
+        },
+        {
+            "id": "-1",
+            "sceneName": "none",
+            "y": 90,
+            "x": 850,
+            "hasInteract": false,
+            "texture": "lockBtn"
+        },
+        {
+            "id": "-1",
+            "sceneName": "none",
+            "y": 230,
+            "x": 100,
+            "hasInteract": false,
+            "texture": "lockBtn"
+        },
+        {
+            "id": "-1",
+            "sceneName": "none",
+            "y": 230,
+            "x": 250,
+            "hasInteract": false,
+            "texture": "lockBtn"
+        },
+        {
+            "id": "-1",
+            "sceneName": "none",
+            "y": 230,
+            "x": 400,
+            "hasInteract": false,
+            "texture": "lockBtn"
+        },
+        {
+            "id": "-1",
+            "sceneName": "none",
+            "y": 230,
+            "x": 550,
+            "hasInteract": false,
+            "texture": "lockBtn"
+        },
+        {
+            "id": "-1",
+            "sceneName": "none",
+            "y": 230,
+            "x": 700,
+            "hasInteract": false,
+            "texture": "lockBtn"
+        },
+        {
+            "id": "-1",
+            "sceneName": "none",
+            "y": 230,
+            "x": 850,
+            "hasInteract": false,
+            "texture": "lockBtn"
+        },
+        {
+            "id": "-1",
+            "sceneName": "none",
+            "y": 370,
+            "x": 100,
+            "hasInteract": false,
+            "texture": "lockBtn"
+        },
+        {
+            "id": "-1",
+            "sceneName": "none",
+            "y": 370,
+            "x": 250,
+            "hasInteract": false,
+            "texture": "lockBtn"
+        },
+        {
+            "id": "-1",
+            "sceneName": "none",
+            "y": 370,
+            "x": 400,
+            "hasInteract": false,
+            "texture": "lockBtn"
+        },
+        {
+            "id": "-1",
+            "sceneName": "none",
+            "y": 370,
+            "x": 550,
+            "hasInteract": false,
+            "texture": "lockBtn"
+        },
+        {
+            "id": "-1",
+            "sceneName": "none",
+            "y": 370,
+            "x": 700,
+            "hasInteract": false,
+            "texture": "lockBtn"
+        },
+        {
+            "id": "-1",
+            "sceneName": "none",
+            "y": 370,
+            "x": 850,
+            "hasInteract": false,
+            "texture": "lockBtn"
+        },
+        {
+            "id": "-1",
+            "sceneName": "none",
+            "y": 510,
+            "x": 100,
+            "hasInteract": false,
+            "texture": "lockBtn"
+        },
+        {
+            "id": "-1",
+            "sceneName": "none",
+            "y": 510,
+            "x": 250,
+            "hasInteract": false,
+            "texture": "lockBtn"
+        },
+        {
+            "id": "-1",
+            "sceneName": "none",
+            "y": 510,
+            "x": 400,
+            "hasInteract": false,
+            "texture": "lockBtn"
+        }
+    ]
+}

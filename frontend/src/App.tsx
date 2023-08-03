@@ -11,6 +11,7 @@ import MarketPage from './web/pages/MarketPage';
 import BeforeEnteringPage from './web/pages/BeforeEnteringPage';
 import WaitingRoomPage from './web/pages/WaitingRoomPage';
 import GamePage from './web/pages/GamePage';
+import GameTestPage from './web/pages/GameTestPage';
 
 // background image
 // import BackgroundImage from '../src/assets/images/background_img.png';
@@ -30,6 +31,7 @@ const App: React.FC = () => {
         <Route path='/before' element={<BeforeEnteringPage />} />
         <Route path='/waiting' element={<WaitingRoomPage />} />
         <Route path='/game' element={<GamePage />} />
+        <Route path='/gametest' element={<GameTestPage />} />
       </Routes>
     </div>
   );
