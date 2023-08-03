@@ -1,7 +1,7 @@
 import styles from './Modal.module.css';
 import axios, { AxiosResponse } from 'axios';
 import { useSelector } from 'react-redux';
-import  { UserState } from '../../web/store/store';
+import  { UserState } from '../../store/store';
 
 interface purchaseProps {
     itemPrice: number;

@@ -13,12 +13,13 @@ import WaitingRoomPage from './web/pages/WaitingRoomPage';
 import GamePage from './web/pages/GamePage';
 
 // background image
-import BackgroundImage from '../src/assets/images/background_img.png';
+// import BackgroundImage from '../src/assets/images/background_img.png';
 
 const App: React.FC = () => {
   return (
     <div className='app-container'>
-      <div className="background-image" style={{ backgroundImage: `url(${BackgroundImage})` }}>
+      {/* <div className="background-image" style={{ backgroundImage: `url(${BackgroundImage})` }}> */}
+      <div className="background-image">
       </div>
       
       <Routes>

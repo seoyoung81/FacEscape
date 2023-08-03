@@ -1,8 +1,8 @@
-import NavBar from "../../components/NavBar/NavBar";
+import NavBar from "../components/NavBar/NavBar";
 import styles from "./RankingPage.module.css";
 import { useState } from 'react';
-import RankingView from "../../components/RankingPage/RankingView";
-import type {Rankings} from '../../services/ranking';
+import RankingView from "../components/RankingPage/RankingView";
+import type {Rankings} from '../services/ranking';
 
 const RankingPage :React.FC = () => {
     const [currentStage, setCurrentStage] = useState<number>(1);

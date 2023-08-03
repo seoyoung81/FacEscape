@@ -2,7 +2,7 @@ import styles from './BeforeEnter.module.css';
 import { useState, ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setNickName } from '../../web/store/nickNameSlice';
+import { setNickName } from '../../store/nickNameSlice';
 import ControlIcon from '../Common/ControlIcon';
 
 const InputNickname: React.FC = () => {

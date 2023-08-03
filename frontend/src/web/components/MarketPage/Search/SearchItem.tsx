@@ -4,7 +4,7 @@ import { useState } from "react";
 
 // redux
 import { useDispatch } from 'react-redux';
-import { setKeyword } from '../../../web/store/searchSlice';
+import { setKeyword } from '../../../store/searchSlice';
 
 const SearchItem: React.FC = () => {
     /*  Argument of type 'void' is not assignable to parameter of type 'AnyAction'

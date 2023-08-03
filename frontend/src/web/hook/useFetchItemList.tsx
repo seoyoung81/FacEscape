@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
-import type { ItemType } from '../../services/market/utils';
-import type { ApiResponse } from '../../services/market/apis';
+import type { ItemType } from '../services/market/utils';
+import type { ApiResponse } from '../services/market/apis';
 
 const useFetchItemList = (): ItemType[] | null => {
   const [itemData, setItemData] = useState<ItemType[] | null>(null);

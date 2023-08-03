@@ -1,6 +1,6 @@
 import styles from './BeforeEnteringPage.module.css';
-import VideoCheck from '../../components/BeforeEnterPage/VideoCheck';
-import InputNickname from '../../components/BeforeEnterPage/InputNickname';
+import VideoCheck from '../components/BeforeEnterPage/VideoCheck';
+import InputNickname from '../components/BeforeEnterPage/InputNickname';
 
 
 const BeforeEnteringPage: React.FC = () => {

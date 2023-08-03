@@ -1,8 +1,8 @@
 import styles from './WaitingRoomPage.module.css';
-import NickName from '../../components/WaitingRoomPage/NickName';
-import Code from '../../components/WaitingRoomPage/Code';
-import Camera from '../../components/WaitingRoomPage/Camera';
-import Chat from '../../components/WaitingRoomPage/Chat';
+import NickName from '../components/WaitingRoomPage/NickName';
+import Code from '../components/WaitingRoomPage/Code';
+import Camera from '../components/WaitingRoomPage/Camera';
+import Chat from '../components/WaitingRoomPage/Chat';
 
 const WaitingRoomPage: React.FC = () => {
     return (

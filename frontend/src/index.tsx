@@ -13,7 +13,7 @@ import { BrowserRouter } from "react-router-dom";
 
 // mock
 if (process.env.NODE_ENV === 'development') {
-  const { worker } = require('./mocks/browser')
+  const { worker } = require('./web/mocks/browser')
   worker.start()
 }
 
