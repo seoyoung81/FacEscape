@@ -5,7 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Provider } from 'react-redux';
-import store from './store/store';
+import store from './web/store/store';
 
 
 // Router
@@ -13,7 +13,7 @@ import { BrowserRouter } from "react-router-dom";
 
 // mock
 if (process.env.NODE_ENV === 'development') {
-  const { worker } = require('./mocks/browser')
+  const { worker } = require('./web/mocks/browser')
   worker.start()
 }
 

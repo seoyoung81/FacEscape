@@ -23,7 +23,7 @@ const LogInForm: React.FC = () => {
     console.log(data);
 
     try {
-        const response = await axios.post('/login', data);
+        const response = await axios.post('http://localhost:8080/login', data);
         console.log(response);
     } catch (error) {
         console.error('Login failed', error);
