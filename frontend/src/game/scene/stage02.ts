@@ -1,5 +1,4 @@
 import Phaser from "phaser";
-import { Player } from "../object/player";
 
 import map from "../assets/data/stage02.json";
 
