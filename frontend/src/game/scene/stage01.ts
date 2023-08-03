@@ -12,6 +12,7 @@ export default class Stage01 extends Phaser.Scene {
   constructor() {
     super({
       key: "Stage01",
+      plugins: {},
     });
   }
 
@@ -19,6 +20,10 @@ export default class Stage01 extends Phaser.Scene {
     this.load.tilemapTiledJSON("map", map);
     this.load.image("bg", background);
     this.load.image("Terrain", Terrain);
+
+    // https://rexrainbow.github.io/phaser3-rex-notes/docs/site/imageuriloader/
+    console.log(background);
+    console.log(Terrain);
   }
 
   create(): void {
