@@ -24,14 +24,14 @@ body {
 /* 로컬 폰트 설정 */
 @font-face {
   font-family: 'MyFont';
-  src: url(../src/assets/fonts/Galmuri11.ttf) format('truetype');
+  src: url(../src/web/assets/fonts/Galmuri11.ttf) format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'MyFontBold';
-  src: url(../src/assets/fonts/Galmuri11-Bold.ttf) format('truetype');
+  src: url(../src/web/assets/fonts/Galmuri11-Bold.ttf) format('truetype');
   font-weight: normal;
   font-style: normal;
 }

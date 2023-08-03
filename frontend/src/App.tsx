@@ -4,21 +4,22 @@ import React from 'react';
 import { Routes, Route } from "react-router-dom";
 
 // router
-import MainPage from './pages/MainPage';
-import RankingPage from './pages/RankingPage';
-import MyPage from './pages/MyPage';
-import MarketPage from './pages/MarketPage';
-import BeforeEnteringPage from './pages/BeforeEnteringPage';
-import WaitingRoomPage from './pages/WaitingRoomPage';
-import GamePage from './pages/GamePage';
+import MainPage from './web/pages/MainPage';
+import RankingPage from './web/pages/RankingPage';
+import MyPage from './web/pages/MyPage';
+import MarketPage from './web/pages/MarketPage';
+import BeforeEnteringPage from './web/pages/BeforeEnteringPage';
+import WaitingRoomPage from './web/pages/WaitingRoomPage';
+import GamePage from './web/pages/GamePage';
 
 // background image
-import BackgroundImage from '../src/assets/images/background_img.png';
+// import BackgroundImage from '../src/assets/images/background_img.png';
 
 const App: React.FC = () => {
   return (
     <div className='app-container'>
-      <div className="background-image" style={{ backgroundImage: `url(${BackgroundImage})` }}>
+      {/* <div className="background-image" style={{ backgroundImage: `url(${BackgroundImage})` }}> */}
+      <div className="background-image">
       </div>
       
       <Routes>
