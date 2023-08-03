@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 public class MileageEventListener {
 	private final MileageService mileageService;
 	private static final int WELCOME_MILEAGE = 100;
-	private static final int DAILY_LOGIN_MILEAGE = 80;
+	private static final int DAILY_LOGIN_MILEAGE = 20;
 
 	@Transactional
 	@TransactionalEventListener
@@ -31,7 +31,7 @@ public class MileageEventListener {
 		} else if (!newTimestamp.toLocalDateTime()
 			.toLocalDate()
 			.isEqual(olderTimestamp.toLocalDateTime().toLocalDate())) {
-			// 일일 로그인 +80
+			// 일일 로그인 +20
 			mileageService.changeMileage(member.getId(), DAILY_LOGIN_MILEAGE);
 		}
 	}
