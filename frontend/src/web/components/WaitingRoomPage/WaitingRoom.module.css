@@ -60,8 +60,9 @@
     align-items: center;
     display: flex;
     justify-content: right;
-    margin-right: 10px;
     gap: 10px;
+    position: relative;
+    right: -53px;
 }
 
 
@@ -78,11 +79,6 @@
     flex-wrap: wrap;
     gap: 20px;
     justify-content: center;
-}
-
-.inventory:hover {
-    transform: scale(1.1);
-    cursor: pointer;
 }
 
 .chat-input {
@@ -198,7 +194,17 @@
 
   .bubble-position {
     position: absolute;
-    top: 150px;
-    left: 350px;
+    top: 90px;
+    left: 420px;
   }
+
+  /* 인벤토리 버튼 */
+.inventory {
+    position: relative;
+    right: -60px;
+}
+
+.inventory:hover {
+    cursor: pointer;
+}
 
