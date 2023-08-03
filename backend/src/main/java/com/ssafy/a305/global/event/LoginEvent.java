@@ -1,4 +1,4 @@
-package com.ssafy.a305.auth.event;
+package com.ssafy.a305.global.event;
 
 import com.ssafy.a305.member.domain.Member;
 import lombok.Getter;

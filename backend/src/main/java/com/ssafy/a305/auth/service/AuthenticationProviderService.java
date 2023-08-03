@@ -3,7 +3,7 @@ package com.ssafy.a305.auth.service;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import com.ssafy.a305.auth.event.LoginEvent;
+import com.ssafy.a305.global.event.LoginEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

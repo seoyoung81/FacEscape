@@ -1,9 +1,8 @@
-package com.ssafy.a305.auth.event;
+package com.ssafy.a305.global.event;
 
 import java.sql.Timestamp;
 
 import com.ssafy.a305.member.repository.MemberRepository;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
