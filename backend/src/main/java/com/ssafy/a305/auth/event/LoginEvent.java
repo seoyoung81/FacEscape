@@ -1,15 +1,11 @@
 package com.ssafy.a305.auth.event;
 
 import com.ssafy.a305.member.domain.Member;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
+@Getter
 public class LoginEvent {
-	private Member member;
-
-	public LoginEvent(Member member) {
-		this.member = member;
-	}
-
-	public Member getMember() {
-		return member;
-	}
+	private final Member member;
 }

@@ -2,7 +2,10 @@ package com.ssafy.a305.auth.event;
 
 import java.sql.Timestamp;
 
+import com.ssafy.a305.member.repository.MemberRepository;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionalEventListener;
 
@@ -15,16 +18,18 @@ import lombok.RequiredArgsConstructor;
 @Component
 public class MileageEventListener {
 	private final MileageService mileageService;
+	private final MemberRepository memberRepository;
 	private static final int WELCOME_MILEAGE = 100;
 	private static final int DAILY_LOGIN_MILEAGE = 20;
 
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@TransactionalEventListener
 	public void transactionalEventListener(LoginEvent event) {
 		Member member = event.getMember();
 		Timestamp olderTimestamp = member.getRecentLogin();
 		Timestamp newTimestamp = member.updateRecentLogin();
 		Integer mileage = member.getMileage();
+		memberRepository.save(member);
 
 		if (olderTimestamp == null) {
 			//회원가입 후 최초 로그인 시 +100 마일리지
