@@ -70,6 +70,7 @@ export class StageSelect extends Phaser.Scene {
     button
       .setOnClick(() => {
         this.socket.emit("stageChange", stage.sceneName);
+        this.scene.start(stage.sceneName);
       })
       .setOnPointerOver("focusBtn", "white")
       .setOnPointOut("stageBtn", "#DB7500");
