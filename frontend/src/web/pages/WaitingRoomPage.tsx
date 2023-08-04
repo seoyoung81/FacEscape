@@ -3,6 +3,9 @@ import NickName from '../components/WaitingRoomPage/NickName';
 import Code from '../components/WaitingRoomPage/Code';
 import Camera from '../components/WaitingRoomPage/Camera';
 import Chat from '../components/WaitingRoomPage/Chat';
+import Inventory from '../components/WaitingRoomPage/Inventory';
+
+
 
 const WaitingRoomPage: React.FC = () => {
     return (
@@ -11,6 +14,7 @@ const WaitingRoomPage: React.FC = () => {
                 <div className={styles['top-container']}>
                     <NickName />
                     <Code />
+                    <Inventory />
                 </div>
             
                 <div className={styles['camera-container']}>

@@ -1,6 +1,5 @@
 import Phaser from "phaser";
 import { Player } from "../object/player";
-
 import map from "../assets/data/stage02.json";
 
 export default class Stage02 extends Phaser.Scene {

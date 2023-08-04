@@ -6,13 +6,10 @@ import styles from './NavBar.module.css';
 const Logo :React.FC = () => {
     return (
         <div>
-            <Link to="/">
-                {/* <img 
-                    src={require("../../assets/images/logo.png")} 
-                    alt="logo"
-                    className={styles['logo-img']} 
-                /> */}
-                <p className={styles['logo-img']}>로고</p>
+            <Link to="/" style={{ textDecoration: 'none' }}>
+                <p className={styles['logo-img']}>
+                    <span>F</span>ac<span>E</span>scape
+                </p>
             </Link>
             
         </div>
