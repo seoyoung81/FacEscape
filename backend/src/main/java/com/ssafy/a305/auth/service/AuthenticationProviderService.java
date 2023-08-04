@@ -50,19 +50,6 @@ public class AuthenticationProviderService implements AuthenticationProvider {
 			NoSuchElementException::new);
 		applicationEventPublisher.publishEvent(new LoginEvent(member));
 
-		//		Timestamp olderTimestamp = member.getRecentLogin();
-		//		Timestamp newTimestamp = member.updateRecentLogin();
-		//		Integer mileage = member.getMileage();
-		//
-		//		if (olderTimestamp == null) {
-		//			//회원가입 후 최초 로그인 시 +100 마일리지
-		//			mileageService.changeMileage(member.getId(), mileage + WELCOME_MILEAGE);
-		//		} else if (!newTimestamp.toLocalDateTime()
-		//			.toLocalDate()
-		//			.isEqual(olderTimestamp.toLocalDateTime().toLocalDate())) {
-		//			// 일일 로그인 +20
-		//			mileageService.changeMileage(member.getId(), mileage + DAILY_LOGIN_MILEAGE);
-		//		}
 		return new UsernamePasswordAuthenticationToken(memberDetails.getId(), "", List.of(() -> "USER"));
 	}
 
