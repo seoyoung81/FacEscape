@@ -1,6 +1,11 @@
 import { useForm, Controller } from 'react-hook-form';
+
+// api
+import { defaultInstance } from '../../services/api';
+
+// css
 import styles from './User.module.css';
-import axios from 'axios';
+import Swal from 'sweetalert2';
 
 type FormData = {
     email: string;
@@ -9,40 +14,64 @@ type FormData = {
     confirmPassword: string;
 }
 
-const SignUpForm: React.FC = () => {
+interface closeModalProps {
+    closeModal: (event?: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => void;
+}
+
+
+const SignUpForm: React.FC<closeModalProps> = ({ closeModal }) => {
     const { control, handleSubmit, formState: { errors }, watch } = useForm<FormData>();
     
     // 비밀번호 추적
     const watchPassword :string = watch('password', '');
 
-    const onSubmit = (data: FormData) => {
+    const onSubmit = async (data: FormData) => {
         const { confirmPassword, ...dataWithoutConfirmPassword } = data;
 
         // 이메일 중복 확인
-        // axios.get('http://localhost:8080/check-email', {
-        //     params: {
-        //         email: data.email
-        //     }
-        // })
-        //     .then((response) => {
-        //         console.log('이메일 중복 확인 응답', response.data.inUniqueEmail);
-        //         // 성공하면 회원가입 로직을 실행 할 것
-        //     })
-        //     .catch((error) => console.error('이메일 중복 체크 에러 Error occured:', error));
-        
+        try {
+            const { data } = await defaultInstance.get(
+                `/check-email?email=${dataWithoutConfirmPassword.email}`
+            )
+            if (data.uniqueEmail === true) {
 
-        // 회원가입 로직
-        axios.post('http://localhost:8080/member', dataWithoutConfirmPassword)
-            // 성공
-            .then((response) => {
-                console.log('회원가입 성공', response);
+                    // 회원가입 로직
+                    try {
+                        const { data } = await defaultInstance.post(
+                            '/member',
+                            dataWithoutConfirmPassword
+                        )
 
-            })
-            // 실패
-            .catch((error) => {
-                console.error('회원가입 실패:', error);
-            })
-    };
+                        // 회원가입 성공 alert
+                        Swal.fire({
+                            title: '회원가입 성공!',
+
+                            confirmButtonColor: '#3479AD',
+                            confirmButtonText: '확인',
+                        }).then(result => {
+                            if (result.isConfirmed) {
+                                // 모달창 닫기
+                                closeModal();
+                            }
+                        })
+
+                        return data;
+                    } catch (error: any) {
+                        if (error.response?.status === 400) {
+                            if (error.response.data.errors[0]?.errorMessage === '이미 회원가입된 회원입니다.') {
+                                Swal.fire('이미 가입한 회원입니다', '', 'error')
+                            }
+                        } else (
+                            console.log('회원 가입 실패', error)
+                        )
+                    }
+            } else (
+                Swal.fire('이미 가입한 회원입니다', '', 'error')
+            )
+            } catch (error: any) {
+                console.log('이메일 중복체크 실패', error);
+            }
+    }
 
     return (
         <div className={styles.container}>
@@ -56,6 +85,7 @@ const SignUpForm: React.FC = () => {
                 <Controller
                     name="nickname"
                     control={control}
+                    defaultValue=""
                     rules={{ 
                         required: '닉네임을 입력해주세요.',
                         pattern: {
@@ -88,10 +118,12 @@ const SignUpForm: React.FC = () => {
                 <Controller
                     name="email"
                     control={control}
+                    defaultValue=""
                     rules={{ 
                         required: '이메일을 입력해주세요.',
                         pattern: {
-                            value: /^[a-zA-Z0-9+-\_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+                            value: /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/,
+                
                             message: '정확한 이메일 주소를 입력하세요.'
                         },
                         maxLength: {
@@ -119,7 +151,14 @@ const SignUpForm: React.FC = () => {
                 <Controller
                     name="password"
                     control={control}
-                    rules={{ required: '비밀번호를 입력해주세요.' }}
+                    defaultValue=""
+                    rules={{ 
+                        required: '비밀번호를 입력해주세요.',
+                        minLength: {
+                            value: 8,
+                            message: '비밀번호는 8자 이상 입력해주세요.',
+                        }
+                    }}
                     render={({ field }) => 
                         <input 
                             {...field} 
@@ -135,6 +174,7 @@ const SignUpForm: React.FC = () => {
                 <Controller
                     name="confirmPassword"
                     control={control}
+                    defaultValue=""
                     rules={{ 
                         required: '비밀번호를 입력해주세요.',
                         validate: (value) => (

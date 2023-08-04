@@ -8,15 +8,14 @@ import LogOut from "./LogOut";
 import MyPage from "./MyPage";
 
 import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
 
 // css
 import styles from './NavBar.module.css';
-import { RootState } from '../../store/store';
 
 
 const NavBar = () => {
     const isLogIn = useSelector((state: RootState) => state.setIsLogIn.isLogIn);
-    console.log('현재 로그인 상태(nav 바 확인용): ',isLogIn);
     return (
         <>
         <div className={styles['nav-bar']}>
