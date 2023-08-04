@@ -1,7 +1,7 @@
 import * as Phaser from "phaser";
-import map from "../assets/data/stage02.json";
+import map from "../assets/data/stage01.json";
 import background from "../assets/images/background.png";
-import Terrain from "../assets/images/Terrain.png";
+import terrain from "../assets/images/Terrain.png";
 
 //====== wall setting ==============
 const WALL_START_X = 100;
@@ -19,11 +19,7 @@ export default class Stage01 extends Phaser.Scene {
   preload(): void {
     this.load.tilemapTiledJSON("map", map);
     this.load.image("bg", background);
-    this.load.image("Terrain", Terrain);
-
-    // https://rexrainbow.github.io/phaser3-rex-notes/docs/site/imageuriloader/
-    console.log(background);
-    console.log(Terrain);
+    this.load.image("terrain", terrain);
   }
 
   create(): void {
@@ -34,7 +30,7 @@ export default class Stage01 extends Phaser.Scene {
       tileHeight: 16,
     });
 
-    const tt = map.addTilesetImage("Terrain", "Terrain");
-    map.createLayer("platformLayer", "Terrain");
+    map.addTilesetImage("terrain", "terrain");
+    map.createLayer("platformLayer", ["terrain"]);
   }
 }

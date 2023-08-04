@@ -10,7 +10,7 @@ export const createGame = (width: number, height: number, tagName: string) => {
   };
 
   const gameConfig: Phaser.Types.Core.GameConfig = {
-    type: Phaser.AUTO,
+    type: Phaser.CANVAS,
     physics: {
       default: "arcade",
       arcade: {
