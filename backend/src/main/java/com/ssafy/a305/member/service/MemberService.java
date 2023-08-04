@@ -55,7 +55,7 @@ public class MemberService {
 		if (nickname != null) {
 			member.updateNickname(nickname);
 		} else if (password != null) {
-			member.updatePassword(password);
+			member.updatePassword(passwordEncoder.encode(password));
 		}
 	}
 
