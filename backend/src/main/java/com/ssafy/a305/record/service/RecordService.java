@@ -7,9 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ssafy.a305.global.event.StageClearEvent;
 import com.ssafy.a305.member.domain.Member;
 import com.ssafy.a305.member.repository.MemberRepository;
 import com.ssafy.a305.record.domain.GameParticipant;
@@ -28,6 +30,7 @@ public class RecordService {
 	private final GameRecordRepository gameRecordRepository;
 	private final GameParticipantRepository gameParticipantRepository;
 	private final MemberRepository memberRepository;
+	private final ApplicationEventPublisher applicationEventPublisher;
 
 	@Transactional // 중간에 실패 시 롤백
 	public void saveRecord(RecordReqDTO dto) {
@@ -51,6 +54,8 @@ public class RecordService {
 		List<GameParticipant> gameParticipants = getGameParticipantsWithExistMembersMap(memberMap, participants,
 			gameRecord);
 		gameParticipantRepository.saveAll(gameParticipants);
+
+		applicationEventPublisher.publishEvent(new StageClearEvent(participantsId));
 	}
 
 	//참여자 id 중 db에 존재하는 회원 정보를 Map으로 반환하는 메서드
