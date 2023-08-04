@@ -31,9 +31,6 @@ public class AuthenticationProviderService implements AuthenticationProvider {
 	private final PasswordEncoder passwordEncoder;
 	private final MemberRepository memberRepository;
 	private final ApplicationEventPublisher applicationEventPublisher;
-	//	private final MileageService mileageService;
-	//	private static final int WELCOME_MILEAGE = 100;
-	//	private static final int DAILY_LOGIN_MILEAGE = 20;
 
 	@Override
 	@Transactional(readOnly = true)
