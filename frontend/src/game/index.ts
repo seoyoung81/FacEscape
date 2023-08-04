@@ -11,6 +11,7 @@ export const createGame = (width: number, height: number, tagName: string) => {
 
   const gameConfig: Phaser.Types.Core.GameConfig = {
     type: Phaser.CANVAS,
+    backgroundColor: "#6061ab",
     physics: {
       default: "arcade",
       arcade: {
