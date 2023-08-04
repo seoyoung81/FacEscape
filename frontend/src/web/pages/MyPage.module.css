@@ -1,0 +1,7 @@
+.mypage-container {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 10px;
+    min-width: 1200px;
+}

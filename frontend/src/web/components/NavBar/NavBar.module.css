@@ -1,0 +1,75 @@
+div {
+    font-family: 'MyFontBold'
+}
+
+.nav-bar {
+    display: flex;
+    margin: 32px 32px 8px 32px;
+    justify-content: space-between;
+    position: relative;
+    min-width: 1200px;
+}
+
+.nav-bar-left {
+    display: flex;
+}
+
+.nav-bar-right {
+    display: flex;
+}
+
+.nav-bar-left > *:not(:last-child) {
+    margin-right: 8px;
+}
+
+.nav-bar-right > *:not(:last-child) {
+    margin-right: 8px;
+}
+
+.logo-img {
+    width: 338px;
+    height: 59px;
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    color: black;
+
+    font-size: 45px;
+    letter-spacing: 4.8px;
+}
+
+.logo-img span {
+    color: #3479AD;
+}
+
+
+.login {
+    width: 107px;
+    height: 59px;
+    font-size: 32px;
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    cursor: pointer;
+}
+
+.sign-up {
+    width: 222px;
+    height: 59px;
+    font-size: 32px;
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    cursor: pointer;
+}
+
+.ranking, .market {
+    color: #838383;
+}
+
+.ranking:hover, .market:hover {
+    color: black;
+    transition: color 0.3s ease;
+}
+
+
