@@ -3,6 +3,7 @@ package com.ssafy.a305.auth.service;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.a305.auth.domain.MemberDetails;
 import com.ssafy.a305.auth.exception.LoginException;
+import com.ssafy.a305.global.event.LoginEvent;
 import com.ssafy.a305.member.domain.Member;
 import com.ssafy.a305.member.repository.MemberRepository;
 
@@ -28,9 +30,10 @@ public class AuthenticationProviderService implements AuthenticationProvider {
 	private final UserDetailsService userDetailService;
 	private final PasswordEncoder passwordEncoder;
 	private final MemberRepository memberRepository;
+	private final ApplicationEventPublisher applicationEventPublisher;
 
 	@Override
-	@Transactional
+	@Transactional(readOnly = true)
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		String email = authentication.getPrincipal().toString();
 		String rawPassword = authentication.getCredentials().toString();
@@ -42,7 +45,8 @@ public class AuthenticationProviderService implements AuthenticationProvider {
 
 		Member member = memberRepository.findById(memberDetails.getId()).orElseThrow(
 			NoSuchElementException::new);
-		member.updateRecentLogin();
+		applicationEventPublisher.publishEvent(new LoginEvent(member));
+
 		return new UsernamePasswordAuthenticationToken(memberDetails.getId(), "", List.of(() -> "USER"));
 	}
 
