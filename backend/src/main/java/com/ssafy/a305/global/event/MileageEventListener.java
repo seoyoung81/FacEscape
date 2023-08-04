@@ -47,6 +47,6 @@ public class MileageEventListener {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@TransactionalEventListener
 	public void stageClearEventListener(StageClearEvent event) {
-		mileageService.increaseMileageWithMemberList(event.getParticipantsIds(), STAGE_CLEAR_MILEAGE);
+		mileageService.increaseMileageWithMemberList(event.getParticipants(), STAGE_CLEAR_MILEAGE);
 	}
 }
