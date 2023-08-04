@@ -1,17 +1,23 @@
 import * as Phaser from "phaser";
+import { stringify } from "querystring";
 
 export class Player extends Phaser.Physics.Arcade.Sprite {
   constructor(
     scene: Phaser.Scene,
     x: number,
     y: number,
-    texture: string,
+    texture: string | Phaser.Textures.Texture,
     collider?: any
   ) {
     super(scene, x, y, texture);
     this.scene = scene;
     this.scene.physics.add.existing(this);
-    this.setTexture(texture);
+    if (typeof texture === "string") {
+      this.setTexture(texture);
+    } else {
+      this.texture = texture;
+    }
+
     this.setCollideWorldBounds(true);
     this.scene.physics.add.collider(this, collider);
   }
