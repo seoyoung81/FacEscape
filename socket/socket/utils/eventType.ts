@@ -14,10 +14,22 @@ export enum JoinEvent {
 
 export enum MemberResponseEvent {
     joinSuccess = "joinSuccess",
-    joinFail = "joinFail"
+    joinFail = "joinFail",
+    othersJoin = "othersJoin",
+    othersExit = "othersExit",
+    kick = "kick"
 }
 
 export enum ExitEvent {
     leave = "leaveRoom",
     disconnect = "disconnect"
 };
+
+export enum GameActionEvent {
+    start = "start"
+}
+
+export enum GameResponseEvent {
+    startSuccess = "startSuccess",
+    startFail = "startFail"
+}

@@ -1,6 +1,7 @@
 import { Server } from "socket.io";
-import { ConnectEvent, JoinEvent, ExitEvent, MemberActionEvent } from "../socket/utils/eventType";
-import { createRoomEventHandler, joinRoomEventHandler, exitEventHandler, memberChatEventHandler } from "./utils/roomSocketEventHandler"
+import { ConnectEvent, JoinEvent, ExitEvent, MemberActionEvent, GameActionEvent, GameResponseEvent, MemberResponseEvent } from "../socket/utils/eventType";
+import { createRoomEventHandler, joinRoomEventHandler, exitEventHandler, memberChatEventHandler, memberNickNameEventHandler, gameStartEventhandler } from "./utils/roomSocketEventHandler"
+import { RoomInfoResponse } from "./utils/roomInfoResponse";
 
 const socketMapper = (httpServer: any) => {
     const io = new Server(httpServer, {
@@ -39,6 +40,18 @@ const socketMapper = (httpServer: any) => {
             return io.to(roomId).emit(MemberActionEvent.chat, chat);
           });
         });
+
+        socket.on(MemberActionEvent.updateNickName, (data: any)=>{
+          memberNickNameEventHandler(socket, data, (roomId:string, response: string) => {
+            return io.to(roomId).emit(MemberActionEvent.updateNickName, response);
+          });
+        });
+
+        socket.on(GameActionEvent.start, ()=>{
+          gameStartEventhandler(socket, (roomId:string, response: string) => {
+            return io.to(roomId).emit(GameResponseEvent.startSuccess, response);
+          });
+        })
     });
 
     return io;
