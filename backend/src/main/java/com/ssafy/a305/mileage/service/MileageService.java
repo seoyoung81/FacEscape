@@ -28,7 +28,10 @@ public class MileageService {
 	@Transactional
 	public void changeMileage(Integer memberId, Integer mileageChange) {
 		Member member = memberRepository.findById(memberId).orElseThrow(NoSuchElementException::new);
-		int oldMileage = member.getMileage();
+		Integer oldMileage = member.getMileage();
+		if (oldMileage == null) {
+			oldMileage = 0;
+		}
 		member.updateMileage(mileageChange);
 		memberRepository.save(member);
 
