@@ -12,13 +12,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.a305.global.event.StageClearEvent;
+import com.ssafy.a305.global.repository.BulkRepository;
 import com.ssafy.a305.member.domain.Member;
 import com.ssafy.a305.member.repository.MemberRepository;
 import com.ssafy.a305.record.domain.GameParticipant;
 import com.ssafy.a305.record.domain.GameRecord;
 import com.ssafy.a305.record.dto.MemberInfoForRecordDTO;
 import com.ssafy.a305.record.dto.RecordReqDTO;
-import com.ssafy.a305.record.repository.GameParticipantRepository;
 import com.ssafy.a305.record.repository.GameRecordRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -28,8 +28,8 @@ import lombok.RequiredArgsConstructor;
 public class RecordService {
 
 	private final GameRecordRepository gameRecordRepository;
-	private final GameParticipantRepository gameParticipantRepository;
 	private final MemberRepository memberRepository;
+	private final BulkRepository bulkRepository;
 	private final ApplicationEventPublisher applicationEventPublisher;
 
 	@Transactional // 중간에 실패 시 롤백
@@ -50,17 +50,17 @@ public class RecordService {
 			.stream()
 			.map(MemberInfoForRecordDTO::getMemberId)
 			.collect(Collectors.toList());
-		Map<Integer, Member> memberMap = getExistMembersIdMapByParticipantsId(participantsId);
+		List<Member> existMembers = memberRepository.findByIdIn(participantsId);
+		Map<Integer, Member> memberMap = getExistMembersIdMapByParticipantsId(existMembers);
 		List<GameParticipant> gameParticipants = getGameParticipantsWithExistMembersMap(memberMap, participants,
 			gameRecord);
-		gameParticipantRepository.saveAll(gameParticipants);
+		bulkRepository.gameParticipantBulkInsert(gameParticipants);
 
-		applicationEventPublisher.publishEvent(new StageClearEvent(participantsId));
+		applicationEventPublisher.publishEvent(new StageClearEvent(existMembers));
 	}
 
 	//참여자 id 중 db에 존재하는 회원 정보를 Map으로 반환하는 메서드
-	private Map<Integer, Member> getExistMembersIdMapByParticipantsId(List<Integer> participantsId) {
-		List<Member> existMembers = memberRepository.findByIdIn(participantsId);
+	private Map<Integer, Member> getExistMembersIdMapByParticipantsId(List<Member> existMembers) {
 		Map<Integer, Member> hmap = new HashMap<>();
 		for (Member member : existMembers) {
 			hmap.put(member.getId(), member);

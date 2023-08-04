@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ssafy.a305.global.repository.BulkRepository;
 import com.ssafy.a305.member.domain.Member;
 import com.ssafy.a305.member.repository.MemberRepository;
 import com.ssafy.a305.mileage.domain.MileageHistory;
@@ -21,6 +22,7 @@ public class MileageService {
 
 	private final MileageHistoryRepository mileageHistoryRepository;
 	private final MemberRepository memberRepository;
+	private final BulkRepository bulkRepository;
 
 	// 마일리지 변화
 	@Transactional
@@ -35,14 +37,13 @@ public class MileageService {
 	}
 
 	@Transactional
-	public void increaseMileageWithMemberList(List<Integer> memberIds, Integer amount) {
-		List<Member> members = memberRepository.findByIdIn(memberIds);
+	public void increaseMileageWithMemberList(List<Member> members, Integer amount) {
 		members.forEach(member -> {
 			Integer mileage = member.getMileage();
 			member.updateMileage(mileage + amount);
 		});
-		memberRepository.saveAll(members);
 		createMileageHistoryWithMemberList(members, amount);
+		bulkRepository.memberBulkUpdate(members);
 	}
 
 	// 마일리지 기록 생성 & 저장
@@ -69,7 +70,7 @@ public class MileageService {
 				.build())
 			.collect(Collectors.toList());
 
-		mileageHistoryRepository.saveAll(mileageHistories);
+		bulkRepository.mileageHistoryBulkInsert(mileageHistories);
 	}
 
 }
