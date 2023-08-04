@@ -2,13 +2,13 @@ package com.ssafy.a305.global.event;
 
 import java.sql.Timestamp;
 
-import com.ssafy.a305.member.repository.MemberRepository;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.event.TransactionalEventListener;
 
 import com.ssafy.a305.member.domain.Member;
+import com.ssafy.a305.member.repository.MemberRepository;
 import com.ssafy.a305.mileage.service.MileageService;
 
 import lombok.RequiredArgsConstructor;
@@ -22,8 +22,8 @@ public class MileageEventListener {
 	private static final int DAILY_LOGIN_MILEAGE = 20;
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	@TransactionalEventListener
-	public void transactionalEventListener(LoginEvent event) {
+	@EventListener
+	public void loginEventListener(LoginEvent event) {
 		Member member = event.getMember();
 		Timestamp olderTimestamp = member.getRecentLogin();
 		Timestamp newTimestamp = member.updateRecentLogin();
