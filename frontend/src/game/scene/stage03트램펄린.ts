@@ -1,9 +1,9 @@
 import * as Phaser from "phaser";
-import { Player } from "./player";
+import { Player } from "../object/player";
 
 import map from "../assets/data/stage01.json";
 import background from "../assets/images/background.png";
-import terrain from "../assets/images/Terrain.png";
+import terrain from "../assets/images/terrain.png";
 
 
 import trampoline from "../assets/images/trampoline.png";
