@@ -1,7 +1,7 @@
 import * as Phaser from "phaser";
 import map from "../assets/data/stage01.json";
 import background from "../assets/images/background.png";
-import terrain from "../assets/images/Terrain.png";
+import terrain from "../assets/images/terrain.png";
 
 
 import trafficLight from "../assets/images/trafficLight.png"
