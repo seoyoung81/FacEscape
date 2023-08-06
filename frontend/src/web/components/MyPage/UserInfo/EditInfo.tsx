@@ -2,7 +2,12 @@ import styles from './UserInfo.module.css';
 import { useState } from 'react';
 import EditModal from './EditModal';
 
-const EditInfo: React.FC= () => {
+interface UserInfoProps {
+    email: string | null,
+    password: string | null
+}
+
+const EditInfo: React.FC<UserInfoProps> = ({ email, password }) => {
     const [openEditModal, setOpenEditModal] = useState<boolean>(false);
     const onEditModal = () => {
         setOpenEditModal(!openEditModal);
