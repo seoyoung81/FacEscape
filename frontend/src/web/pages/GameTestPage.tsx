@@ -1,7 +1,7 @@
 import { createGame } from "../../game";
 
 const GameTestPage = () => {
-  createGame(960, 600, "game");
+  createGame("100vw", "100vh", "game");
   return <div id="game"></div>;
 };
 

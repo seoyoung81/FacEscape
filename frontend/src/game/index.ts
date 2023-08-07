@@ -3,10 +3,10 @@ import { StageSelect } from "./scene/stageSelect";
 import Stage01 from "./scene/stage01";
 import Stage02 from "./scene/stage02";
 import Stage03 from "./scene/stage03";
-export const createGame = (width: number, height: number, tagName: string) => {
+export const createGame = (width: number|string, height: number|string, tagName: string) => {
   const scaleObject: Phaser.Types.Core.ScaleConfig = {
     width: width,
-    height: height,
+    height: height, 
   };
 
   const gameConfig: Phaser.Types.Core.GameConfig = {

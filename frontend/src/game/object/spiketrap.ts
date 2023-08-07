@@ -1,6 +1,6 @@
 import * as Phaser from "phaser";
 
-export class Trampoline extends Phaser.Physics.Arcade.Sprite {
+export class SpikeTrap extends Phaser.Physics.Arcade.Sprite {
   constructor(
     scene: Phaser.Scene,
     x: number,
@@ -25,16 +25,8 @@ export class Trampoline extends Phaser.Physics.Arcade.Sprite {
   }
 
   update(): void {
-    console.log("Trampoline update method called");
+    console.log("SpikeTrap update method called");
 
   }
-
-
-  jumpTrampoline(player: any) {
-    if (player.body.touching.down) {
-      player.setVelocityY(-200);
-    }
-  }
-
   
 }
