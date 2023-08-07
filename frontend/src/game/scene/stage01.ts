@@ -22,7 +22,7 @@ export default class Stage01 extends Phaser.Scene {
   }
   player!: Player;
   cannon!: Cannon;
-  // cannonBalls!: Phaser.Physics.Arcade.Group;
+  cannonBalls!: Phaser.Physics.Arcade.Group;
   platformLayer!: Phaser.Tilemaps.TilemapLayer | null;
   preload(): void {
     console.log(frogIdle);
@@ -75,27 +75,55 @@ export default class Stage01 extends Phaser.Scene {
       this.player,
     ]);
 
-    const cannonBall = this.add.sprite(
-      this.cannon.body!.x,
-      this.cannon.body!.y + 20,
-      "cannonBall"
-    );
+    this.cannonBalls = this.physics.add.group();
+    
+    this.time.addEvent({
+      delay: 1500,
+      callback: () => {
+        const cannonBall = this.physics.add.sprite(this.cannon.x, this.cannon.y, 'cannonBall');
+        this.cannonBalls.add(cannonBall);
+        cannonBall.body.allowGravity = false;
+        cannonBall.setVelocityX(-500);
+        this.physics.add.collider(this.player, this.cannonBalls,
+          () => {
+            cannonBall.destroy();
+            console.log("hit");
+          }
+        );
+        // this.physics.add.collider(this.cannonBalls, this.walls, ()=>{cannonBall.destroy(); walls.destroy}, undefined, this);
+      },
+      callbackScope: this,
+      loop: true
 
-    const cb = this.tweens.add({
-      targets: cannonBall,
-      x: 0,
-      y: this.cannon.body!.y + 20,
-      duration: 1000,
-      delay: 1000,
-      repeatDelay: 500,
-      loop: -1,
-    });
+    })
 
-    this.physics.add.collider(cannonBall, this.player);
+    // const cannonBall = this.add.sprite(
+    //   this.cannon.body!.x,
+    //   this.cannon.body!.y + 20,
+    //   "cannonBall"
+    // );
+
+    // const cb = this.tweens.add({
+    //   targets: cannonBall,
+    //   x: 0,
+    //   y: this.cannon.body!.y + 20,
+    //   duration: 1000,
+    //   delay: 1000,
+    //   repeatDelay: 500,
+    //   loop: -1,
+    // });
   }
 
   update(): void {
     this.player.update();
     this.cannon.update();
+
+    this.cannonBalls.getChildren().forEach((gameObj) => {
+      const cannonBall = gameObj as Phaser.GameObjects.Sprite;
+
+      if (cannonBall.x < 0) {
+        this.cannonBalls.killAndHide(cannonBall);
+      }
+    });
   }
 }
