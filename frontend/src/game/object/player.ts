@@ -14,7 +14,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.scene.physics.add.existing(this);
     this.setCollideWorldBounds(true);
     this.scene.physics.add.collider(this, collider);
-
     this.anims.create({
       key: "idleAnims",
       frames: this.anims.generateFrameNumbers("idle", {
@@ -50,7 +49,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
   update(): void {
     // this.play("idleAnims");
-    const cursor = this.scene.input.keyboard?.createCursorKeys();
+    const cursor = this.scene.input.keyboard!.createCursorKeys();
     if (cursor!.left.isDown) {
       this.setVelocityX(-160);
       this.flipX = true;

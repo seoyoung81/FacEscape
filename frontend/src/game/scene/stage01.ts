@@ -7,8 +7,13 @@ import frogIdle from "../assets/images/Ninja Frog/idle.png";
 import frogRun from "../assets/images/Ninja Frog/run.png";
 import frogJump from "../assets/images/Ninja Frog/jump.png";
 import frogFall from "../assets/images/Ninja Frog/fall.png";
+import cannonIdle from "../assets/images/Idle.png";
+import cannonShoot from "../assets/images/Shoot (44x28).png";
+import cannonBall from "../assets/images/Cannon Ball.png";
 
 import { Player } from "../object/player";
+import { Cannon } from "../object/cannon";
+
 export default class Stage01 extends Phaser.Scene {
   constructor() {
     super({
@@ -16,16 +21,24 @@ export default class Stage01 extends Phaser.Scene {
     });
   }
   player!: Player;
-  platformLayer!: Phaser.Tilemaps.TilemapLayer | any;
+  cannon!: Cannon;
+  // cannonBalls!: Phaser.Physics.Arcade.Group;
+  platformLayer!: Phaser.Tilemaps.TilemapLayer | null;
   preload(): void {
-    // console.log(terrain);
     console.log(frogIdle);
     this.load.tilemapTiledJSON("map", map);
     this.load.image("bg", background);
     this.load.image("terrain", terrain);
-
     this.load.image("jump", frogJump);
     this.load.image("fall", frogFall);
+    this.load.image("cannon", cannonIdle);
+    this.load.image("cannonBall", cannonBall);
+
+    this.load.spritesheet("shoot", cannonShoot, {
+      frameWidth: 44,
+      frameHeight: 28,
+      endFrame: 3,
+    });
 
     this.load.spritesheet("idle", frogIdle, {
       frameWidth: 32,
@@ -42,6 +55,7 @@ export default class Stage01 extends Phaser.Scene {
 
   create(): void {
     this.add.image(480, 360, "bg");
+
     const map = this.make.tilemap({
       key: "map",
       tileWidth: 16,
@@ -52,10 +66,36 @@ export default class Stage01 extends Phaser.Scene {
     map.setCollisionByExclusion([-1]);
     this.platformLayer = map.createLayer("platformLayer", ["terrain"]);
 
-    this.player = new Player(this, 90, 460, "idle", this.platformLayer);
+    this.player = new Player(this, 90, 460, "idle", [
+      this.platformLayer,
+      this.cannon,
+    ]);
+    this.cannon = new Cannon(this, 800, 505, "cannon", [
+      this.platformLayer,
+      this.player,
+    ]);
+
+    const cannonBall = this.add.sprite(
+      this.cannon.body!.x,
+      this.cannon.body!.y + 20,
+      "cannonBall"
+    );
+
+    const cb = this.tweens.add({
+      targets: cannonBall,
+      x: 0,
+      y: this.cannon.body!.y + 20,
+      duration: 1000,
+      delay: 1000,
+      repeatDelay: 500,
+      loop: -1,
+    });
+
+    this.physics.add.collider(cannonBall, this.player);
   }
 
   update(): void {
     this.player.update();
+    this.cannon.update();
   }
 }
