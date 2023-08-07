@@ -3,7 +3,10 @@ import * as Phaser from "phaser";
 import map from "../assets/data/stage01.json";
 import background from "../assets/images/background.png";
 import terrain from "../assets/images/terrain.png";
-import idle from "../assets/images/Ninja Frog/Idle (32x32).png";
+import frogIdle from "../assets/images/Ninja Frog/idle.png";
+import frogRun from "../assets/images/Ninja Frog/run.png";
+import frogJump from "../assets/images/Ninja Frog/jump.png";
+import frogFall from "../assets/images/Ninja Frog/fall.png";
 
 import { Player } from "../object/player";
 export default class Stage01 extends Phaser.Scene {
@@ -16,38 +19,28 @@ export default class Stage01 extends Phaser.Scene {
   platformLayer!: Phaser.Tilemaps.TilemapLayer | any;
   preload(): void {
     // console.log(terrain);
-    // console.log(idle);
+    console.log(frogIdle);
     this.load.tilemapTiledJSON("map", map);
     this.load.image("bg", background);
     this.load.image("terrain", terrain);
 
-    // Image 객체를 생성하여 data URI를 이미지로 변환합니다.
-    const img = new Image();
-    img.onload = () => {
-      // 이미지를 그릴 캔버스를 생성합니다.
-      const canvas = document.createElement("canvas");
-      canvas.width = img.width;
-      canvas.height = img.height;
-      const context = canvas.getContext("2d");
+    this.load.image("jump", frogJump);
+    this.load.image("fall", frogFall);
 
-      // Image를 캔버스에 그립니다.
-      context?.drawImage(img, 0, 0);
+    this.load.spritesheet("idle", frogIdle, {
+      frameWidth: 32,
+      frameHeight: 32,
+      endFrame: 10,
+    });
 
-      canvas.toBlob((blob) => {
-        // Blob을 Phaser 텍스처로 로드합니다.
-        this.textures.addBase64("idleImage", blob);
-      }, "image/png");
-      img.src = idle;
-    };
-    // this.load.spritesheet("ii", "idleImage", {
-    //   frameWidth: 32,
-    //   frameHeight: 32,
-    // });
+    this.load.spritesheet("run", frogRun, {
+      frameWidth: 32,
+      frameHeight: 32,
+      endFrame: 11,
+    });
   }
 
   create(): void {
-    this.add.sprite(140, 460, "idleImage");
-
     this.add.image(480, 360, "bg");
     const map = this.make.tilemap({
       key: "map",
@@ -56,10 +49,10 @@ export default class Stage01 extends Phaser.Scene {
     });
 
     map.addTilesetImage("terrain", "terrain");
+    map.setCollisionByExclusion([-1]);
     this.platformLayer = map.createLayer("platformLayer", ["terrain"]);
 
-    this.player = new Player(this, 90, 460, "ii", this.platformLayer);
-    this.physics.add.collider(this.player, this.platformLayer);
+    this.player = new Player(this, 90, 460, "idle", this.platformLayer);
   }
 
   update(): void {
