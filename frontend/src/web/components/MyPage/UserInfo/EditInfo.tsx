@@ -2,15 +2,16 @@ import styles from './UserInfo.module.css';
 import { useState } from 'react';
 import EditModal from './EditModal';
 
-interface UserInfoProps {
-    email: string | null,
-    password: string | null
+interface UserNickNameProps {
+    nickName: string | null,
 }
 
-const EditInfo: React.FC<UserInfoProps> = ({ email, password }) => {
+const EditInfo: React.FC<UserNickNameProps> = ({ nickName }) => {
     const [openEditModal, setOpenEditModal] = useState<boolean>(false);
-    const onEditModal = () => {
+
+    const onEditModal = async () => {
         setOpenEditModal(!openEditModal);
+    
     };
   return (
     <div>
@@ -21,7 +22,7 @@ const EditInfo: React.FC<UserInfoProps> = ({ email, password }) => {
             회원정보수정
         </div>
         <div className={styles['edit-modal']}>
-            {openEditModal ? <EditModal /> : null }
+            {openEditModal ? <EditModal nickName={nickName} onEditModal={onEditModal} /> : null }
         </div>
     </div>
   );

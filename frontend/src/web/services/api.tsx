@@ -1,12 +1,12 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:8080';
+const BASE_URL = 'http://i9a305.p.ssafy.io:8081';
 
 interface AxiosOptions {
     [key: string]: any; 
   };
 
-// 인증 값이 필요 없는 경우 GET
+// 인증 값이 필요 없는 경우
 const axiosApi = (url: string, options?: AxiosOptions) => {
     const instance = axios.create({ baseURL: url, ...options })
     return instance;

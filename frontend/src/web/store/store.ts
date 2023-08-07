@@ -1,8 +1,9 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import categoryReducer from './categorySlice';
 import searchReducer from './searchSlice';
-import isLogInReducer from './authSlice';
+import persistReducer from './authSlice';
 import nickNameReducer from './nickNameSlice';
+import userNickNameReducer from './userInfoSlice';
 
 export type UserState = {
   token: string | null;
@@ -59,11 +60,17 @@ const store = configureStore({
       // keyword 상점관리
         setKeyword: searchReducer,
       // 로그인 여부 관리
-        setIsLogIn: isLogInReducer,
-      // 닉네임
+        setIsLogIn: persistReducer,
+      // 닉네임(비회원)
         nickName: nickNameReducer,
+      // 회원 정보
+        userNickName: userNickNameReducer
     },
+    middleware: getDefaultMiddleware => getDefaultMiddleware({ serializableCheck: false}),
+    devTools: true,
 });
+
+
 
 // RootState 타입 정의
 export type RootState = ReturnType<typeof store.getState>;
