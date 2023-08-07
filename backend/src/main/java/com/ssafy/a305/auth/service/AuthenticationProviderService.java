@@ -31,11 +31,11 @@ public class AuthenticationProviderService implements AuthenticationProvider {
 	private final PasswordEncoder passwordEncoder;
 	private final MemberRepository memberRepository;
 	private final MileageService mileageService;
-	private static final int WELCOME_MILEAGE = 80;
+	private static final int WELCOME_MILEAGE = 100;
 	private static final int DAILY_LOGIN_MILEAGE = 20;
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		String email = authentication.getPrincipal().toString();
 		String rawPassword = authentication.getCredentials().toString();
