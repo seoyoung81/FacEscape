@@ -2,11 +2,13 @@ package com.ssafy.a305.memberitem.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.a305.memberitem.dto.MemberItemReqDTO;
+import com.ssafy.a305.memberitem.dto.PurchasedItemResDTO;
 import com.ssafy.a305.memberitem.service.MemberItemService;
 
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,11 @@ public class MemberItemController {
 	public ResponseEntity<Void> equipItem(@RequestBody MemberItemReqDTO dto, Authentication authentication) {
 		memberItemService.equipItem(dto, authentication);
 		return ResponseEntity.ok().build();
+	}
+
+	@GetMapping("/member/item/purchased")
+	public ResponseEntity<PurchasedItemResDTO> getPurchasedItem(Authentication authentication) {
+		return ResponseEntity.ok(memberItemService.getPurchasedItem(Integer.parseInt(authentication.getName())));
 	}
 
 }
