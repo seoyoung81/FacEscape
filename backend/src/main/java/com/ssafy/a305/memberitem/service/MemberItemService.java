@@ -1,9 +1,13 @@
 package com.ssafy.a305.memberitem.service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
+import com.ssafy.a305.memberitem.dto.PurchasedItemElementDTO;
+import com.ssafy.a305.memberitem.dto.PurchasedItemResDTO;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -121,6 +125,17 @@ public class MemberItemService {
 	@Transactional(readOnly = true)
 	public List<MemberItem> showEquippedItem(Integer memberId) {
 		return memberItemRepository.findByMemberIdAndUsedYN(memberId, true);
+	}
+
+	public PurchasedItemResDTO getPurchasedItem(Integer memberId){
+		List<MemberItem> purchasedMemberItems = showItem(memberId);
+		List<PurchasedItemElementDTO> purchasedItems = purchasedMemberItems.stream()
+				.map(memberItem -> {
+					Item item = memberItem.getItem();
+					return new PurchasedItemElementDTO(item.getId(), item.getName(), item.getImage(), item.getItemType().getName());
+				})
+				.collect(Collectors.toList());
+		return new PurchasedItemResDTO(purchasedItems);
 	}
 
 }
