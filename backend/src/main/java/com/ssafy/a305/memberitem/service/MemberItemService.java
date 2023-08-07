@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.a305.item.domain.Item;
+import com.ssafy.a305.item.domain.ItemType;
 import com.ssafy.a305.item.repository.ItemRepository;
 import com.ssafy.a305.member.domain.Member;
 import com.ssafy.a305.member.repository.MemberRepository;
@@ -97,6 +98,15 @@ public class MemberItemService {
 		// memberId와 itemId로 MemberItem을 조회
 		MemberItem memberItem = memberItemRepository.findByMemberIdAndItemId(memberId, dto.getItemId())
 			.orElseThrow(NoSuchElementException::new);
+
+		//새로운 아이템 장착 시 장착 중인 아이템 해제 필요
+		if (!memberItem.getUsedYN()) {
+			ItemType type = memberItem.getItem().getItemType();
+			memberItemRepository.findByMemberIdAndUsedYNAndItem_ItemType(memberId, true, type)
+				.ifPresent(oldItem -> {
+					oldItem.updateUsedYN(false);
+				});
+		}
 
 		// usedYN 값을 변경
 		boolean currentUsedYN = memberItem.getUsedYN();
