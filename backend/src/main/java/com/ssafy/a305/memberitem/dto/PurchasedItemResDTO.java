@@ -1,14 +1,14 @@
 package com.ssafy.a305.memberitem.dto;
 
-import com.ssafy.a305.item.dto.ItemElementDTO;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class PurchasedItemResDTO {
-    private List<PurchasedItemElementDTO> items;
+	private List<PurchasedItemElementDTO> items;
 }
