@@ -42,20 +42,20 @@ export default class Stage03 extends Phaser.Scene {
 
   create(): void {
 
-    // this.cameras.main.setBounds(
-    //   0,
-    //   0,
-    //   this.mapWidth * this.tileWidth,
-    //   this.mapHeight * this.tileHeight
-    // );
-    // this.physics.world.setBounds(
-    //   0,
-    //   0,
-    //   this.mapWidth * this.tileWidth,
-    //   this.mapHeight * this.tileHeight
-    // );
-    // this.cameras.main.scrollX = 1000;
-    // this.cameras.main.scrollY = 300;
+    this.cameras.main.setBounds(
+      0,
+      0,
+      this.mapWidth * this.tileWidth,
+      this.mapHeight * this.tileHeight
+    );
+    this.physics.world.setBounds(
+      0,
+      0,
+      this.mapWidth * this.tileWidth,
+      this.mapHeight * this.tileHeight
+    );
+    this.cameras.main.scrollX = 1000;
+    this.cameras.main.scrollY = 300;
 
     this.add.image(480, 360, "bg");
     const map = this.make.tilemap({

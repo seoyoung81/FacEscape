@@ -14,8 +14,8 @@ export class TimeGauge extends Phaser.GameObjects.Sprite {
     // this.scene.add.existing(this);
 
     // 게이지 바 생성
-    const bar1 = this.scene.add.nineslice(x, y, 'timeGauge', 'ButtonOrange');
-    const fill1 = this.scene.add.nineslice(x - 114, y - 2, 'timeGauge', 'ButtonOrangeFill2', 13, 39, 6, 6);
+    const bar1 = this.scene.add.nineslice(x, y, 'timeGauge', 'ButtonOrange').setScrollFactor(0);
+    const fill1 = this.scene.add.nineslice(x - 114, y - 2, 'timeGauge', 'ButtonOrangeFill2', 13, 39, 6, 6).setScrollFactor(0);
     fill1.setOrigin(0, 0.5);
 
     // 트윈 애니메이션 설정

@@ -31,20 +31,20 @@ export default class Stage02 extends Phaser.Scene {
   }
 
   create(): void {
-    // this.cameras.main.setBounds(
-    //   0,
-    //   0,
-    //   this.mapWidth * this.tileWidth,
-    //   this.mapHeight * this.tileHeight
-    // );
-    // this.physics.world.setBounds(
-    //   0,
-    //   0,
-    //   this.mapWidth * this.tileWidth,
-    //   this.mapHeight * this.tileHeight
-    // );
-    // this.cameras.main.scrollX = 480;
-    // this.cameras.main.scrollY = 1200;
+    this.cameras.main.setBounds(
+      0,
+      0,
+      this.mapWidth * this.tileWidth,
+      this.mapHeight * this.tileHeight
+    );
+    this.physics.world.setBounds(
+      0,
+      0,
+      this.mapWidth * this.tileWidth,
+      this.mapHeight * this.tileHeight
+    );
+    this.cameras.main.scrollX = 480;
+    this.cameras.main.scrollY = 1200;
     
     const map = this.make.tilemap({
       key: "map",
@@ -54,7 +54,7 @@ export default class Stage02 extends Phaser.Scene {
 
     map.addTilesetImage("terrain", "terrain");
     this.platformLayer = map.createLayer("platformLayer", ["terrain"]);
-    this.timeGauge = new TimeGauge(this, this.game.canvas.width/2, this.game.canvas.height/6, "timeGauge").setScrollFactor(0);
+    this.timeGauge = new TimeGauge(this, this.game.canvas.width/2, this.game.canvas.height/6, "timeGauge");
 
   }
 
