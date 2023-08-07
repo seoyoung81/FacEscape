@@ -22,8 +22,6 @@ const UserInfo: React.FC = () =>{
             setNickName(response.data.nickname);
             setEmail(response.data.email);
             setMileage(response.data.mileage);
-            console.log('회원 정보 수정이 되었는지 확인하기 위한 내 정보 불러오기 api 확인', response.data.nickname);
-            return response;
         } catch (error) {
             console.log(error);
         }

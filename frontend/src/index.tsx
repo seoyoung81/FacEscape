@@ -13,12 +13,6 @@ import { PersistGate } from 'redux-persist/integration/react';
 // Router
 import { BrowserRouter } from "react-router-dom";
 
-// mock
-// if (process.env.NODE_ENV === 'development') {
-//   const { worker } = require('./web/mocks/browser')
-//   worker.start()
-// }
-
 const persistor = persistStore(store);
 
 const root = ReactDOM.createRoot(
