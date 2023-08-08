@@ -51,11 +51,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     // this.play("idleAnims");
     const cursor = this.scene.input.keyboard!.createCursorKeys();
     if (cursor!.left.isDown) {
-      this.setVelocityX(-160);
+      this.setVelocityX(-130);
       this.flipX = true;
       this.play("runAnims", true);
     } else if (cursor!.right.isDown) {
-      this.setVelocityX(160);
+      this.setVelocityX(130);
       this.flipX = false;
       this.play("runAnims", true);
     } else {
@@ -64,7 +64,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     if (cursor!.up.isDown && this.body!.blocked.down) {
-      this.setVelocityY(-330);
+      this.setVelocityY(-260);
       this.play("jumpAnims", true);
     }
 
