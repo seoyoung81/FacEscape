@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Dispatch } from 'redux';
-import { setToken } from '../../store/store';
+// import { setToken } from '../../store/store';
 
 import { setIsLogIn } from '../../store/authSlice';
 

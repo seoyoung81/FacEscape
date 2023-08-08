@@ -25,20 +25,22 @@ const ItemList: React.FC = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-        try {
-            const response = await defaultInstance.get(
-            `/items`,
-            {
-                params: {
-                    itemType: itemType.itemType,
-                    keyword: keyword.keyword
-                },
+            try {
+                const params: { itemType?: string; keyword?: string } = {};
+
+                if (itemType.itemType && itemType.itemType !== '전체보기') {
+                    params.itemType = itemType.itemType;
+                }
+                if (keyword.keyword) {
+                    params.keyword = keyword.keyword;
+                }
+
+    
+                const response = await defaultInstance.get('/items', { params });
+                setItemData(response.data.items || []);
+            } catch (error: any) {
+                console.error('아이템 조회 에러났음', error);
             }
-            );
-            setItemData(response.data.items || []);
-        } catch (error) {
-            console.error('아이템 조회 에러났음', error);
-        }
         };
         fetchData();
     }, [itemType, keyword]);
@@ -57,8 +59,7 @@ const ItemList: React.FC = () => {
                     </div>
                 ))
             ) : (
-                <p>Loading...</p>
-                // 무조건 UI 넣을 것.
+                <p>아이템이 존재하지 않습니다.</p>
             )}
         </div>
     );
