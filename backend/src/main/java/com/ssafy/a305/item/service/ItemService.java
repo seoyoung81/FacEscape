@@ -3,7 +3,6 @@ package com.ssafy.a305.item.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,10 +22,10 @@ public class ItemService {
 
 	@Transactional(readOnly = true)
 	public ItemsResDTO getItems(ItemsReqDTO dto) {
-		Page<Item> items = itemRepository.findByItemsByDTO(dto);
-		List<ItemElementDTO> itemElements = items.getContent().stream()
+		List<Item> items = itemRepository.findByItemsByDTO(dto);
+		List<ItemElementDTO> itemElements = items.stream()
 			.map(ItemElementDTO::new)
 			.collect(Collectors.toList());
-		return new ItemsResDTO(itemElements, items.getNumber(), items.getTotalPages(), items.isLast());
+		return new ItemsResDTO(itemElements);
 	}
 }

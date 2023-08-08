@@ -8,8 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PurchasedItemElementDTO {
-    private Integer itemId;
-    private String name;
-    private String image;
-    private String itemType;
+	private Integer itemId;
+	private String name;
+	private String image;
 }

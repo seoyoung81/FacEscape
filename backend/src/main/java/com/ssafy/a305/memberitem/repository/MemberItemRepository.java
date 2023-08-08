@@ -15,6 +15,8 @@ import com.ssafy.a305.memberitem.domain.MemberItem;
 public interface MemberItemRepository extends JpaRepository<MemberItem, Integer> {
 	List<MemberItem> findByMemberId(Integer memberId);
 
+	List<MemberItem> findByMemberIdAndItem_ItemType_Name(Integer memberId, String itemTypeName);
+
 	List<MemberItem> findByMemberIdAndUsedYN(Integer memberId, boolean usedYN);
 
 	Optional<MemberItem> findByMemberIdAndUsedYNAndItem_ItemType(Integer memberId, boolean usedYN, ItemType itemType);
