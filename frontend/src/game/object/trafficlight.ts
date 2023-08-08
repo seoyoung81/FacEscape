@@ -58,7 +58,7 @@ export class TrafficLight extends Phaser.GameObjects.Sprite {
   }
 
 
-  returnTrafficLightState() {
+  getTrafficLightState() {
     return this.trafficLightState;
   }
 

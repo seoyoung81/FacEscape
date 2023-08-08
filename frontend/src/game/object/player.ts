@@ -1,5 +1,8 @@
 import * as Phaser from "phaser";
 export class Player extends Phaser.Physics.Arcade.Sprite {
+  
+  private playerState: number = 0;
+
   constructor(
     scene: Phaser.Scene,
     x: number,
@@ -49,7 +52,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
   update(): void {
     // this.play("idleAnims");
+    
     const cursor = this.scene.input.keyboard!.createCursorKeys();
+    if (this.playerState === 0) {
+
     if (cursor!.left.isDown) {
       this.setVelocityX(-130);
       this.flipX = true;
@@ -62,8 +68,26 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       this.setVelocityX(0);
       this.play("idleAnims", true);
     }
+    } else if (this.body && this.playerState === 1) {
+      if (cursor!.left.isDown) {
+        this.setVelocityX(this.body.velocity.x - 0.5);
+        this.flipX = true;
+        this.play("runAnims", true);
+      } else if (cursor!.right.isDown) {
+        this.setVelocityX(this.body.velocity.x + 0.5);
+        this.flipX = false;
+        this.play("runAnims", true);
+      } else {
+        if (this.body.blocked.down) {
+          // this.setVelocityX(0);
+          this.playerState = 0;
+          this.play("idleAnims", true);
+        }
+      }
 
-    if (cursor!.up.isDown && this.body!.blocked.down) {
+    }
+
+    if (cursor!.up.isDown && this.body!.blocked.down && this.playerState === 0) {
       this.setVelocityY(-260);
       this.play("jumpAnims", true);
     }
@@ -74,4 +98,16 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       this.play("jumpAnims", true);
     }
   }
+
+  
+  getPlayerState() {
+    console.log(this.playerState);
+    return this.playerState;
+  }
+
+  setPlayerState(stateNumber: number) {
+    this.playerState = stateNumber;
+  }
+
+
 }
