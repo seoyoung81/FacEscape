@@ -1,7 +1,5 @@
 package com.ssafy.a305.global.security.config;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -10,13 +8,9 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.ssafy.a305.global.security.errorhandler.CustomAccessDeniedHandler;
 import com.ssafy.a305.global.security.errorhandler.CustomAuthenticationEntryPoint;
@@ -40,24 +34,11 @@ public class SecurityConfig {
 	}
 
 	@Bean
-	public CorsConfigurationSource corsFilter() {
-		CorsConfiguration corsConfiguration = new CorsConfiguration();
-		corsConfiguration.setAllowedOrigins(List.of("*"));
-		corsConfiguration.setAllowedMethods(
-			List.of(HttpMethod.GET.name(), HttpMethod.POST.name(), HttpMethod.PATCH.name(), HttpMethod.DELETE.name(),
-				HttpMethod.OPTIONS.name()));
-
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", corsConfiguration);
-		return source;
-	}
-
-	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		// http basic을 통한 인증은 하지 않으므로 설정 해제
 		http.httpBasic().disable();
 		// 기본 Cors 설정은 제외하며, CorsConfigurationSource를 통해 Cors 설정을 제어한다.
-		http.cors(AbstractHttpConfigurer::disable);
+		http.cors();
 		// Rest API 서버 이므로 csrf 관련 설정은 사용하지 않는다.
 		http.csrf().disable();
 		// 인증이 필요한 서비스의 경우 Authorization Header에 Bearer토큰 여부와, 토큰 유효 여부를 판단해야하므로 커스텀 필터를 추가한다.
