@@ -15,7 +15,7 @@ export const createGame = (width: number|string, height: number|string, tagName:
     physics: {
       default: "arcade",
       arcade: {
-        gravity: { y: 150 },
+        gravity: { y: 500 },
         debug: true,
         checkCollision: { up: true, down: true, left: true, right: true },
       },

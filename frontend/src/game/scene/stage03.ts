@@ -34,7 +34,7 @@ export default class Stage03 extends Phaser.Scene {
   private prevPlayerX: number = 0;
   private prevPlayerY: number = 0;
 
-  mapWidth: number = 180;
+  mapWidth: number = 300;
   mapHeight: number = 46;
   tileWidth: number = 16;
   tileHeight: number = 16;
@@ -104,8 +104,20 @@ export default class Stage03 extends Phaser.Scene {
     
     // 트램펄린 배치
     const trampolinePositions = [
-      { x: 1200, y: 500 },
-      { x: 1500, y: 500 },
+      { x: 790, y: 670 },
+      
+      { x: 1480, y: 670 },
+      { x: 1504, y: 670 },
+      { x: 1528, y: 670 },
+      { x: 1552, y: 670 },
+      { x: 1576, y: 670 },
+      { x: 1600, y: 670 },
+      { x: 1624, y: 670 },
+      { x: 1648, y: 670 },
+      { x: 1672, y: 670 },
+      { x: 1696, y: 670 },
+      { x: 1720, y: 670 },
+      
     ];
     
     trampolinePositions.forEach(position => {
@@ -117,12 +129,37 @@ export default class Stage03 extends Phaser.Scene {
 
     // 가시 배치
     const spikeTrapPositions = [
-      { x: 1300, y: 500 },
-      { x: 1600, y: 500 },
+      { x: 396, y: 800 },
+      { x: 422, y: 800 },
+      { x: 448, y: 800 },
+      { x: 474, y: 800 },
+      { x: 500, y: 800 },
+
+      { x: 604, y: 800 },
+      { x: 630, y: 800 },
+      { x: 656, y: 800 },
+      { x: 682, y: 800 },
+      { x: 708, y: 800 },
+      
+      { x: 812, y: 800 },
+      { x: 838, y: 800 },
+      { x: 864, y: 800 },
+      { x: 890, y: 800 },
+      { x: 918, y: 800 },
+      { x: 944, y: 800 },
+      { x: 968, y: 800 },
+      { x: 992, y: 800 },
+      
+      { x: 1164, y: 800 },
+      { x: 1190, y: 800 },
+      { x: 1216, y: 800 },
+      { x: 1242, y: 800 },
+      { x: 1268, y: 800 },      
+      
     ];
     
     spikeTrapPositions.forEach(position => {
-      const spikeTrap = new SpikeTrap(this, position.x, position.y, "spikeTrap", this.platformLayer).setScale(0.15);
+      const spikeTrap = new SpikeTrap(this, position.x, position.y, "spikeTrap", this.platformLayer).setScale(0.13333);
       (spikeTrap.body as Phaser.Physics.Arcade.Body).setAllowGravity(false);
       (spikeTrap.body as Phaser.Physics.Arcade.Body).setImmovable(true);
       this.physics.add.collider(spikeTrap, this.platformLayer);

@@ -24,7 +24,7 @@ export default class Stage02 extends Phaser.Scene {
   timeGauge!: TimeGauge;
 
   mapWidth: number = 95;
-  mapHeight: number = 100;
+  mapHeight: number = 160;
   tileWidth: number = 16;
   tileHeight: number = 16;
 
@@ -77,7 +77,7 @@ export default class Stage02 extends Phaser.Scene {
     this.platformLayer = map.createLayer("platformLayer", ["terrain"]);
     this.platformLayer.setCollision(1); 
     this.platformLayer.setCollisionByExclusion([-1], true);
-    this.player = new Player(this, 100, 1500, "idle", this.platformLayer);
+    this.player = new Player(this, 300, 650, "idle", this.platformLayer);
     
     this.timeGauge = new TimeGauge(this, this.game.canvas.width/2, this.game.canvas.height/6, "timeGauge");
 
@@ -86,5 +86,10 @@ export default class Stage02 extends Phaser.Scene {
   update(): void {
     this.player.update();
 
+
+    this.cameras.main.scrollX = this.player.x - this.cameras.main.width / 2;
+    this.cameras.main.scrollY = this.player.y - this.cameras.main.height / 2;
+
+  
   }
 }
