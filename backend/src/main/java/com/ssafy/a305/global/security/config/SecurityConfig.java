@@ -1,5 +1,7 @@
 package com.ssafy.a305.global.security.config;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -12,6 +14,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.ssafy.a305.global.security.errorhandler.CustomAccessDeniedHandler;
 import com.ssafy.a305.global.security.errorhandler.CustomAuthenticationEntryPoint;
@@ -34,18 +39,18 @@ public class SecurityConfig {
 		return authenticationManagerBuilder.build();
 	}
 
-	// @Bean
-	// public CorsConfigurationSource corsFilter() {
-	// 	CorsConfiguration corsConfiguration = new CorsConfiguration();
-	// 	corsConfiguration.setAllowedOrigins(List.of("*"));
-	// 	corsConfiguration.setAllowedMethods(
-	// 		List.of(HttpMethod.GET.name(), HttpMethod.POST.name(), HttpMethod.PATCH.name(), HttpMethod.DELETE.name(),
-	// 			HttpMethod.OPTIONS.name()));
-	//
-	// 	UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-	// 	source.registerCorsConfiguration("/**", corsConfiguration);
-	// 	return source;
-	// }
+	@Bean
+	public CorsConfigurationSource corsFilter() {
+		CorsConfiguration corsConfiguration = new CorsConfiguration();
+		corsConfiguration.setAllowedOrigins(List.of("*"));
+		corsConfiguration.setAllowedMethods(
+			List.of(HttpMethod.GET.name(), HttpMethod.POST.name(), HttpMethod.PATCH.name(), HttpMethod.DELETE.name(),
+				HttpMethod.OPTIONS.name()));
+
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", corsConfiguration);
+		return source;
+	}
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
