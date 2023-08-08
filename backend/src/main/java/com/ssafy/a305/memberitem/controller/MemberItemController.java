@@ -33,10 +33,10 @@ public class MemberItemController {
 	}
 
 	@GetMapping("/member/item/purchased")
-	public ResponseEntity<PurchasedItemResDTO> getPurchasedItem(@RequestParam String itemTypeName,
+	public ResponseEntity<PurchasedItemResDTO> getPurchasedItem(@RequestParam String itemType,
 		Authentication authentication) {
 		return ResponseEntity.ok(
-			memberItemService.getPurchasedItem(itemTypeName, Integer.parseInt(authentication.getName())));
+			memberItemService.getPurchasedItem(itemType, Integer.parseInt(authentication.getName())));
 	}
 
 }
