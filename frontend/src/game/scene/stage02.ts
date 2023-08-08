@@ -93,7 +93,7 @@ export default class Stage02 extends Phaser.Scene {
     this.platformLayer = map.createLayer("platformLayer", ["terrain"]);
     this.platformLayer.setCollision(1); 
     this.platformLayer.setCollisionByExclusion([-1], true);
-    this.player = new Player(this, 300, 650, "idle", [
+    this.player = new Player(this, 400, 650, "idle", [
       this.platformLayer,
       this.cannon,
       this.cannonBalls,
@@ -101,10 +101,11 @@ export default class Stage02 extends Phaser.Scene {
     
     this.timeGauge = new TimeGauge(this, this.game.canvas.width/2, this.game.canvas.height/6, "timeGauge");
 
-    this.cannon = new Cannon(this, 90, 500, "cannon", [
+    this.cannon = new Cannon(this, 170, 1300, "cannon", [
       this.platformLayer,
       this.player,
     ]);
+    this.cannon.flipX = true;
 
     this.cannonBalls = this.physics.add.group();
     this.time.addEvent({
@@ -117,7 +118,7 @@ export default class Stage02 extends Phaser.Scene {
         );
         this.cannonBalls.add(cannonBall);
         cannonBall.body.allowGravity = false;
-        cannonBall.setVelocityX(-500);
+        cannonBall.setVelocityX(500);
         this.physics.add.collider(this.player, cannonBall, () => {
           this.knockBack(this.player);
           cannonBall.destroy();
@@ -132,11 +133,10 @@ export default class Stage02 extends Phaser.Scene {
 
   knockBack(player: Player) {
     player.setPlayerState(1);
-    const pushBackVelocityX = -200;
+    const pushBackVelocityX = 300;
     const pushBackVelocityY = -200;
     player.setVelocity(pushBackVelocityX, pushBackVelocityY);
   }
-
 
   update(): void {
     this.player.update();
