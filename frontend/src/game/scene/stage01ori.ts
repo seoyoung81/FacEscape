@@ -109,7 +109,6 @@ export default class Stage01 extends Phaser.Scene {
         cannonBall.body.allowGravity = false;
         cannonBall.setVelocityX(-500);
         this.physics.add.collider(this.player, cannonBall, () => {
-          this.knockBack(this.player);
           cannonBall.destroy();
         });
       },
@@ -133,20 +132,9 @@ export default class Stage01 extends Phaser.Scene {
     );
   }
 
-
-  knockBack(player: Player) {
-    player.setPlayerState(1);
-    const pushBackVelocityX = -200;
-    const pushBackVelocityY = -200;
-    player.setVelocity(pushBackVelocityX, pushBackVelocityY);
-  }
-
-
   update(): void {
     this.player.update();
     this.cannon.update();
-
-    this.player.getPlayerState();
 
     this.cannonBalls.getChildren().forEach((gameObj) => {
       const cannonBall = gameObj as Phaser.GameObjects.Sprite;
