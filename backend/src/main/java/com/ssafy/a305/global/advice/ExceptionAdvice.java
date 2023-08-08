@@ -16,6 +16,8 @@ import com.ssafy.a305.auth.exception.LoginException;
 import com.ssafy.a305.global.advice.dto.ValidationErrorDTO;
 import com.ssafy.a305.global.advice.dto.ValidationFailedResDTO;
 import com.ssafy.a305.member.exception.DuplicatedEmailException;
+import com.ssafy.a305.memberitem.exception.ItemAlreadyPurchasedException;
+import com.ssafy.a305.memberitem.exception.MileageInsufficientException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -58,6 +60,18 @@ public class ExceptionAdvice {
 
 	@ExceptionHandler(LoginException.class)
 	public ResponseEntity loginException(LoginException e) {
+		log.error("exception : ", e);
+		return new ResponseEntity(HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(MileageInsufficientException.class)
+	public ResponseEntity mileageInsufficientException(MileageInsufficientException e) {
+		log.error("exception : ", e);
+		return new ResponseEntity(HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(ItemAlreadyPurchasedException.class)
+	public ResponseEntity itemAlreadyPurchasedException(ItemAlreadyPurchasedException e) {
 		log.error("exception : ", e);
 		return new ResponseEntity(HttpStatus.BAD_REQUEST);
 	}
