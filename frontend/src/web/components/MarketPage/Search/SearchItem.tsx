@@ -14,7 +14,6 @@ const SearchItem: React.FC = () => {
     const [value, setValue] = useState<string>("");
 
     const handleSearch = () => {
-        console.log('검색어', value);
         dispatch(setKeyword(value));
         setValue("");
     };

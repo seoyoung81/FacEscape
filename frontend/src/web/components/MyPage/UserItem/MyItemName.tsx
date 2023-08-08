@@ -1,17 +1,15 @@
 import styles from './UserItem.module.css';
 import { useState, useEffect } from 'react';
 
+interface nameProps {
+    itemName: string;
+}
 
-const MyItemName: React.FC = () => {
-    const [myItemName, setMyItemName] = useState<string>("");
-    // api 응답 
-    useEffect(() => {
-        setMyItemName("날개 한 짝");
-    }, [])
+const MyItemName: React.FC<nameProps> = ({ itemName }) => {
 
     return (
         <div className={styles['myitem-name']}>
-           { myItemName } 
+           { itemName } 
         </div>
     )
 };

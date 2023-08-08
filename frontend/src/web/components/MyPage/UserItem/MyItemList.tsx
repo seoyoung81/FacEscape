@@ -32,11 +32,11 @@ const MyItemList: React.FC = () => {
                     }
                 }
             ); 
-            if (Array.isArray(data)) {
-                setItemList(data);
+            console.log('내가 구매한 아이템', data);
+            if (data && data.items.length > 0) {
+                setItemList(data.items);
                 console.log('내가 구매한 아이템 불러오기 성공', data);
             } else {
-                setMyItem(true);
                 console.log('API 데이터가 0개임', data);
             }
         }  
@@ -46,13 +46,12 @@ const MyItemList: React.FC = () => {
     };
 
         fetchItemList();
-    }, []);
+    }, [myCategory]);
     
-    console.log()
     return (
         <div className={styles['myitem-wrap']}>
             <div>
-                {myItem ? (
+                {itemList.length === 0 ? (
                     <div className={styles['go-market']}>
                         <button onClick={goMarket}>아이템 구매하러 가기</button>
                     </div>
@@ -62,13 +61,14 @@ const MyItemList: React.FC = () => {
                 }
             </div>
             {itemList.map(item => (
-            <MyItem
-                key={item.id}
-                itemId={item.id}
-                itemName={item.name}
-                checked={item.id === checkedItemId}
-                onEquip={handleEquipItem}
-            />
+                <MyItem
+                    key={item.itemId}
+                    itemId={item.itemId}
+                    itemName={item.name}
+                    itemImg={item.image}
+                    checked={item.id === checkedItemId}
+                    onEquip={handleEquipItem}
+                />
             
       ))}
           

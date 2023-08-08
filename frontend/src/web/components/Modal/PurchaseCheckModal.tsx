@@ -18,18 +18,18 @@ const PurchaseCheckModal: React.FC<purchaseProps> = ({ itemPrice, itemId, itemIm
     const stopPropagation = (event: React.MouseEvent<HTMLDivElement>) => {
         event.stopPropagation();
     };
-
-    
+    console.log(itemId);
     const purchaseItem = async () => {
         const response = await authInstance.post('/member/item', {
-            params: {
-                itemId: {itemId}
-            }
+            itemId
         })
         try {
             console.log('구매 동작 성공', response);
         }
         catch(error) {
+            // 이미 구매한 아이템이면 구매 못하게
+    
+            // 가격이 내 마일리지보다 높으면 구매 못하게
             console.log('구매 동작 실패', error);
         }
         setOpenPurchaseModal(false);

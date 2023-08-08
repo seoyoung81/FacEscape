@@ -6,7 +6,6 @@ interface imgProps {
 
 const ItemImg :React.FC<imgProps> = ({ itemImg }) => {
     const img: string = itemImg ;
-    console.log(img);
     return (
         <div>
             <div className={styles['img-box']}>

@@ -2,15 +2,13 @@ import Item from './Item';
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
-import { AxiosResponse } from 'axios';
-import type { ApiResponse } from '../../../services/market';
 
 import { defaultInstance } from '../../../services/api';
 
 import styles from './Item.module.css';
 
 export interface ItemType {
-    ItemId: number;
+    itemId: number;
     name: string;
     image: string;
     price: number;
@@ -25,8 +23,6 @@ const ItemList: React.FC = () => {
     // 검색
     const keyword = useSelector((state: RootState) => state.setKeyword);
 
-    console.log(itemType);
-
     useEffect(() => {
         const fetchData = async () => {
         try {
@@ -39,9 +35,7 @@ const ItemList: React.FC = () => {
                 },
             }
             );
-            console.log('아이템 조회', response);
-            const allItems = response.data.flatMap((data: any) => data.items);
-            setItemData(allItems);
+            setItemData(response.data.items || []);
         } catch (error) {
             console.error('아이템 조회 에러났음', error);
         }
@@ -53,17 +47,18 @@ const ItemList: React.FC = () => {
         <div className={styles.container}>
             {itemData && itemData.length > 0 ? (
                 itemData.map((item) => (
-                    <div key={item.ItemId} className={styles['main-item']}>
+                    <div key={item.itemId} className={styles['main-item']}>
                         <Item 
                             itemName={item.name} 
                             itemImg={item.image} 
                             itemPrice={item.price} 
-                            itemId={item.ItemId}
+                            itemId={item.itemId}
                         />
                     </div>
                 ))
             ) : (
                 <p>Loading...</p>
+                // 무조건 UI 넣을 것.
             )}
         </div>
     );

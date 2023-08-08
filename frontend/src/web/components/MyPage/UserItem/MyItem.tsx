@@ -7,11 +7,12 @@ import styles from './UserItem.module.css';
 interface MyItemProps {
     itemId: string;
     itemName: string;
+    itemImg: string;
     checked: boolean;
     onEquip: (itemId: string) => void;
 }
 
-const MyItem: React.FC<MyItemProps> = ({ itemId, itemName, checked, onEquip }) => {
+const MyItem: React.FC<MyItemProps> = ({ itemId, itemName, checked, onEquip, itemImg }) => {
     const onEquipItemClick = () => {
         if (checked) {
             onEquip(""); 
@@ -27,9 +28,9 @@ const MyItem: React.FC<MyItemProps> = ({ itemId, itemName, checked, onEquip }) =
                 onClick={onEquipItemClick}
             >
                 <div>
-                    <MyItemImg />
+                    <MyItemImg itemImg={itemImg} />
                 </div>
-                <MyItemName />
+                <MyItemName itemName={itemName} />
             <div className={styles['check-icon']}>
                 {checked ? <BsCheck size={180} /> : null}
             </div>
