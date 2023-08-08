@@ -69,6 +69,7 @@ export default class Stage01 extends Phaser.Scene {
     this.player = new Player(this, 90, 460, "idle", [
       this.platformLayer,
       this.cannon,
+      this.cannonBalls,
     ]);
     this.cannon = new Cannon(this, 800, 505, "cannon", [
       this.platformLayer,
@@ -76,26 +77,27 @@ export default class Stage01 extends Phaser.Scene {
     ]);
 
     this.cannonBalls = this.physics.add.group();
-    
+
     this.time.addEvent({
-      delay: 1500,
+      delay: 1000,
       callback: () => {
-        const cannonBall = this.physics.add.sprite(this.cannon.x, this.cannon.y, 'cannonBall');
+        const cannonBall = this.physics.add.sprite(
+          this.cannon.x,
+          this.cannon.y,
+          "cannonBall"
+        );
         this.cannonBalls.add(cannonBall);
         cannonBall.body.allowGravity = false;
         cannonBall.setVelocityX(-500);
-        this.physics.add.collider(this.player, this.cannonBalls,
-          () => {
-            cannonBall.destroy();
-            console.log("hit");
-          }
-        );
+        this.physics.add.collider(this.player, cannonBall, () => {
+          cannonBall.destroy();
+          console.log("hit");
+        });
         // this.physics.add.collider(this.cannonBalls, this.walls, ()=>{cannonBall.destroy(); walls.destroy}, undefined, this);
       },
       callbackScope: this,
-      loop: true
-
-    })
+      loop: true,
+    });
 
     // const cannonBall = this.add.sprite(
     //   this.cannon.body!.x,

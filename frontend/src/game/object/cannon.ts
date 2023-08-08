@@ -19,9 +19,9 @@ export class Cannon extends Phaser.Physics.Arcade.Sprite {
       frames: this.anims.generateFrameNumbers("shoot", {
         frames: [0, 1, 2, 3],
       }),
-      duration: 1000,
       delay: 1000,
-      repeatDelay: 500,
+      duration: 200,
+      repeatDelay: 800,
       repeat: -1,
     });
   }
