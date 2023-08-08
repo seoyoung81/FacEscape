@@ -1,13 +1,13 @@
 import Phaser from "phaser";
 import map from "../assets/data/stage02.json";
 import terrain from "../assets/images/terrain.png";
-import frogIdle from "../assets/images/Ninja Frog/idle.png";
-import frogRun from "../assets/images/Ninja Frog/run.png";
-import frogJump from "../assets/images/Ninja Frog/jump.png";
-import frogFall from "../assets/images/Ninja Frog/fall.png";
+import frogIdle from "../assets/images/NinjaFrog/idle.png";
+import frogRun from "../assets/images/NinjaFrog/run.png";
+import frogJump from "../assets/images/NinjaFrog/jump.png";
+import frogFall from "../assets/images/NinjaFrog/fall.png";
 
-import timeGaugePNG from "../assets/images/timegauge.png"
-import timeGaugeJSON from "../assets/images/timegauge.json"
+import timeGaugePNG from "../assets/images/timegauge.png";
+import timeGaugeJSON from "../assets/images/timegauge.json";
 
 import { TimeGauge } from "../object/timegauge";
 import { Player } from "../object/player";
@@ -46,12 +46,10 @@ export default class Stage02 extends Phaser.Scene {
       endFrame: 11,
     });
 
-    this.load.atlas('timeGauge', timeGaugePNG, timeGaugeJSON);
-
+    this.load.atlas("timeGauge", timeGaugePNG, timeGaugeJSON);
   }
 
   create(): void {
-    
     this.cameras.main.setBounds(
       0,
       0,
@@ -66,7 +64,7 @@ export default class Stage02 extends Phaser.Scene {
     );
     this.cameras.main.scrollX = 480;
     this.cameras.main.scrollY = 1200;
-    
+
     const map = this.make.tilemap({
       key: "map",
       tileWidth: 16,
@@ -75,21 +73,22 @@ export default class Stage02 extends Phaser.Scene {
 
     map.addTilesetImage("terrain", "terrain");
     this.platformLayer = map.createLayer("platformLayer", ["terrain"]);
-    this.platformLayer.setCollision(1); 
+    this.platformLayer.setCollision(1);
     this.platformLayer.setCollisionByExclusion([-1], true);
     this.player = new Player(this, 300, 650, "idle", this.platformLayer);
-    
-    this.timeGauge = new TimeGauge(this, this.game.canvas.width/2, this.game.canvas.height/6, "timeGauge");
 
+    this.timeGauge = new TimeGauge(
+      this,
+      this.game.canvas.width / 2,
+      this.game.canvas.height / 6,
+      "timeGauge"
+    );
   }
 
   update(): void {
     this.player.update();
 
-
     this.cameras.main.scrollX = this.player.x - this.cameras.main.width / 2;
     this.cameras.main.scrollY = this.player.y - this.cameras.main.height / 2;
-
-  
   }
 }

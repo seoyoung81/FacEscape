@@ -11,15 +11,17 @@ import cannonIdle from "../assets/images/Idle.png";
 import cannonShoot from "../assets/images/shoot.png";
 import cannonBall from "../assets/images/cannonBall.png";
 import wall from "../assets/images/wall.png";
+import key from "../assets/images/key.png";
 
 import { Player } from "../object/player";
 import { Cannon } from "../object/cannon";
+import { Key } from "../object/key";
 
 //====== wall setting ==============
 const WALL_START_X = 100;
 const WALL_START_Y = 490;
-const WALL_GAP = 70;
-const WALL_Y_OFFSET = 5; // Positioned slightly above the wall below it
+const WALL_GAP = 120;
+const WALL_Y_OFFSET = 20; // Positioned slightly above the wall below it
 
 export default class Stage01 extends Phaser.Scene {
   constructor() {
@@ -32,6 +34,8 @@ export default class Stage01 extends Phaser.Scene {
   cannonBalls!: Phaser.Physics.Arcade.Group;
   platformLayer!: Phaser.Tilemaps.TilemapLayer | null;
   walls!: Phaser.Physics.Arcade.Group;
+  key!: Phaser.Physics.Arcade.Sprite;
+  isKeyPicked: boolean = false;
 
   preload(): void {
     console.log(frogIdle);
@@ -43,6 +47,7 @@ export default class Stage01 extends Phaser.Scene {
     this.load.image("cannon", cannonIdle);
     this.load.image("cannonBall", cannonBall);
     this.load.image("wall", wall);
+    this.load.image("key", key);
 
     this.load.spritesheet("shoot", cannonShoot, {
       frameWidth: 44,
@@ -130,6 +135,22 @@ export default class Stage01 extends Phaser.Scene {
         wall.destroy();
       }
     );
+
+    // create key
+    this.key = new Key(this, 30, 490, "key", [this.platformLayer]).setScale(
+      0.09
+    );
+    this.physics.add.collider(this.key, this.player, () => {
+      this.isKeyPicked = true;
+    });
+
+    // key, player collider
+    this.events.on("postupdate", () => {
+      if (this.isKeyPicked) {
+        this.key.body!.enable = false;
+        Phaser.Display.Align.To.TopCenter(this.key, this.player, 0, -130);
+      }
+    });
   }
 
   update(): void {
@@ -143,6 +164,7 @@ export default class Stage01 extends Phaser.Scene {
         this.cannonBalls.killAndHide(cannonBall);
       }
     });
+    console.log(this.isKeyPicked);
   }
 
   addWall() {
@@ -150,7 +172,7 @@ export default class Stage01 extends Phaser.Scene {
       const positionY = WALL_START_Y - WALL_GAP * i + WALL_Y_OFFSET * i;
       const wall = this.physics.add
         .sprite(WALL_START_X, positionY, "wall")
-        .setScale(0.05)
+        .setScale(0.07)
         .setImmovable(false);
       wall.body.allowGravity = true;
 
