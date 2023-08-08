@@ -13,12 +13,15 @@ import trafficLight from "../assets/images/trafficLight.png";
 import spikeTrap from "../assets/images/spiketrap.png";
 import trampoline from "../assets/images/trampoline.png";
 // import trampolineSound from "../assets/audio/trampoline.wav";
+import cannonIdle from "../assets/images/Idle.png";
+import cannonShoot from "../assets/images/shoot.png";
+import cannonBall from "../assets/images/cannonBall.png";
 
 import { TrafficLight } from "../object/trafficlight";
 import { Trampoline } from "../object/trampoline";
 import { Player } from "../object/player";
 import { SpikeTrap } from "../object/spiketrap";
-
+import { Cannon } from "../object/cannon";
 export default class Stage03 extends Phaser.Scene {
   constructor() {
     super({
@@ -26,6 +29,8 @@ export default class Stage03 extends Phaser.Scene {
     });
   }
   player!: Player;
+  cannon!: Cannon;
+  cannonBalls!: Phaser.Physics.Arcade.Group;
 
   platformLayer!: Phaser.Tilemaps.TilemapLayer | any;
   trafficLight!: TrafficLight;
@@ -66,6 +71,16 @@ export default class Stage03 extends Phaser.Scene {
       frameHeight: 32,
       endFrame: 11,
     });
+
+    this.load.image("cannon", cannonIdle);
+    this.load.image("cannonBall", cannonBall);
+    
+    this.load.spritesheet("shoot", cannonShoot, {
+      frameWidth: 44,
+      frameHeight: 28,
+      endFrame: 3,
+    });
+
   }
 
   create(): void {
@@ -96,13 +111,13 @@ export default class Stage03 extends Phaser.Scene {
     this.platformLayer.setCollision(1);
     this.platformLayer.setCollisionByExclusion([-1], true);
 
-    this.player = new Player(this, 100, 600, "idle", this.platformLayer);
+    this.player = new Player(this, 3000, 400, "idle", this.platformLayer);
     this.trafficLight = new TrafficLight(
       this,
       this.game.canvas.width / 2,
       this.game.canvas.height / 6,
       "trafficLight"
-    ).setScrollFactor(0);
+    ).setScrollFactor(0);    
 
     // 트램펄린 배치
     const trampolinePositions = [
@@ -119,6 +134,31 @@ export default class Stage03 extends Phaser.Scene {
       { x: 1672, y: 670 },
       { x: 1696, y: 670 },
       { x: 1720, y: 670 },
+      { x: 1744, y: 670 },
+      { x: 1768, y: 670 },
+      { x: 1792, y: 670 },
+      { x: 1816, y: 670 },
+      { x: 1840, y: 670 },
+      { x: 1864, y: 670 },
+      { x: 1888, y: 670 },
+      { x: 1912, y: 670 },
+      { x: 1936, y: 670 },
+      { x: 1960, y: 670 },
+      { x: 1984, y: 670 },
+      { x: 2008, y: 670 },
+      { x: 2032, y: 670 },
+      { x: 2056, y: 670 },
+      { x: 2080, y: 670 },
+      { x: 2104, y: 670 },
+      { x: 2128, y: 670 },
+      { x: 2152, y: 670 },
+      { x: 2176, y: 670 },
+      { x: 2200, y: 670 },
+      { x: 2224, y: 670 },
+      { x: 2248, y: 670 },
+      { x: 2272, y: 670 },
+      { x: 2296, y: 670 },
+      { x: 2320, y: 670 },
     ];
 
     trampolinePositions.forEach((position) => {
@@ -167,9 +207,14 @@ export default class Stage03 extends Phaser.Scene {
       { x: 1190, y: 800 },
       { x: 1216, y: 800 },
       { x: 1242, y: 800 },
-      { x: 1268, y: 800 },
+      { x: 1268, y: 800 },      
+      
+      { x: 2556, y: 800 },
+      { x: 2580, y: 800 },
+      { x: 2604, y: 800 },      
+      { x: 2628, y: 800 },
     ];
-
+    
     spikeTrapPositions.forEach((position) => {
       const spikeTrap = new SpikeTrap(
         this,
@@ -189,6 +234,43 @@ export default class Stage03 extends Phaser.Scene {
         this
       );
     });
+
+
+
+  this.cannon = new Cannon(this, 3220, 420, "cannon", [
+    this.platformLayer,
+    this.player,
+  ]);
+  this.cannon.flipX = true;
+
+  this.cannonBalls = this.physics.add.group();
+  this.time.addEvent({
+    delay: 1000,
+    callback: () => {
+      const cannonBall = this.physics.add.sprite(
+        this.cannon.x,
+        this.cannon.y,
+        "cannonBall"
+      );
+      this.cannonBalls.add(cannonBall);
+      cannonBall.body.allowGravity = false;
+      cannonBall.setVelocityX(500);
+      this.physics.add.collider(this.player, cannonBall, () => {
+        this.knockBack(this.player);
+        cannonBall.destroy();
+      });
+    },
+    callbackScope: this,
+    loop: true,
+  });
+
+  }
+
+  knockBack(player: Player) {
+    player.setPlayerState(1);
+    const pushBackVelocityX = 200;
+    const pushBackVelocityY = -500;
+    player.setVelocity(pushBackVelocityX, pushBackVelocityY);
   }
 
   gameOver(): void {
@@ -199,7 +281,7 @@ export default class Stage03 extends Phaser.Scene {
     this.trafficLight.update();
     this.player.update();
 
-    if (this.trafficLight.returnTrafficLightState() === "red") {
+    if (this.trafficLight.getTrafficLightState() === "red") {
       if (
         this.player.x !== this.prevPlayerX ||
         this.player.y !== this.prevPlayerY
