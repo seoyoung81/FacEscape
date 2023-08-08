@@ -68,7 +68,7 @@ public class SecurityConfig {
 			.accessDeniedHandler(new CustomAccessDeniedHandler());
 		// 사용자 로그인이 필요한 API는 필터가 적용되도록 별도 설정해준다.
 		http.authorizeRequests()
-			.antMatchers("/logout", "/member/equipment", "/member/item").authenticated()
+			.antMatchers("/logout", "/member/equipment", "/member/item", "/member/item/purchased").authenticated()
 			.antMatchers(HttpMethod.DELETE,"/member").authenticated()
 			.antMatchers(HttpMethod.PATCH,"/member").authenticated()
 			.antMatchers(HttpMethod.GET,"/member").authenticated()
