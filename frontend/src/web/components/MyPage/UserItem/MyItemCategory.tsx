@@ -1,11 +1,14 @@
 import styles from './UserItem.module.css';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { setMyItemType } from '../../../store/myItemCategorySlice';
 
 
 
 const MyItemCategory: React.FC = () => {
-    // 어떤 카테고리가 선택 되었는지: api에 담아서 요청 보내야 함
-    const [selectedValue, setSelectedValue] = useState('');
+    const [selectedValue, setSelectedValue] = useState<string>('말풍선');
+    const dispatch = useDispatch();
+    dispatch(setMyItemType(selectedValue));
 
     const handleRadioChange = (event: any) => {
         setSelectedValue(event.target.value);

@@ -35,7 +35,7 @@ const LogInForm: React.FC<closeModalProps> = ({ closeModal }) => {
         axios.defaults.headers.common['Authorization'] = `Bearer ${data.accessToken}`;
         
         // 토큰 저장
-        localStorage.setItem('token', `${data.accessToken}`)
+        localStorage.setItem('accessToken', `${data.accessToken}`)
 
         // 로그인 상태
         dispatch(setIsLogIn(true));

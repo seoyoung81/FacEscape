@@ -74,20 +74,22 @@ const EditModal: React.FC<UserProps> = ({ nickName, onEditModal }) => {
 
     return (
         <div>
-            <div className={styles['open-modal']}>                   
+            <div className={styles['open-modal']}>  
+                <div className={styles['edit-title']}>닉네임</div>                 
                 <div className={styles['edit-input']}>
                     <input 
                         type="text" 
                         defaultValue={beforeEditNickName}
                         onChange={handleNickNameChange}
-                    />  
+                        />  
                     <button 
                         className={styles['edit-btn']}
                         onClick={onEditInfo}
-                    >
+                        >
                         수정
                     </button>      
                 </div>      
+                <div  className={styles['edit-title']}>비밀번호</div>                 
                 <div className={styles['edit-input']}>
                     <input 
                         type="password" 

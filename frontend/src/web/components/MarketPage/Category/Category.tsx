@@ -7,7 +7,7 @@ import { setItemType } from '../../../store/categorySlice';
 
 const Category: React.FC = () => {
     const dispatch = useDispatch();
-    const [selectedOption, setSelectedOption] = useState<string>("");
+    const [selectedOption, setSelectedOption] = useState<string>("말풍선");
     
     const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         // 변수를 새로 지정해야 함수가 동기적으로 처리된다

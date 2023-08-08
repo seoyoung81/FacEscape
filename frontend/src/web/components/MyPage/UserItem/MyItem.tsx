@@ -1,6 +1,5 @@
 import MyItemImg from './MyItemImg';
 import MyItemName from './MyItemName';
-import { useState } from 'react';
 import { BsCheck } from 'react-icons/bs';
 
 import styles from './UserItem.module.css';

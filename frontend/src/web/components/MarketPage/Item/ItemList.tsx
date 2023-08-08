@@ -25,19 +25,22 @@ const ItemList: React.FC = () => {
     // 검색
     const keyword = useSelector((state: RootState) => state.setKeyword);
 
+    console.log(itemType);
+
     useEffect(() => {
         const fetchData = async () => {
         try {
-            const response: AxiosResponse<ApiResponse[]> = await defaultInstance.get(
-            '/items',
+            const response = await defaultInstance.get(
+            `/items`,
             {
                 params: {
-                    itemType: itemType,
-                    keyword: keyword,
+                    itemType: itemType.itemType,
+                    keyword: keyword.keyword
                 },
-            });
+            }
+            );
             console.log('아이템 조회', response);
-            const allItems = response.data.flatMap((data) => data.items);
+            const allItems = response.data.flatMap((data: any) => data.items);
             setItemData(allItems);
         } catch (error) {
             console.error('아이템 조회 에러났음', error);

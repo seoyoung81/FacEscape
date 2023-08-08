@@ -1,7 +1,5 @@
 import styles from './Modal.module.css';
-import axios, { AxiosResponse } from 'axios';
-import { useSelector } from 'react-redux';
-import  { UserState } from '../../store/store';
+import { authInstance } from '../../services/api';
 
 interface purchaseProps {
     itemPrice: number;
@@ -21,22 +19,19 @@ const PurchaseCheckModal: React.FC<purchaseProps> = ({ itemPrice, itemId, itemIm
         event.stopPropagation();
     };
 
-    const token = useSelector((state: UserState) => state.token);
-    console.log('토큰:', token);
-
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     
-    const purchaseItem = () => {
-        axios.post('/member/item', {
+    const purchaseItem = async () => {
+        const response = await authInstance.post('/member/item', {
             params: {
                 itemId: {itemId}
             }
         })
-            .then((response: AxiosResponse) => {
-                console.log(response);
-            })
-            .catch(error => console.error('Error: ', error));
-        
+        try {
+            console.log('구매 동작 성공', response);
+        }
+        catch(error) {
+            console.log('구매 동작 실패', error);
+        }
         setOpenPurchaseModal(false);
     };
 

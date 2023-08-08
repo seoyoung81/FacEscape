@@ -1,9 +1,10 @@
-import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
 import categoryReducer from './categorySlice';
 import searchReducer from './searchSlice';
 import persistReducer from './authSlice';
 import nickNameReducer from './nickNameSlice';
 import userNickNameReducer from './userInfoSlice';
+import myItemCategoryReducer from './myItemCategorySlice';
 
 export type UserState = {
   token: string | null;
@@ -64,7 +65,9 @@ const store = configureStore({
       // 닉네임(비회원)
         nickName: nickNameReducer,
       // 회원 정보
-        userNickName: userNickNameReducer
+        userNickName: userNickNameReducer,
+      // 내가 구매한 아이템 카테고리 관리
+        setMyItemType: myItemCategoryReducer
     },
     middleware: getDefaultMiddleware => getDefaultMiddleware({ serializableCheck: false}),
     devTools: true,
