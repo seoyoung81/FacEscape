@@ -67,7 +67,6 @@ export default class Stage02 extends Phaser.Scene {
   }
 
   create(): void {
-    
     this.cameras.main.setBounds(
       0,
       0,
@@ -82,7 +81,7 @@ export default class Stage02 extends Phaser.Scene {
     );
     this.cameras.main.scrollX = 480;
     this.cameras.main.scrollY = 1200;
-    
+
     const map = this.make.tilemap({
       key: "map",
       tileWidth: 16,
@@ -91,15 +90,21 @@ export default class Stage02 extends Phaser.Scene {
 
     map.addTilesetImage("terrain", "terrain");
     this.platformLayer = map.createLayer("platformLayer", ["terrain"]);
-    this.platformLayer.setCollision(1); 
+    this.platformLayer.setCollision(1);
     this.platformLayer.setCollisionByExclusion([-1], true);
+
     this.player = new Player(this, 400, 650, "idle", [
       this.platformLayer,
       this.cannon,
       this.cannonBalls,
     ]);
     
-    this.timeGauge = new TimeGauge(this, this.game.canvas.width/2, this.game.canvas.height/6, "timeGauge");
+    this.timeGauge = new TimeGauge(
+      this,
+      this.game.canvas.width / 2,
+      this.game.canvas.height / 6,
+      "timeGauge"
+    );
 
     this.cannon = new Cannon(this, 170, 1300, "cannon", [
       this.platformLayer,
@@ -136,13 +141,12 @@ export default class Stage02 extends Phaser.Scene {
     const pushBackVelocityX = 300;
     const pushBackVelocityY = -200;
     player.setVelocity(pushBackVelocityX, pushBackVelocityY);
+
   }
 
   update(): void {
     this.player.update();
     this.cameras.main.scrollX = this.player.x - this.cameras.main.width / 2;
     this.cameras.main.scrollY = this.player.y - this.cameras.main.height / 2;
-
-  
   }
 }
