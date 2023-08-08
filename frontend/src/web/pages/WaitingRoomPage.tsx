@@ -1,13 +1,23 @@
 import styles from './WaitingRoomPage.module.css';
 import NickName from '../components/WaitingRoomPage/NickName';
 import Code from '../components/WaitingRoomPage/Code';
-import Camera from '../components/WaitingRoomPage/Camera';
+import Video from '../components/WaitingRoomPage/Video';
 import Chat from '../components/WaitingRoomPage/Chat';
 import Inventory from '../components/WaitingRoomPage/Inventory';
 
-
+import { useState, useEffect } from "react"
+import { useOpenVidu } from "../../common/webrtc"
 
 const WaitingRoomPage: React.FC = () => {
+
+    const [openVidu] = useOpenVidu();
+    const [value, setValue] = useState<string>("qwertyuiop12345");
+
+    useEffect(()=>{
+        openVidu.handleChangeSessionId(value);
+        openVidu.joinSession();
+    }, [value]);
+
     return (
         <div className={styles['waitingroom-container']}>
             <div>
@@ -18,7 +28,10 @@ const WaitingRoomPage: React.FC = () => {
                 </div>
             
                 <div className={styles['camera-container']}>
-                    <Camera />
+                    <div className={styles['box-container']}>
+                        { openVidu.webRTCState.publisher && <Video streamManager={openVidu.webRTCState.publisher} /> }
+                        { openVidu.webRTCState.subscribers.map(subscriber=><Video streamManager={subscriber}/>) }
+                    </div>
                 </div>
                 <div className={styles['chat-container']}>
                     <Chat />
