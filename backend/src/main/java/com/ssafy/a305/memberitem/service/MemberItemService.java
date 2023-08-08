@@ -93,6 +93,11 @@ public class MemberItemService {
 		return memberItemRepository.findByMemberId(memberId);
 	}
 
+	@Transactional(readOnly = true)
+	public List<MemberItem> showSpecificTypeItem(String itemTypeName, Integer memberId) {
+		return memberItemRepository.findByMemberIdAndItem_ItemType_Name(memberId, itemTypeName);
+	}
+
 	// 회원이 아이템을 장착하고 해제하는 메서드
 	@Transactional
 	public void equipItem(MemberItemReqDTO dto, Authentication authentication) {
@@ -126,13 +131,13 @@ public class MemberItemService {
 		return memberItemRepository.findByMemberIdAndUsedYN(memberId, true);
 	}
 
-	public PurchasedItemResDTO getPurchasedItem(Integer memberId) {
-		List<MemberItem> purchasedMemberItems = showItem(memberId);
+	@Transactional(readOnly = true)
+	public PurchasedItemResDTO getPurchasedItem(String itemTypeName, Integer memberId) {
+		List<MemberItem> purchasedMemberItems = showSpecificTypeItem(itemTypeName, memberId);
 		List<PurchasedItemElementDTO> purchasedItems = purchasedMemberItems.stream()
 			.map(memberItem -> {
 				Item item = memberItem.getItem();
-				return new PurchasedItemElementDTO(item.getId(), item.getName(), item.getImage(),
-					item.getItemType().getName());
+				return new PurchasedItemElementDTO(item.getId(), item.getName(), item.getImage());
 			})
 			.collect(Collectors.toList());
 		return new PurchasedItemResDTO(purchasedItems);
