@@ -13,9 +13,13 @@ import cannonBall from "../assets/images/cannonBall.png";
 import wall from "../assets/images/wall.png";
 import key from "../assets/images/key.png";
 
+import doorIdle from "../assets/images/Door/doorIdle.png";
+import doorOpening from "../assets/images/Door/doorOpening.png";
+
 import { Player } from "../object/player";
 import { Cannon } from "../object/cannon";
 import { Key } from "../object/key";
+import { Door } from "../object/door";
 
 //====== wall setting ==============
 const WALL_START_X = 100;
@@ -32,29 +36,25 @@ export default class Stage01 extends Phaser.Scene {
   player!: Player;
   cannon!: Cannon;
   cannonBalls!: Phaser.Physics.Arcade.Group;
+  shoot!: Phaser.Time.TimerEvent;
   platformLayer!: Phaser.Tilemaps.TilemapLayer | null;
   walls!: Phaser.Physics.Arcade.Group;
   key!: Phaser.Physics.Arcade.Sprite;
   isKeyPicked: boolean = false;
+  door!: Door;
 
   preload(): void {
-    console.log(frogIdle);
+
+    this.registry.destroy(); // destroy registry
+    // this.events.off(); // disable all active events
+    this.scene.restart(); // restart current scene
+
     this.load.tilemapTiledJSON("map", map);
-    this.load.image("bg", background);
     this.load.image("terrain", terrain);
+    this.load.image("bg", background);
+    
     this.load.image("jump", frogJump);
     this.load.image("fall", frogFall);
-    this.load.image("cannon", cannonIdle);
-    this.load.image("cannonBall", cannonBall);
-    this.load.image("wall", wall);
-    this.load.image("key", key);
-
-    this.load.spritesheet("shoot", cannonShoot, {
-      frameWidth: 44,
-      frameHeight: 28,
-      endFrame: 3,
-    });
-
     this.load.spritesheet("idle", frogIdle, {
       frameWidth: 32,
       frameHeight: 32,
@@ -66,6 +66,18 @@ export default class Stage01 extends Phaser.Scene {
       frameHeight: 32,
       endFrame: 11,
     });
+
+    this.load.image("cannon", cannonIdle);
+    this.load.spritesheet("shoot", cannonShoot, {
+      frameWidth: 44,
+      frameHeight: 28,
+      endFrame: 3,
+    });
+    this.load.image("cannonBall", cannonBall);
+    this.load.image("wall", wall);
+    this.load.image("key", key);
+    this.load.image("doorIdle", doorIdle);
+    this.load.spritesheet("doorOpening", doorOpening, { frameWidth: 46, frameHeight: 56 });
   }
 
   create(): void {
@@ -82,7 +94,6 @@ export default class Stage01 extends Phaser.Scene {
 
     // add collision
     map.setCollisionByExclusion([-1]);
-    map.setCollisionByProperty({ collides: true });
 
     // create layer
     this.platformLayer = map.createLayer("platformLayer", ["terrain"]);
@@ -94,7 +105,7 @@ export default class Stage01 extends Phaser.Scene {
       this.cannonBalls,
     ]);
 
-    // create cannon
+    // create cannon with collision
     this.cannon = new Cannon(this, 800, 505, "cannon", [
       this.platformLayer,
       this.player,
@@ -102,7 +113,8 @@ export default class Stage01 extends Phaser.Scene {
 
     // create cannonBall
     this.cannonBalls = this.physics.add.group();
-    this.time.addEvent({
+    this.shoot = this.time.addEvent({
+
       delay: 1000,
       callback: () => {
         const cannonBall = this.physics.add.sprite(
@@ -151,11 +163,29 @@ export default class Stage01 extends Phaser.Scene {
         Phaser.Display.Align.To.TopCenter(this.key, this.player, 0, -130);
       }
     });
+
+    // create door
+    this.door = new Door(this, 600, 470, "doorIdle",[this.platformLayer]);
+    this.events.once("doorOpenEvent", () => {
+      if (this.isKeyPicked) {
+        this.door.play("doorOpenAnims");
+        this.shoot.destroy();
+      }
+    }, this);
+
+    this.physics.add.overlap(this.door, this.player, () => {
+      if (this.isKeyPicked) {
+        this.scene.start("StageSelect");
+      }
+    });
   }
 
   update(): void {
     this.player.update();
-    this.cannon.update();
+    if (!this.isKeyPicked) {
+      this.cannon.update();
+    }
+    
 
     this.cannonBalls.getChildren().forEach((gameObj) => {
       const cannonBall = gameObj as Phaser.GameObjects.Sprite;
@@ -164,7 +194,11 @@ export default class Stage01 extends Phaser.Scene {
         this.cannonBalls.killAndHide(cannonBall);
       }
     });
-    console.log(this.isKeyPicked);
+
+    if (this.isKeyPicked) {
+      this.events.emit("doorOpenEvent");
+      this.cannon.setTexture("cannon");
+    }
   }
 
   addWall() {
