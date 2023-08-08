@@ -3,16 +3,23 @@ import * as Phaser from "phaser";
 import map from "../assets/data/stage01.json";
 import background from "../assets/images/background.png";
 import terrain from "../assets/images/terrain.png";
-import frogIdle from "../assets/images/Ninja Frog/idle.png";
-import frogRun from "../assets/images/Ninja Frog/run.png";
-import frogJump from "../assets/images/Ninja Frog/jump.png";
-import frogFall from "../assets/images/Ninja Frog/fall.png";
+import frogIdle from "../assets/images/NinjaFrog/idle.png";
+import frogRun from "../assets/images/NinjaFrog/run.png";
+import frogJump from "../assets/images/NinjaFrog/jump.png";
+import frogFall from "../assets/images/NinjaFrog/fall.png";
 import cannonIdle from "../assets/images/Idle.png";
-import cannonShoot from "../assets/images/Shoot (44x28).png";
-import cannonBall from "../assets/images/Cannon Ball.png";
+import cannonShoot from "../assets/images/shoot.png";
+import cannonBall from "../assets/images/cannonBall.png";
+import wall from "../assets/images/wall.png";
 
 import { Player } from "../object/player";
 import { Cannon } from "../object/cannon";
+
+//====== wall setting ==============
+const WALL_START_X = 100;
+const WALL_START_Y = 490;
+const WALL_GAP = 70;
+const WALL_Y_OFFSET = 5; // Positioned slightly above the wall below it
 
 export default class Stage01 extends Phaser.Scene {
   constructor() {
@@ -24,6 +31,8 @@ export default class Stage01 extends Phaser.Scene {
   cannon!: Cannon;
   cannonBalls!: Phaser.Physics.Arcade.Group;
   platformLayer!: Phaser.Tilemaps.TilemapLayer | null;
+  walls!: Phaser.Physics.Arcade.Group;
+
   preload(): void {
     console.log(frogIdle);
     this.load.tilemapTiledJSON("map", map);
@@ -33,6 +42,7 @@ export default class Stage01 extends Phaser.Scene {
     this.load.image("fall", frogFall);
     this.load.image("cannon", cannonIdle);
     this.load.image("cannonBall", cannonBall);
+    this.load.image("wall", wall);
 
     this.load.spritesheet("shoot", cannonShoot, {
       frameWidth: 44,
@@ -54,30 +64,39 @@ export default class Stage01 extends Phaser.Scene {
   }
 
   create(): void {
+    // add background
     this.add.image(480, 360, "bg");
 
+    // create map
     const map = this.make.tilemap({
       key: "map",
       tileWidth: 16,
       tileHeight: 16,
     });
-
     map.addTilesetImage("terrain", "terrain");
+
+    // add collision
     map.setCollisionByExclusion([-1]);
+    map.setCollisionByProperty({ collides: true });
+
+    // create layer
     this.platformLayer = map.createLayer("platformLayer", ["terrain"]);
 
-    this.player = new Player(this, 90, 460, "idle", [
+    // create player with collision
+    this.player = new Player(this, 150, 460, "idle", [
       this.platformLayer,
       this.cannon,
       this.cannonBalls,
     ]);
+
+    // create cannon
     this.cannon = new Cannon(this, 800, 505, "cannon", [
       this.platformLayer,
       this.player,
     ]);
 
+    // create cannonBall
     this.cannonBalls = this.physics.add.group();
-
     this.time.addEvent({
       delay: 1000,
       callback: () => {
@@ -91,29 +110,26 @@ export default class Stage01 extends Phaser.Scene {
         cannonBall.setVelocityX(-500);
         this.physics.add.collider(this.player, cannonBall, () => {
           cannonBall.destroy();
-          console.log("hit");
         });
-        // this.physics.add.collider(this.cannonBalls, this.walls, ()=>{cannonBall.destroy(); walls.destroy}, undefined, this);
       },
       callbackScope: this,
       loop: true,
     });
 
-    // const cannonBall = this.add.sprite(
-    //   this.cannon.body!.x,
-    //   this.cannon.body!.y + 20,
-    //   "cannonBall"
-    // );
+    // create walls
+    this.walls = this.physics.add.group();
+    this.addWall();
 
-    // const cb = this.tweens.add({
-    //   targets: cannonBall,
-    //   x: 0,
-    //   y: this.cannon.body!.y + 20,
-    //   duration: 1000,
-    //   delay: 1000,
-    //   repeatDelay: 500,
-    //   loop: -1,
-    // });
+    this.physics.add.collider(this.walls, this.platformLayer!);
+    this.physics.add.collider(this.walls, this.walls);
+    this.physics.add.collider(
+      this.cannonBalls,
+      this.walls,
+      (cannonBall, wall) => {
+        cannonBall.destroy();
+        wall.destroy();
+      }
+    );
   }
 
   update(): void {
@@ -127,5 +143,23 @@ export default class Stage01 extends Phaser.Scene {
         this.cannonBalls.killAndHide(cannonBall);
       }
     });
+  }
+
+  addWall() {
+    for (let i = 0; i < 3; i++) {
+      const positionY = WALL_START_Y - WALL_GAP * i + WALL_Y_OFFSET * i;
+      const wall = this.physics.add
+        .sprite(WALL_START_X, positionY, "wall")
+        .setScale(0.05)
+        .setImmovable(false);
+      wall.body.allowGravity = true;
+
+      this.physics.add.collider(this.player, wall, () => {
+        wall.body.immovable = true;
+        wall.body.moves = false;
+      });
+
+      this.walls.add(wall);
+    }
   }
 }
