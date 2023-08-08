@@ -5,6 +5,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.a305.memberitem.dto.MemberItemReqDTO;
@@ -32,8 +33,10 @@ public class MemberItemController {
 	}
 
 	@GetMapping("/member/item/purchased")
-	public ResponseEntity<PurchasedItemResDTO> getPurchasedItem(Authentication authentication) {
-		return ResponseEntity.ok(memberItemService.getPurchasedItem(Integer.parseInt(authentication.getName())));
+	public ResponseEntity<PurchasedItemResDTO> getPurchasedItem(@RequestParam String itemTypeName,
+		Authentication authentication) {
+		return ResponseEntity.ok(
+			memberItemService.getPurchasedItem(itemTypeName, Integer.parseInt(authentication.getName())));
 	}
 
 }

@@ -11,8 +11,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ItemsReqDTO {
 
-    private Integer currentPage;
-    private Integer size;
-    private String itemType;
-    private String keyword;
+	private Integer currentPage;
+	private Integer size;
+	private String itemType;
+	private String keyword;
 }
