@@ -1,6 +1,7 @@
 import MyItemImg from './MyItemImg';
 import MyItemName from './MyItemName';
 import { BsCheck } from 'react-icons/bs';
+import { authInstance } from '../../../services/api';
 
 import styles from './UserItem.module.css';
 
@@ -13,11 +14,19 @@ interface MyItemProps {
 }
 
 const MyItem: React.FC<MyItemProps> = ({ itemId, itemName, checked, onEquip, itemImg }) => {
-    const onEquipItemClick = () => {
+    const onEquipItemClick = async () => {
         if (checked) {
             onEquip(""); 
           } else {
             onEquip(itemId);
+          }
+          // 아이템 장착
+          try {
+              await authInstance.post('/member/equipment', 
+                    { itemId }
+              );
+          } catch (error) {
+            console.log('아이템 장착 실패', error);
           }
       };
 

@@ -10,15 +10,21 @@ const CodeInput :React.FC = () => {
         // console.log(codeInput);
     }
     const handleClick = () => {
-        navigate('/before');
-        setCodeInput("");
+        if(codeInput){
+            // 소켓서버로 join요청
+            // 성공시 세션스토리지에 저장
+            navigate('/before');
+        }
+        else{
+            alert("입장 코드를 입력해주세요!");
+        }
     }
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
-          handleClick();
+            handleClick();
         }
-      };
+    };
 
     return (
         <div className={styles['code-container']}>

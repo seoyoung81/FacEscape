@@ -19,10 +19,13 @@ export function useSocketRooms() {
             transports: ["websocket", "polling"]
         });
 
-        newSocket.on(SUCCESS_RESPONSE, (uuid) => {
-            setRoomId(uuid);
-            console.log(uuid);
+        newSocket.on(SUCCESS_RESPONSE, (data) => {
+            const roomInfo = JSON.parse(data);
+            setRoomId(roomInfo["rooomId"]);
+            console.log(roomInfo["rooomId"]);
         });
+
+        
         newSocket.on(FAIL_RESPONSE, (errMsg) => {
             console.log(errMsg);
         });

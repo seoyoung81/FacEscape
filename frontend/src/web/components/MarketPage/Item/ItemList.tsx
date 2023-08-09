@@ -59,7 +59,15 @@ const ItemList: React.FC = () => {
                     </div>
                 ))
             ) : (
-                <p>아이템이 존재하지 않습니다.</p>
+                <div className={styles['loader']}>
+                <div className={styles['loader']}></div>
+                <div className={styles['loader']}></div>
+                <div className={styles['loader']}></div>
+                <div className={styles['loader']}></div> 
+                <div className={styles['loader']}></div> 
+                <div className={styles['loader']}></div>
+                <div className={styles['loader']}></div>
+                </div>
             )}
         </div>
     );
