@@ -14,6 +14,7 @@ const SearchItem: React.FC = () => {
     const [value, setValue] = useState<string>("");
 
     const handleSearch = () => {
+        dispatch(setKeyword(value));
         setValue("");
     };
 
@@ -31,7 +32,6 @@ const SearchItem: React.FC = () => {
         // sekKeyword 리덕스로 보내기
         const newKeyword: string = event.target.value;
         setValue(newKeyword);
-        dispatch(setKeyword(newKeyword));
     };
 
     return (

@@ -1,14 +1,16 @@
 import { useState, ChangeEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './MainPageComponent.module.css';
 
 const CodeInput :React.FC = () => {
     const [codeInput, setCodeInput] = useState<string>("");
+    const navigate = useNavigate();
     const onChange = (event: ChangeEvent<HTMLInputElement>) => {
         setCodeInput(event.target.value);
         // console.log(codeInput);
     }
     const handleClick = () => {
-        console.log('send codeInput: ', codeInput);
+        navigate('/before');
         setCodeInput("");
     }
 

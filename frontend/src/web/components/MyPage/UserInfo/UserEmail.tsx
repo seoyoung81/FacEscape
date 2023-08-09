@@ -1,9 +1,13 @@
 import styles from './UserInfo.module.css';
 
-const UserEmail: React.FC = () => {
+interface UserEmailProps {
+    email: string | null
+}
+
+const UserEmail: React.FC<UserEmailProps> = ({ email }) => {
     return (
         <div>
-            <div className={styles.email}>1234@ssafy.com</div>
+            <div className={styles.email}>{email}</div>
         </div>
     )
 };
