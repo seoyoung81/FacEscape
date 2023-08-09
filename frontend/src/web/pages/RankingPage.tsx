@@ -9,18 +9,23 @@ const RankingPage :React.FC = () => {
     const [currentStage, setCurrentStage] = useState<number>(1);
     const [gameRankings, setGameRankings] = useState<Rankings[]>([]);
 
+    
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const { data } = await defaultInstance.get('/ranking')
+                const { data } = await defaultInstance.get('/ranking', {
+                    params: {
+                        stage: currentStage
+                    }
+                })
                 console.log('랭킹 데이터 조회', data);
                 setGameRankings(gameRankings);
             } catch (error: any) {
-                console.error('아이템 조회 에러났음', error);
+                console.error('랭킹 조회 에러났음', error);
             }
         };
         fetchData();
-    }, [gameRankings]);
+    }, []);
 
     return (
         <div className={styles['wrap-container']}>

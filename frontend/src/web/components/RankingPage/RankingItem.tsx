@@ -18,7 +18,7 @@ const RankingItem = ({rankInfo}: RankingItemProps) => {
                 
                 <div className={styles['rank-item-text-container']}>
                     <div>
-                        mm:ss
+                        r
                     </div> 
 
                     <div>
