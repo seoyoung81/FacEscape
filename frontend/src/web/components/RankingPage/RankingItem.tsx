@@ -7,6 +7,7 @@ type RankingItemProps = {
 }
 
 const RankingItem = ({rankInfo}: RankingItemProps) => {
+    console.log('랭킹 정보', rankInfo);
     return (
         <div className={styles['ranking-item-container']}>
                 <img 

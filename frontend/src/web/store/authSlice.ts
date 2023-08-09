@@ -29,5 +29,4 @@ const authSlice = createSlice({
 
 export const { setIsLogIn } = authSlice.actions;
 
-// export default authSlice.reducer;
 export default persistReducer(persisConfig, authSlice.reducer);
