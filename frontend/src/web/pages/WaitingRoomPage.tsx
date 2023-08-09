@@ -13,6 +13,14 @@ const WaitingRoomPage: React.FC = () => {
     const [openVidu] = useOpenVidu();
     const [value] = useState<string>("181815834618");
 
+    useEffect(() => {
+        const leaveSession = openVidu.leaveSession
+        window.addEventListener('beforeunload', leaveSession);
+        return () => {
+            window.removeEventListener('beforeunload', leaveSession);
+        };
+    }, [openVidu]);
+
     useEffect(()=>{
         openVidu.handleChangeRoomId(value);
     }, [value]);
