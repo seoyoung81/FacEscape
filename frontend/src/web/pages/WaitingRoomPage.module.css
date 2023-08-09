@@ -25,3 +25,12 @@
   gap: 20px;
   justify-content: center;
 }
+
+.action-container {
+  flex-shrink: 1;
+  display: flex;
+  width: 1117px;
+  align-items: center;
+  gap: 30px;
+  margin-left: 10px;
+}

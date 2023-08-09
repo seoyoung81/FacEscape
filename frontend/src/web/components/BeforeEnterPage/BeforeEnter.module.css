@@ -88,3 +88,7 @@
     align-items: flex-start;
     gap: 29px;
 }
+
+.icon-cursor {
+    cursor: pointer;
+}

@@ -90,6 +90,8 @@ export function useOpenVidu () {
 
     const leaveSession = () => {
         if(session) {
+            setVideoState(false);
+            setAudioState(false);
             session.disconnect();
         }
 
@@ -100,5 +102,19 @@ export function useOpenVidu () {
         setPublisher(()=>undefined);
     }
 
-    return [{ publisher, subscribers, handleChangeRoomId, handleChangeMemberNickname, joinSession, leaveSession }];
+    const setVideoState = (isActive: boolean) => {
+        if(publisher){
+            publisher.publishVideo(isActive);
+            setPublisher(publisher);
+        }
+    }
+
+    const setAudioState = (isActive: boolean) => {
+        if(publisher) {
+            publisher.publishAudio(isActive);
+            setPublisher(publisher);
+        }
+    }
+
+    return [{ publisher, subscribers, handleChangeRoomId, handleChangeMemberNickname, joinSession, leaveSession, setVideoState, setAudioState }];
 }; 

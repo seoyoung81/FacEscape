@@ -1,5 +1,5 @@
 import styles from '../BeforeEnterPage/BeforeEnter.module.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { 
     BsFillMicFill, 
@@ -8,7 +8,11 @@ import {
     BsFillCameraVideoOffFill
 } from 'react-icons/bs';
 
-const ControlIcon: React.FC = () => {
+type OpenViduProps = {
+    openVidu: any
+}
+
+const ControlIcon = ({openVidu}: OpenViduProps) => {
     const [micControl, setMicControl] = useState<boolean>(true);
     const [cameraControl, setCameraControl] = useState<boolean>(true);
 
@@ -19,19 +23,32 @@ const ControlIcon: React.FC = () => {
     const onMic = () => {
         setMicControl(!micControl);
     }
+
+    useEffect(()=>{
+        openVidu.setAudioState(micControl);
+    }, [micControl]);
+
+    useEffect(()=>{
+        openVidu.setVideoState(cameraControl);
+    }, [cameraControl]);
+
     return (
         <div className={styles.icon}>
-            {cameraControl ? 
-                <BsFillCameraVideoFill size={80} onClick={onCamera} /> 
-                : 
-                <BsFillCameraVideoOffFill size={80} onClick={onCamera} />
-            }
-            {micControl ? 
-                <BsFillMicFill size={80} onClick={onMic} /> 
-                : 
-                <BsFillMicMuteFill size={80} onClick={onMic} />
-            }
-            
+
+            <div className={styles["icon-cursor"]}>
+                {cameraControl ? 
+                    <BsFillCameraVideoFill size={80} onClick={onCamera} /> 
+                    : 
+                    <BsFillCameraVideoOffFill size={80} onClick={onCamera} />
+                }
+            </div>
+            <div className={styles["icon-cursor"]}>
+                {micControl ? 
+                    <BsFillMicFill size={80} onClick={onMic} /> 
+                    : 
+                    <BsFillMicMuteFill size={80} onClick={onMic} />
+                }
+            </div>
         </div>
     )
 }

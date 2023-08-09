@@ -3,7 +3,6 @@ import { useState, ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setNickName } from '../../store/nickNameSlice';
-import ControlIcon from '../Common/ControlIcon';
 
 const InputNickname: React.FC = () => {
     const [value, setValue] = useState<string>("");
@@ -28,9 +27,9 @@ const InputNickname: React.FC = () => {
       };
     return (
         <div className={styles['chat-layout']}>
-            <div>
+            {/* <div>
                 <ControlIcon />
-            </div>
+            </div> */}
             <div className={styles['input-container']}>
                 <input 
                     type="text" 

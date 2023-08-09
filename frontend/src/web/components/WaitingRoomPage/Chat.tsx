@@ -1,4 +1,3 @@
-import ControlIcon from "../Common/ControlIcon";
 import styles from './WaitingRoom.module.css';
 import { useState, ChangeEvent, useEffect } from 'react';
 import StartBtn from "./StartBtn";
@@ -26,12 +25,8 @@ const Chat: React.FC = () => {
     }, [value])
 
     return (
-        <div>
-            <div className={styles['chat-layout']}>
-                <div>
-                    <ControlIcon />
-                </div>
-                <div className={styles['input-container']}>
+        <>
+            <div className={styles['input-container']}>
                     <input 
                         type="text" 
                         placeholder='채팅을 입력하세요'
@@ -44,12 +39,11 @@ const Chat: React.FC = () => {
                 </div>
                 <div>
                     <StartBtn />
-                </div>
             </div>
             <span className={styles['bubble-position']}>
                 <SpeechBubble text={text} align="right" />
             </span>
-        </div>
+        </>
     )
 };
 
