@@ -11,10 +11,15 @@ import timeGaugeJSON from "../assets/images/timegauge.json";
 import cannonIdle from "../assets/images/Idle.png";
 import cannonShoot from "../assets/images/shoot.png";
 import cannonBall from "../assets/images/cannonBall.png";
+import key from "../assets/images/key.png";
+import doorIdle from "../assets/images/Door/doorIdle.png";
+import doorOpening from "../assets/images/Door/doorOpening.png";
 
 import { TimeGauge } from "../object/timegauge";
 import { Player } from "../object/player";
 import { Cannon } from "../object/cannon";
+import { Key } from "../object/key";
+import { Door } from "../object/door";
 
 export default class Stage02 extends Phaser.Scene {
   constructor() {
@@ -29,6 +34,10 @@ export default class Stage02 extends Phaser.Scene {
   
   cannons: Cannon[] = [];
   cannonBalls!: Phaser.Physics.Arcade.Group;
+
+  key!: Phaser.Physics.Arcade.Sprite;
+  isKeyPicked!: boolean;
+  door!: Door;
 
   mapWidth: number = 95;
   mapHeight: number = 160;
@@ -56,16 +65,30 @@ export default class Stage02 extends Phaser.Scene {
     this.load.atlas("timeGauge", timeGaugePNG, timeGaugeJSON);
 
     this.load.image("cannon", cannonIdle);
-    this.load.image("cannonBall", cannonBall);
-
     this.load.spritesheet("shoot", cannonShoot, {
       frameWidth: 44,
       frameHeight: 28,
       endFrame: 3,
     });
+
+    this.load.image("cannonBall", cannonBall);
+    this.load.image("key", key);
+    this.load.image("doorIdle", doorIdle);
+    this.load.spritesheet("doorOpening", doorOpening, {
+      frameWidth: 46,
+      frameHeight: 56,
+    });
   }
 
   create(): void {
+    this.isKeyPicked = false;
+    const map = this.make.tilemap({
+      key: "stage02",
+      tileWidth: 16,
+      tileHeight: 16,
+    });
+    map.addTilesetImage("terrain", "terrain");
+
     this.cameras.main.setBounds(
       0,
       0,
@@ -81,29 +104,26 @@ export default class Stage02 extends Phaser.Scene {
     this.cameras.main.scrollX = 480;
     this.cameras.main.scrollY = 1200;
 
-    const map = this.make.tilemap({
-      key: "stage02",
-      tileWidth: 16,
-      tileHeight: 16,
-    });
-
-    map.addTilesetImage("terrain", "terrain");
+    map.setCollisionByExclusion([-1]);
     this.platformLayer = map.createLayer("platformLayer", ["terrain"]);
-    this.platformLayer.setCollision(1);
-    this.platformLayer.setCollisionByExclusion([-1], true);
 
-    this.player = new Player(this, 450, 200, "idle", [
-      this.platformLayer,
-      // this.cannon,
-      this.cannonBalls,
-    ]);
-
+    this.player = new Player(this, 850, 200, "idle");
     this.timeGauge = new TimeGauge(
       this,
       this.game.canvas.width / 2,
       this.game.canvas.height / 6,
       "timeGauge"
     );
+    
+    // create key
+    this.key = new Key(this, 1200, 270, "key", [this.platformLayer]).setScale(
+      0.09
+    );
+    // create door
+    this.door = new Door(this, 1300, 270, "doorIdle", [
+      this.platformLayer,
+    ]).setDepth(-1);
+
 
     const cannon1 = new Cannon(this, 120, 2020, "cannon", [
       this.platformLayer, 
@@ -136,7 +156,7 @@ export default class Stage02 extends Phaser.Scene {
     this.cannonBalls = this.physics.add.group();
 
     this.cannons.forEach((cannon) => {
-      cannon.update();
+      // cannon.update();
       this.time.addEvent({
         delay: 2100, // 대포 발사 간격
         callback: () => {
@@ -153,6 +173,41 @@ export default class Stage02 extends Phaser.Scene {
         loop: true,
       });
     });
+    
+    this.physics.add.collider(this.player, this.platformLayer!);
+
+    this.physics.add.collider(this.key, this.player, () => {
+      this.isKeyPicked = true;
+    });
+
+    // key, player collider
+    this.events.on("postupdate", () => {
+      if (this.isKeyPicked) {
+        this.key.body!.enable = false;
+        Phaser.Display.Align.To.TopCenter(this.key, this.player, 0, -130);
+      }
+    });
+
+    this.events.once(
+      "doorOpenEvent",
+      () => {
+        if (this.isKeyPicked) {
+          this.door.play("doorOpenAnims");
+        }
+      },
+      this
+    );
+
+    this.physics.add.overlap(this.door, this.player, () => {
+      if (this.isKeyPicked) {
+        this.scene.start("StageSelect");
+      }
+    });
+
+    this.input.keyboard?.on("keydown-R", () => {
+      this.scene.start("StageSelect");
+    });
+
   }
 
   knockBack(player: Player) {
@@ -166,5 +221,9 @@ export default class Stage02 extends Phaser.Scene {
     this.player.update();
     this.cameras.main.scrollX = this.player.x - this.cameras.main.width / 2;
     this.cameras.main.scrollY = this.player.y - this.cameras.main.height / 2;
+
+    if (this.isKeyPicked) {
+      this.events.emit("doorOpenEvent");
+    }
   }
 }
