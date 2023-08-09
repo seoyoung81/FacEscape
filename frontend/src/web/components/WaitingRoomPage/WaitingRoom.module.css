@@ -65,7 +65,6 @@
     right: -53px;
 }
 
-
 .box {
     width: 358px;
     height: 240px;
@@ -96,15 +95,6 @@
     font-size: 32px;
     font-weight: 400;
     letter-spacing: 1.6px;
-}
-
-.chat-layout {
-    flex-shrink: 1;
-    display: flex;
-    width: 1117px;
-    align-items: center;
-    gap: 30px;
-    margin-left: 10px;
 }
 
 .chat-input:focus {
@@ -207,4 +197,3 @@
 .inventory:hover {
     cursor: pointer;
 }
-
