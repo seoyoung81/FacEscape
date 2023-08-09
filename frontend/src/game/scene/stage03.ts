@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 
-import map from "../assets/data/stage03.json";
+import stage03 from "../assets/data/stage03.json";
 import background from "../assets/images/background.png";
 import terrain from "../assets/images/terrain.png";
 
@@ -45,7 +45,7 @@ export default class Stage03 extends Phaser.Scene {
   tileHeight: number = 16;
 
   preload(): void {
-    this.load.tilemapTiledJSON("map", map);
+    this.load.tilemapTiledJSON("stage03", stage03);
     this.load.image("bg", background);
     this.load.image("terrain", terrain);
     this.load.image("trampoline", trampoline);
@@ -74,13 +74,12 @@ export default class Stage03 extends Phaser.Scene {
 
     this.load.image("cannon", cannonIdle);
     this.load.image("cannonBall", cannonBall);
-    
+
     this.load.spritesheet("shoot", cannonShoot, {
       frameWidth: 44,
       frameHeight: 28,
       endFrame: 3,
     });
-
   }
 
   create(): void {
@@ -101,7 +100,7 @@ export default class Stage03 extends Phaser.Scene {
 
     // this.add.image(480, 360, "bg");
     const map = this.make.tilemap({
-      key: "map",
+      key: "stage03",
       tileWidth: 16,
       tileHeight: 16,
     });
@@ -117,7 +116,7 @@ export default class Stage03 extends Phaser.Scene {
       this.game.canvas.width / 2,
       this.game.canvas.height / 6,
       "trafficLight"
-    ).setScrollFactor(0);    
+    ).setScrollFactor(0);
 
     // 트램펄린 배치
     const trampolinePositions = [
@@ -207,14 +206,14 @@ export default class Stage03 extends Phaser.Scene {
       { x: 1190, y: 800 },
       { x: 1216, y: 800 },
       { x: 1242, y: 800 },
-      { x: 1268, y: 800 },      
-      
+      { x: 1268, y: 800 },
+
       { x: 2556, y: 800 },
       { x: 2580, y: 800 },
-      { x: 2604, y: 800 },      
+      { x: 2604, y: 800 },
       { x: 2628, y: 800 },
     ];
-    
+
     spikeTrapPositions.forEach((position) => {
       const spikeTrap = new SpikeTrap(
         this,
@@ -235,35 +234,32 @@ export default class Stage03 extends Phaser.Scene {
       );
     });
 
+    this.cannon = new Cannon(this, 3220, 420, "cannon", [
+      this.platformLayer,
+      this.player,
+    ]);
+    this.cannon.flipX = true;
 
-
-  this.cannon = new Cannon(this, 3220, 420, "cannon", [
-    this.platformLayer,
-    this.player,
-  ]);
-  this.cannon.flipX = true;
-
-  this.cannonBalls = this.physics.add.group();
-  this.time.addEvent({
-    delay: 1000,
-    callback: () => {
-      const cannonBall = this.physics.add.sprite(
-        this.cannon.x,
-        this.cannon.y,
-        "cannonBall"
-      );
-      this.cannonBalls.add(cannonBall);
-      cannonBall.body.allowGravity = false;
-      cannonBall.setVelocityX(500);
-      this.physics.add.collider(this.player, cannonBall, () => {
-        this.knockBack(this.player);
-        cannonBall.destroy();
-      });
-    },
-    callbackScope: this,
-    loop: true,
-  });
-
+    this.cannonBalls = this.physics.add.group();
+    this.time.addEvent({
+      delay: 1000,
+      callback: () => {
+        const cannonBall = this.physics.add.sprite(
+          this.cannon.x,
+          this.cannon.y,
+          "cannonBall"
+        );
+        this.cannonBalls.add(cannonBall);
+        cannonBall.body.allowGravity = false;
+        cannonBall.setVelocityX(500);
+        this.physics.add.collider(this.player, cannonBall, () => {
+          this.knockBack(this.player);
+          cannonBall.destroy();
+        });
+      },
+      callbackScope: this,
+      loop: true,
+    });
   }
 
   knockBack(player: Player) {
