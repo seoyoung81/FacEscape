@@ -54,6 +54,12 @@
     margin-bottom: 23px;
 }
 
+.edit-title {
+    font-family: 'MyFont';
+    margin: 0 0 5px 17px;
+    letter-spacing: 3.2px;
+}
+
 .edit-input {
     height: 50px;
     gap: 10px;
@@ -66,7 +72,7 @@
     border: none;
     color: #898989;
     text-align: center;
-    font-family: Galmuri11;
+    font-family: 'MyFont';
     font-size: 32px;
     font-style: normal;
     font-weight: 400;
@@ -93,7 +99,7 @@
 .resign-container {
     font-size: 24px;
     letter-spacing: 4.8px;
-    margin-top: 60px;
+    margin-top: 15px;
 }
 
 .resign-message {

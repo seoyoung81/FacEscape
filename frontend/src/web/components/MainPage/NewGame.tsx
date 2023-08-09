@@ -1,8 +1,10 @@
 import styles from './MainPageComponent.module.css'
+import { useNavigate } from 'react-router-dom'
 
 const NewGame :React.FC = () => {
+    const navigate = useNavigate();
     const handleClick = () => {
-        // code
+        navigate('/before');
     }
     return (
         <div className={styles.conatiner}>

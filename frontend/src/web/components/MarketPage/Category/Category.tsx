@@ -7,7 +7,7 @@ import { setItemType } from '../../../store/categorySlice';
 
 const Category: React.FC = () => {
     const dispatch = useDispatch();
-    const [selectedOption, setSelectedOption] = useState<string>("");
+    const [selectedOption, setSelectedOption] = useState<string>("전체보기");
     
     const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         // 변수를 새로 지정해야 함수가 동기적으로 처리된다
@@ -20,6 +20,17 @@ const Category: React.FC = () => {
     return (
         <div className={styles['category-container']}>
             <div className={styles['radio-buttons']}>
+                <label className={styles["radio-button"]}>
+                        <input 
+                            value="전체보기" 
+                            name="option" 
+                            type="radio" 
+                            checked={selectedOption === '전체보기'}
+                            onChange={handleOptionChange}
+                        />
+                        <div className={styles['radio-circle']}></div>
+                        <span className={styles['radio-label']}>전체보기</span>
+                    </label>
                 <label className={styles["radio-button"]}>
                     <input 
                         value="말풍선" 

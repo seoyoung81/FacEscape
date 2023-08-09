@@ -1,9 +1,13 @@
 import styles from './UserInfo.module.css';
 
-const UserNickName: React.FC = () => {
+interface UserNickNameProps {
+    nickName: string | null
+}
+
+const UserNickName: React.FC<UserNickNameProps> = ({ nickName }) => {
     return (
         <div>
-            <div className={styles.name}>SoEZ</div>
+            <div className={styles.name}>{nickName}</div>
         </div>
     )
 };

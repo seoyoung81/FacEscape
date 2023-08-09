@@ -6,6 +6,7 @@ import { defaultInstance } from '../../services/api';
 
 import { useDispatch } from 'react-redux';
 import { setIsLogIn } from '../../store/authSlice';
+import axios from 'axios';
 
 import styles from './User.module.css';
 import Swal from 'sweetalert2';
@@ -29,9 +30,12 @@ const LogInForm: React.FC<closeModalProps> = ({ closeModal }) => {
             '/login',
             LogIndata
         )
-
+        
+        // 토큰 헤더에 저장
+        axios.defaults.headers.common['Authorization'] = `Bearer ${data.accessToken}`;
+        
         // 토큰 저장
-        localStorage.setItem('token', `${data.accessToken}`)
+        localStorage.setItem('accessToken', `${data.accessToken}`)
 
         // 로그인 상태
         dispatch(setIsLogIn(true));

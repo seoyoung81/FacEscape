@@ -14,7 +14,7 @@ const Item :React.FC<ChildProps> = ({ itemImg, itemName, itemPrice, itemId }) =>
     return (
         <div className={styles.item}>
             <div>
-                <ItemImg itemImg={itemImg}/>
+                <ItemImg itemImg={itemImg} itemName={itemName} />
                 <ItemPurchase 
                     itemPrice={itemPrice} 
                     itemId={itemId} 
