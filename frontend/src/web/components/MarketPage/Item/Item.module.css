@@ -68,13 +68,39 @@
     justify-content: center;
     align-items: center;
     margin-bottom: 10px;
+
+    transform-style: preserve-3d; 
+    transition: transform 0.8s ease-in-out;
+}
+
+.img-box:hover {
+    transform: rotateY(180deg);
 }
 
 .item-img {
     width: 128px;
     height: 128px;
     border-radius: 5px;
+    backface-visibility: hidden;
 }
+
+.success-text {
+    position: absolute;
+    top: 40%;
+    transform: translate(-50%, -50%) rotateY(180deg);
+    font-size: 24px;
+    color: grey;
+    font-family: 'MyFont';
+    text-align: center;
+    width: 100%;
+    visibility: hidden;
+    transform: rotateY(180deg);
+}
+
+.img-box:hover .success-text {
+    visibility: visible;
+}
+
 
 /* 전체 아이템 */
 .item {
@@ -92,20 +118,20 @@
 .container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: flex-start;
     width: 800px;
+    height: 550px;
     border-radius: 5px;
     border: 1px solid;
+    
     /* 스크롤 */
     overflow: auto;
     max-height: 550px;
-
     margin-top: 8px;
-
 }
 
 .main-item {
-    margin: 10px; 
+    margin: 15px 20px 0 20px; 
 }
 
 .container::-webkit-scrollbar {

@@ -3,38 +3,38 @@ import UserEmail from './UserEmail';
 import UserMilage from './UserMileage';
 import EditInfo from './EditInfo';
 
-import { defaultInstance } from '../../../services/api';
+import { authInstance } from '../../../services/api';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import styles from './UserInfo.module.css';
 
 const UserInfo: React.FC = () =>{
 
-    const onClick = async () => {
-        
+    const [nickName, setNickName] = useState(null);
+    const [email, setEmail] = useState(null);
+    const [mileage, setMileage] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
         try {
-        const { data } = await defaultInstance.get(
-            '/member',
-        )
-        console.log(data);
-        return data; 
-        } catch (error: any) {
+            const response = await authInstance.get('/member');
+            setNickName(response.data.nickname);
+            setEmail(response.data.email);
+            setMileage(response.data.mileage);
+        } catch (error) {
             console.log(error);
         }
-    }
-  
-
+        };
+    fetchData();
+  }, [nickName, email, mileage ]);
 
     return (
         <div className={styles['userinfo-container']}>
-            <UserNickName />
-            <UserEmail />
-            <UserMilage />
-            <EditInfo />
-            <div onClick={onClick} >
-                불러오기
-            </div>
+            <UserNickName  nickName={nickName} />
+            <UserEmail email={email} />
+            <UserMilage mileage={mileage} />
+            <EditInfo nickName={nickName} />
         </div>
     )
 };

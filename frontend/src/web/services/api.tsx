@@ -1,23 +1,31 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:8080';
+const BASE_URL = 'http://i9a305.p.ssafy.io:8081';
 
 interface AxiosOptions {
     [key: string]: any; 
   };
 
-// 인증 값이 필요 없는 경우 GET
+// 인증 값이 필요 없는 경우
 const axiosApi = (url: string, options?: AxiosOptions) => {
-    const instance = axios.create({ baseURL: url, ...options })
+    const instance = axios.create({ 
+      baseURL: url,
+      headers: { 'Access-Control-Allow-Origin' : 'http://localhost:3000' },
+      ...options 
+      })
     return instance;
 };
 
 // 인증 값이 필요한 경우
 const axiosAuthApi = (url: string, options?: AxiosOptions) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('accessToken');
     const instance = axios.create({
       baseURL: url,
-      headers: { Authorization: 'Bearer ' + token },
+      headers: 
+      { 
+        Authorization: 'Bearer ' + token,
+        'Access-Control-Allow-Origin' : 'http://localhost:3000'
+      },
       ...options,
     })
     return instance;
