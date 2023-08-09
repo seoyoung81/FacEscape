@@ -32,6 +32,9 @@ export default class Stage01 extends Phaser.Scene {
     super({
       key: "Stage01",
     });
+    if (this.isKeyPicked) {
+      this.scene.restart();
+    }
   }
   player!: Player;
   cannon!: Cannon;
@@ -40,19 +43,14 @@ export default class Stage01 extends Phaser.Scene {
   platformLayer!: Phaser.Tilemaps.TilemapLayer | null;
   walls!: Phaser.Physics.Arcade.Group;
   key!: Phaser.Physics.Arcade.Sprite;
-  isKeyPicked: boolean = false;
+  isKeyPicked!: boolean;
   door!: Door;
 
   preload(): void {
-
-    this.registry.destroy(); // destroy registry
-    // this.events.off(); // disable all active events
-    this.scene.restart(); // restart current scene
-
     this.load.tilemapTiledJSON("map", map);
     this.load.image("terrain", terrain);
     this.load.image("bg", background);
-    
+
     this.load.image("jump", frogJump);
     this.load.image("fall", frogFall);
     this.load.spritesheet("idle", frogIdle, {
@@ -77,7 +75,13 @@ export default class Stage01 extends Phaser.Scene {
     this.load.image("wall", wall);
     this.load.image("key", key);
     this.load.image("doorIdle", doorIdle);
-    this.load.spritesheet("doorOpening", doorOpening, { frameWidth: 46, frameHeight: 56 });
+    this.load.spritesheet("doorOpening", doorOpening, {
+      frameWidth: 46,
+      frameHeight: 56,
+    });
+    this.isKeyPicked = false;
+
+    console.log(this.scene.get(this));
   }
 
   create(): void {
@@ -114,7 +118,6 @@ export default class Stage01 extends Phaser.Scene {
     // create cannonBall
     this.cannonBalls = this.physics.add.group();
     this.shoot = this.time.addEvent({
-
       delay: 1000,
       callback: () => {
         const cannonBall = this.physics.add.sprite(
@@ -165,18 +168,29 @@ export default class Stage01 extends Phaser.Scene {
     });
 
     // create door
-    this.door = new Door(this, 600, 470, "doorIdle",[this.platformLayer]);
-    this.events.once("doorOpenEvent", () => {
-      if (this.isKeyPicked) {
-        this.door.play("doorOpenAnims");
-        this.shoot.destroy();
-      }
-    }, this);
+    this.door = new Door(this, 600, 470, "doorIdle", [this.platformLayer]);
+    this.events.once(
+      "doorOpenEvent",
+      () => {
+        if (this.isKeyPicked) {
+          this.door.play("doorOpenAnims");
+          this.shoot.destroy();
+        }
+      },
+      this
+    );
 
     this.physics.add.overlap(this.door, this.player, () => {
       if (this.isKeyPicked) {
-        this.scene.start("StageSelect");
+        this.scene.transition({
+          target: "StageSelect",
+          moveBelow: false,
+        });
       }
+    });
+
+    this.input.keyboard?.on("keydown-R", () => {
+      this.scene.restart();
     });
   }
 
@@ -185,7 +199,6 @@ export default class Stage01 extends Phaser.Scene {
     if (!this.isKeyPicked) {
       this.cannon.update();
     }
-    
 
     this.cannonBalls.getChildren().forEach((gameObj) => {
       const cannonBall = gameObj as Phaser.GameObjects.Sprite;
