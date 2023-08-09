@@ -155,28 +155,6 @@ export default class Stage02 extends Phaser.Scene {
     });
   }
 
-  
-  //   this.time.addEvent({
-  //     delay: 1000,
-  //     callback: () => {
-  //       const cannonBall = this.physics.add.sprite(
-  //         this.cannon.x,
-  //         this.cannon.y,
-  //         "cannonBall"
-  //       );
-  //       this.cannonBalls.add(cannonBall);
-  //       cannonBall.body.allowGravity = false;
-  //       cannonBall.setVelocityX(500);
-  //       this.physics.add.collider(this.player, cannonBall, () => {
-  //         this.knockBack(this.player);
-  //         cannonBall.destroy();
-  //       });
-  //     },
-  //     callbackScope: this,
-  //     loop: true,
-  //   });
-  // }
-
   knockBack(player: Player) {
     player.setPlayerState(1);
     const pushBackVelocityX = 300;
