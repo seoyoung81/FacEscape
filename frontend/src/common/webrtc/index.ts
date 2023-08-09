@@ -31,20 +31,16 @@ export function useOpenVidu () {
         if(session) {
             session.on(WebRTCStreamEvent.streamCreated, (event)=>{
                 const subscriber = session.subscribe(event.stream, undefined);
-                subscribers.push(subscriber);
-                const newSubscribers = [...subscribers];
-                setSubscribers(()=>newSubscribers);
+                setSubscribers((prev)=>[...prev, subscriber]);
             });
 
             session.on(WebRTCStreamEvent.streamDestroyed, (event)=>{
-                const prevSubscribers = subscribers;
-                const idx = prevSubscribers.indexOf(event.stream.streamManager as Subscriber, 0);
-                console.warn("나갈때 버금 ㅜㄴ제")
+                setSubscribers((prev)=>{
+                    const idx = prev.indexOf(event.stream.streamManager as Subscriber, 0);
 
-                if(idx > -1) {
-                    const newSubscribers = [...subscribers.splice(idx, 1)];
-                    setSubscribers(()=>newSubscribers);
-                }
+                    if(idx > -1) prev.splice(idx, 1);
+                    return [...prev];
+                });
             });
 
             session.on(WebRTCStreamEvent.exception, (exception)=>{
@@ -69,12 +65,12 @@ export function useOpenVidu () {
             await (session as Session).connect(token, { clientData: nickname });
 
             const publisher = openViduInstance.initPublisher(undefined, {
-                audioSource: undefined, // The source of audio. If undefined default microphone
-                videoSource: undefined, // The source of video. If undefined default webcam
-                publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
-                publishVideo: true, // Whether you want to start publishing with your video enabled or not
-                resolution: '640x480', // The resolution of your video
-                frameRate: 30, // The frame rate of your video
+                audioSource: undefined, 
+                videoSource: undefined,
+                publishAudio: true, 
+                publishVideo: true,
+                resolution: '640x480',
+                frameRate: 30, 
                 insertMode: 'APPEND',
                 mirror: false
             });
@@ -103,7 +99,6 @@ export function useOpenVidu () {
         setNickname(()=>'Participant' + Math.floor(Math.random() * 100));
         setPublisher(()=>undefined);
     }
-
 
     return [{ publisher, subscribers, handleChangeRoomId, handleChangeMemberNickname, joinSession, leaveSession }];
 }; 
