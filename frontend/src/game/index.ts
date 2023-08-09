@@ -11,7 +11,7 @@ export const createGame = (width: number, height: number, tagName: string) => {
 
   const gameConfig: Phaser.Types.Core.GameConfig = {
     type: Phaser.AUTO,
-    backgroundColor: "#6061ab",
+    backgroundColor: "#0278e6",
     physics: {
       default: "arcade",
       arcade: {

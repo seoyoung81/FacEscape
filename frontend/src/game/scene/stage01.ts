@@ -2,10 +2,7 @@ import * as Phaser from "phaser";
 
 import map from "../assets/data/stage01.json";
 import background from "../assets/images/background.png";
-import terrain from "../assets/images/terrain.png";
-import idle from "../assets/images/Ninja Frog/Idle (32x32).png";
-
-import { Player } from "../object/player";
+import terrain from "../assets/images/Terrain.png";
 export default class Stage01 extends Phaser.Scene {
   constructor() {
     super({
@@ -15,10 +12,8 @@ export default class Stage01 extends Phaser.Scene {
   player!: Player;
   platformLayer!: Phaser.Tilemaps.TilemapLayer | any;
   preload(): void {
-    // console.log(terrain);
-    // console.log(idle);
-    this.load.tilemapTiledJSON("map", map);
     this.load.image("bg", background);
+    this.load.tilemapTiledJSON("map", map);
     this.load.image("terrain", terrain);
 
     // Image 객체를 생성하여 data URI를 이미지로 변환합니다.
@@ -46,9 +41,7 @@ export default class Stage01 extends Phaser.Scene {
   }
 
   create(): void {
-    this.add.sprite(140, 460, "idleImage");
-
-    this.add.image(480, 360, "bg");
+    this.add.image(480, 300, "bg");
     const map = this.make.tilemap({
       key: "map",
       tileWidth: 16,
