@@ -27,7 +27,7 @@ export default class Stage02 extends Phaser.Scene {
   platformLayer!: Phaser.Tilemaps.TilemapLayer | any;
   timeGauge!: TimeGauge;
   
-  cannon!: Cannon;
+  cannons: Cannon[] = [];
   cannonBalls!: Phaser.Physics.Arcade.Group;
 
   mapWidth: number = 95;
@@ -93,9 +93,9 @@ export default class Stage02 extends Phaser.Scene {
     this.platformLayer.setCollision(1);
     this.platformLayer.setCollisionByExclusion([-1], true);
 
-    this.player = new Player(this, 400, 650, "idle", [
+    this.player = new Player(this, 450, 200, "idle", [
       this.platformLayer,
-      this.cannon,
+      // this.cannon,
       this.cannonBalls,
     ]);
     
@@ -106,40 +106,61 @@ export default class Stage02 extends Phaser.Scene {
       "timeGauge"
     );
 
-    this.cannon = new Cannon(this, 170, 1300, "cannon", [
-      this.platformLayer,
-      this.player,
+    const cannon1 = new Cannon(this, 120, 2020, "cannon", [
+      this.platformLayer, 
+      this.player
     ]);
-    this.cannon.flipX = true;
+    cannon1.flipX = true;
+    this.cannons.push(cannon1);
+  
+    const cannon2 = new Cannon(this, 170, 1300, "cannon", [
+      this.platformLayer, 
+      this.player
+    ]);
+    cannon2.flipX = true;
+    this.cannons.push(cannon2);
+
+    const cannon3 = new Cannon(this, 90, 550, "cannon", [
+      this.platformLayer, 
+      this.player
+    ]);
+    cannon3.flipX = true;
+    this.cannons.push(cannon3);
+
+    const cannon4 = new Cannon(this, 90, 750, "cannon", [
+      this.platformLayer, 
+      this.player
+    ]);
+    cannon4.flipX = true;
+    this.cannons.push(cannon4);
 
     this.cannonBalls = this.physics.add.group();
-    this.time.addEvent({
-      delay: 1000,
-      callback: () => {
-        const cannonBall = this.physics.add.sprite(
-          this.cannon.x,
-          this.cannon.y,
-          "cannonBall"
-        );
-        this.cannonBalls.add(cannonBall);
-        cannonBall.body.allowGravity = false;
-        cannonBall.setVelocityX(500);
-        this.physics.add.collider(this.player, cannonBall, () => {
-          this.knockBack(this.player);
-          cannonBall.destroy();
-        });
-      },
-      callbackScope: this,
-      loop: true,
-    });
 
+    this.cannons.forEach((cannon) => {
+      cannon.update();
+      this.time.addEvent({
+        delay: 2100, // 대포 발사 간격
+        callback: () => {
+          const cannonBall = this.physics.add.sprite(cannon.x, cannon.y, "cannonBall");
+          this.cannonBalls.add(cannonBall);
+          cannonBall.body.allowGravity = false;
+          cannonBall.setVelocityX(300);
+          this.physics.add.collider(this.player, cannonBall, () => {
+            this.knockBack(this.player);
+            cannonBall.destroy();
+          });
+        },
+        callbackScope: this,
+        loop: true,
+      });
+    });
   }
 
-
+  
   knockBack(player: Player) {
     player.setPlayerState(1);
     const pushBackVelocityX = 300;
-    const pushBackVelocityY = -200;
+    const pushBackVelocityY = -300;
     player.setVelocity(pushBackVelocityX, pushBackVelocityY);
 
   }
