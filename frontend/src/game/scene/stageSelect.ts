@@ -44,8 +44,7 @@ export class StageSelect extends Phaser.Scene {
     this.input.manager.enabled = true;
     this.addStageButtons();
     this.socket.on("test", (stage: string) => {
-      console.log(stage);
-      this.scene.start(stage);
+      // this.scene.start(stage);
     });
   }
 
@@ -70,6 +69,7 @@ export class StageSelect extends Phaser.Scene {
     button
       .setOnClick(() => {
         this.socket.emit("stageChange", stage.sceneName);
+        // this.scene.stop(stage.sceneName);
         this.scene.start(stage.sceneName);
       })
       .setOnPointerOver("focusBtn", "white")

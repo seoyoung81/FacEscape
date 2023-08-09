@@ -1,4 +1,6 @@
 import { useForm, Controller } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import { setUserNickName } from '../../store/userInfoSlice';
 
 // api
 import { defaultInstance } from '../../services/api';
@@ -21,12 +23,13 @@ interface closeModalProps {
 
 const SignUpForm: React.FC<closeModalProps> = ({ closeModal }) => {
     const { control, handleSubmit, formState: { errors }, watch } = useForm<FormData>();
+    const dispatch = useDispatch();
     
     // 비밀번호 추적
     const watchPassword :string = watch('password', '');
 
     const onSubmit = async (data: FormData) => {
-        const { confirmPassword, ...dataWithoutConfirmPassword } = data;
+        const { nickname, confirmPassword, ...dataWithoutConfirmPassword } = data;
 
         // 이메일 중복 확인
         try {
@@ -39,9 +42,10 @@ const SignUpForm: React.FC<closeModalProps> = ({ closeModal }) => {
                     try {
                         const { data } = await defaultInstance.post(
                             '/member',
-                            dataWithoutConfirmPassword
+                            {...dataWithoutConfirmPassword, nickname}
                         )
-
+                        // 회원 정보 저장
+                        dispatch(setUserNickName(nickname));     
                         // 회원가입 성공 alert
                         Swal.fire({
                             title: '회원가입 성공!',
@@ -135,7 +139,6 @@ const SignUpForm: React.FC<closeModalProps> = ({ closeModal }) => {
                             message: '이메일 글자수를 확인해주세요.',
                         }
                     }}
-                    // 회원가입된 유저인지 확인 여부 code ...
                     render={({ field }) => 
                         <input 
                             {...field} 

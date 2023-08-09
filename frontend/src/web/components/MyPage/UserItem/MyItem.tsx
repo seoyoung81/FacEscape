@@ -1,31 +1,47 @@
 import MyItemImg from './MyItemImg';
 import MyItemName from './MyItemName';
-import { useState } from 'react';
 import { BsCheck } from 'react-icons/bs';
+import { authInstance } from '../../../services/api';
 
 import styles from './UserItem.module.css';
 
-const MyItem: React.FC = () => {
-    const [check, setCheck] = useState<boolean>(false);
-    const onEquip = () => { 
-        setCheck(!check);
-    };
-    // check 가 true 이면 아이템 장착하는 API 요청 보내기
-    if (check) {
-        // 아이템 장착 로직
-    }
+interface MyItemProps {
+    itemId: string;
+    itemName: string;
+    itemImg: string;
+    checked: boolean;
+    onEquip: (itemId: string) => void;
+}
+
+const MyItem: React.FC<MyItemProps> = ({ itemId, itemName, checked, onEquip, itemImg }) => {
+    const onEquipItemClick = async () => {
+        if (checked) {
+            onEquip(""); 
+          } else {
+            onEquip(itemId);
+          }
+          // 아이템 장착
+          try {
+              await authInstance.post('/member/equipment', 
+                    { itemId }
+              );
+          } catch (error) {
+            console.log('아이템 장착 실패', error);
+          }
+      };
+
     return (
         <div>
             <div 
                 className={styles['myitem-container']}
-                onClick={onEquip}
+                onClick={onEquipItemClick}
             >
                 <div>
-                    <MyItemImg />
+                    <MyItemImg itemImg={itemImg} />
                 </div>
-                <MyItemName />
+                <MyItemName itemName={itemName} />
             <div className={styles['check-icon']}>
-                {check ? <BsCheck size={180} /> : null}
+                {checked ? <BsCheck size={180} /> : null}
             </div>
             </div>
         </div>

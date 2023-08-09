@@ -11,11 +11,18 @@ import { useOpenVidu } from "../../common/webrtc"
 const WaitingRoomPage: React.FC = () => {
 
     const [openVidu] = useOpenVidu();
-    const [value, setValue] = useState<string>("qwertyuiop12345");
+    const [value] = useState<string>("181815834618");
+
+    useEffect(() => {
+        const leaveSession = openVidu.leaveSession
+        window.addEventListener('beforeunload', leaveSession);
+        return () => {
+            window.removeEventListener('beforeunload', leaveSession);
+        };
+    }, [openVidu]);
 
     useEffect(()=>{
-        openVidu.handleChangeSessionId(value);
-        openVidu.joinSession();
+        openVidu.handleChangeRoomId(value);
     }, [value]);
 
     return (
@@ -29,8 +36,8 @@ const WaitingRoomPage: React.FC = () => {
             
                 <div className={styles['camera-container']}>
                     <div className={styles['box-container']}>
-                        { openVidu.webRTCState.publisher && <Video streamManager={openVidu.webRTCState.publisher} /> }
-                        { openVidu.webRTCState.subscribers.map(subscriber=><Video streamManager={subscriber}/>) }
+                        { openVidu.publisher && <Video streamManager={openVidu.publisher} /> }
+                        { openVidu.subscribers.map((subscriber, i)=><Video streamManager={subscriber} key={i}/>) }
                     </div>
                 </div>
                 <div className={styles['chat-container']}>

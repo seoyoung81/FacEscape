@@ -1,13 +1,13 @@
 import Phaser from "phaser";
-import map from "../assets/data/stage02.json";
+import stage02 from "../assets/data/stage02.json";
 import terrain from "../assets/images/terrain.png";
 import frogIdle from "../assets/images/NinjaFrog/idle.png";
 import frogRun from "../assets/images/NinjaFrog/run.png";
 import frogJump from "../assets/images/NinjaFrog/jump.png";
 import frogFall from "../assets/images/NinjaFrog/fall.png";
 
-import timeGaugePNG from "../assets/images/timegauge.png"
-import timeGaugeJSON from "../assets/images/timegauge.json"
+import timeGaugePNG from "../assets/images/timegauge.png";
+import timeGaugeJSON from "../assets/images/timegauge.json";
 import cannonIdle from "../assets/images/Idle.png";
 import cannonShoot from "../assets/images/shoot.png";
 import cannonBall from "../assets/images/cannonBall.png";
@@ -26,8 +26,13 @@ export default class Stage02 extends Phaser.Scene {
   player!: Player;
   platformLayer!: Phaser.Tilemaps.TilemapLayer | any;
   timeGauge!: TimeGauge;
+<<<<<<< HEAD
   
   cannons: Cannon[] = [];
+=======
+
+  cannon!: Cannon;
+>>>>>>> 02ab3fffb32d8453a0bbad7957a4fb41355a72b6
   cannonBalls!: Phaser.Physics.Arcade.Group;
 
   mapWidth: number = 95;
@@ -36,7 +41,7 @@ export default class Stage02 extends Phaser.Scene {
   tileHeight: number = 16;
 
   preload(): void {
-    this.load.tilemapTiledJSON("map", map);
+    this.load.tilemapTiledJSON("stage02", stage02);
     this.load.image("terrain", terrain);
     this.load.image("jump", frogJump);
     this.load.image("fall", frogFall);
@@ -53,17 +58,16 @@ export default class Stage02 extends Phaser.Scene {
       endFrame: 11,
     });
 
-    this.load.atlas('timeGauge', timeGaugePNG, timeGaugeJSON);
-    
+    this.load.atlas("timeGauge", timeGaugePNG, timeGaugeJSON);
+
     this.load.image("cannon", cannonIdle);
     this.load.image("cannonBall", cannonBall);
-    
+
     this.load.spritesheet("shoot", cannonShoot, {
       frameWidth: 44,
       frameHeight: 28,
       endFrame: 3,
     });
-    
   }
 
   create(): void {
@@ -83,7 +87,7 @@ export default class Stage02 extends Phaser.Scene {
     this.cameras.main.scrollY = 1200;
 
     const map = this.make.tilemap({
-      key: "map",
+      key: "stage02",
       tileWidth: 16,
       tileHeight: 16,
     });
@@ -98,7 +102,7 @@ export default class Stage02 extends Phaser.Scene {
       // this.cannon,
       this.cannonBalls,
     ]);
-    
+
     this.timeGauge = new TimeGauge(
       this,
       this.game.canvas.width / 2,
@@ -157,12 +161,32 @@ export default class Stage02 extends Phaser.Scene {
   }
 
   
+  //   this.time.addEvent({
+  //     delay: 1000,
+  //     callback: () => {
+  //       const cannonBall = this.physics.add.sprite(
+  //         this.cannon.x,
+  //         this.cannon.y,
+  //         "cannonBall"
+  //       );
+  //       this.cannonBalls.add(cannonBall);
+  //       cannonBall.body.allowGravity = false;
+  //       cannonBall.setVelocityX(500);
+  //       this.physics.add.collider(this.player, cannonBall, () => {
+  //         this.knockBack(this.player);
+  //         cannonBall.destroy();
+  //       });
+  //     },
+  //     callbackScope: this,
+  //     loop: true,
+  //   });
+  // }
+
   knockBack(player: Player) {
     player.setPlayerState(1);
     const pushBackVelocityX = 300;
     const pushBackVelocityY = -300;
     player.setVelocity(pushBackVelocityX, pushBackVelocityY);
-
   }
 
   update(): void {

@@ -1,10 +1,14 @@
 import styles from './UserInfo.module.css';
 
-const UserMilage: React.FC = () => {
+interface UserMileageProps {
+    mileage: number | null
+}
+
+const UserMilage: React.FC<UserMileageProps> = ({ mileage }) => {
     return (
         <div>
             <div className={styles['mileage-box']}>
-                <div className={styles.mileage}>1260&nbsp;M</div>
+                <div className={styles.mileage}>{mileage}&nbsp;M</div>
             </div>
         </div>
     )
