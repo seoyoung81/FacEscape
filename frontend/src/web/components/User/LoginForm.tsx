@@ -1,45 +1,68 @@
-import { useForm, Controller } from 'react-hook-form';
 import GoogleLogin from './GoogleLogin';
-import styles from './User.module.css';
-import axios from 'axios';
+
+import { useForm, Controller } from 'react-hook-form';
+
+import { defaultInstance } from '../../services/api';
+
 import { useDispatch } from 'react-redux';
-import { initToken } from '../../services/Token/Token';
-import { useEffect } from 'react';
+import { setIsLogIn } from '../../store/authSlice';
+
+import styles from './User.module.css';
+import Swal from 'sweetalert2';
 
 type FormData = {
   email: string;
   password: string; 
 };
 
-const LogInForm: React.FC = () => {
-  const { control, handleSubmit, formState: { errors } } = useForm<FormData>();
-  const dispatch = useDispatch();
+interface closeModalProps {
+    closeModal: (event?: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => void;
+}
 
-    useEffect(() => {
-        initToken(dispatch);
-    }, [dispatch]);
+const LogInForm: React.FC<closeModalProps> = ({ closeModal }) => {
+  const { control, handleSubmit, formState: { errors } } = useForm<FormData>();  
+  const dispatch = useDispatch();                                                                                   
 
-  const onSubmit = async (data: FormData) => {
-    console.log(data);
-
+  const onSubmit = async (LogIndata: FormData) => {
     try {
-        const response = await axios.post('http://localhost:8080/login', data);
-        console.log(response);
-    } catch (error) {
-        console.error('Login failed', error);
+        const { data } = await defaultInstance.post(
+            '/login',
+            LogIndata
+        )
+
+        // 토큰 저장
+        localStorage.setItem('token', `${data.accessToken}`)
+
+        // 로그인 상태
+        dispatch(setIsLogIn(true));
+
+        // 모달창 닫기
+        closeModal();
+
+        return data;
+    } catch (error: any) {
+        console.log('로그인 실패', error);
+        // 로그인 실패 alert
+        Swal.fire({
+            title: '존재하지 않는 정보입니다.',
+
+            confirmButtonColor: '#3479AD',
+            confirmButtonText: '확인',
+        })
+
     }
   }; 
-
   return (
     <div className={styles.container}>
         <form onSubmit={handleSubmit(onSubmit)}>
                 <Controller
                 name="email"
                 control={control}
+                defaultValue=""
                 rules={{ 
                     required: '아이디를 입력해주세요.',
                     pattern: {
-                        value: /^[a-zA-Z0-9+-\_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+                        value: /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/,
                         message: '정확한 이메일 주소를 입력하세요'
                     }
                     }}
@@ -61,6 +84,7 @@ const LogInForm: React.FC = () => {
                 <Controller
                 name="password"
                 control={control}
+                defaultValue=""
                 rules={{ required: '비밀번호를 입력해주세요.' }}
                 render={({ field }) => 
                     <input 
@@ -84,6 +108,7 @@ const LogInForm: React.FC = () => {
                 </button>
             <GoogleLogin />            
         </form>
+   
     </div>
   );
 };
