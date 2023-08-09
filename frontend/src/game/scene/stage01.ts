@@ -1,6 +1,6 @@
 import * as Phaser from "phaser";
 
-import map from "../assets/data/stage01.json";
+import stage01 from "../assets/data/stage01.json";
 import background from "../assets/images/background.png";
 import terrain from "../assets/images/terrain.png";
 import frogIdle from "../assets/images/NinjaFrog/idle.png";
@@ -44,7 +44,7 @@ export default class Stage01 extends Phaser.Scene {
   door!: Door;
 
   preload(): void {
-    this.load.tilemapTiledJSON("map", map);
+    this.load.tilemapTiledJSON("stage01", stage01);
     this.load.image("terrain", terrain);
     this.load.image("bg", background);
 
@@ -85,7 +85,7 @@ export default class Stage01 extends Phaser.Scene {
 
     // create map
     const map = this.make.tilemap({
-      key: "map",
+      key: "stage01",
       tileWidth: 16,
       tileHeight: 16,
     });
