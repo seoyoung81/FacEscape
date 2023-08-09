@@ -6,11 +6,11 @@ import { setIsLogIn } from '../../store/authSlice';
 
 const fetchToken = async (): Promise<string | null> => {
   try {
-    const response = await axios.post('http://localhost:8080/login', {
-      email: 'yourUsername',
+    const response = await axios.post('/api/login', {
+      username: 'yourUsername',
       password: 'yourPassword',
     });
-    return response.data.acessToken;
+    return response.data.token;
   } catch (error) {
     console.error('Failed to fetch token', error);
     return null;
