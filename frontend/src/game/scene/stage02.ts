@@ -26,13 +26,8 @@ export default class Stage02 extends Phaser.Scene {
   player!: Player;
   platformLayer!: Phaser.Tilemaps.TilemapLayer | any;
   timeGauge!: TimeGauge;
-<<<<<<< HEAD
   
   cannons: Cannon[] = [];
-=======
-
-  cannon!: Cannon;
->>>>>>> 02ab3fffb32d8453a0bbad7957a4fb41355a72b6
   cannonBalls!: Phaser.Physics.Arcade.Group;
 
   mapWidth: number = 95;
