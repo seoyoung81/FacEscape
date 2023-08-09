@@ -13,8 +13,8 @@ type OpenViduProps = {
 }
 
 const ControlIcon = ({openVidu}: OpenViduProps) => {
-    const [micControl, setMicControl] = useState<boolean>(true);
-    const [cameraControl, setCameraControl] = useState<boolean>(true);
+    const [micControl, setMicControl] = useState<boolean>(sessionStorage.getItem("micControl")==="true");
+    const [cameraControl, setCameraControl] = useState<boolean>(sessionStorage.getItem("cameraControl")==="true");
 
     const onCamera = () => {
         setCameraControl(!cameraControl);
@@ -25,11 +25,17 @@ const ControlIcon = ({openVidu}: OpenViduProps) => {
     }
 
     useEffect(()=>{
-        openVidu.setAudioState(micControl);
+        if(openVidu) {
+            openVidu.setAudioState(micControl);
+        }
+        sessionStorage.setItem("micControl", micControl.toString());
     }, [micControl]);
 
     useEffect(()=>{
-        openVidu.setVideoState(cameraControl);
+        if(openVidu) {
+            openVidu.setVideoState(cameraControl);
+        }
+        sessionStorage.setItem("cameraControl", cameraControl.toString());
     }, [cameraControl]);
 
     return (

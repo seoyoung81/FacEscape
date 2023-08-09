@@ -1,3 +1,4 @@
+import ControlIcon from '../Common/ControlIcon';
 import styles from './BeforeEnter.module.css';
 import { useState, ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -27,9 +28,9 @@ const InputNickname: React.FC = () => {
       };
     return (
         <div className={styles['chat-layout']}>
-            {/* <div>
-                <ControlIcon />
-            </div> */}
+            <div>
+                <ControlIcon openVidu={undefined} />
+            </div>
             <div className={styles['input-container']}>
                 <input 
                     type="text" 

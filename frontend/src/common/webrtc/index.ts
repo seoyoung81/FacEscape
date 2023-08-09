@@ -1,4 +1,4 @@
-import { OpenVidu, Device } from "openvidu-browser";
+import { OpenVidu } from "openvidu-browser";
 import { useState, useEffect } from 'react';
 import { getToken } from "./service"
 import { WebRTCStreamEvent } from "./utils/types"
@@ -11,7 +11,6 @@ export function useOpenVidu () {
     const [session, setSession] = useState<Session>();
     const [publisher, setPublisher] = useState<Publisher>();
     const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
-    const [currentVideoDevice, setCurrentVideoDevice] = useState<Device>();
 
     const handleChangeRoomId = (id: string) => {
         setRoomId(()=>id);
@@ -50,6 +49,13 @@ export function useOpenVidu () {
         }
     }, [session])
 
+    useEffect(()=>{
+        if(publisher) {
+            setAudioState(sessionStorage.getItem("micControl")==="true");
+            setVideoState(sessionStorage.getItem("cameraControl")==="true");
+        }
+    }, [publisher])
+
     const initSession = () => {
         const openViduInstance = new OpenVidu();
         openViduInstance.enableProdMode();
@@ -76,12 +82,6 @@ export function useOpenVidu () {
             });
 
             await (session as Session).publish(publisher);
-            const devices = await openViduInstance.getDevices();
-            const videoDevices = devices.filter(device => device.kind === "videoinput");
-            const currentVideoDeviceId = publisher.stream.getMediaStream().getVideoTracks()[0].getSettings().deviceId;
-            const device = videoDevices.find(device => device.deviceId === currentVideoDeviceId);
-
-            setCurrentVideoDevice(()=>device);
             setPublisher(()=>publisher);
         } catch(e) {
             console.warn(e);
