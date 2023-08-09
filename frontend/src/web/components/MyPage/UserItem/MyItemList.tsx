@@ -9,41 +9,44 @@ import { RootState } from '../../../store/store';
 
 const MyItemList: React.FC = () => {
     const [itemList, setItemList] = useState<any[]>([]);
-    const [checkedItemId, setCheckedItemId] = useState<string | null>(null);
-    const [myItem, setMyItem] = useState<boolean>(false);
+    const [checkedItemId, setCheckedItemId] = useState<{ [key: string]: string | null }>({});
     const navigate = useNavigate();
     const myCategory = useSelector((state: RootState ) => state.setMyItemType.itemType);
+    
 
+    // 카테고리별로 선택하기
     const handleEquipItem = (itemId: string) => {
-        setCheckedItemId(itemId);
+        setCheckedItemId(prevState => ({
+            ...prevState,
+            [myCategory]: itemId === prevState[myCategory] ? null : itemId
+        }));
     };
 
+
+    // 상점으로 이동하기
     const goMarket = () => {
         navigate('/market');
     }
 
+    // 내가 구매한 아이템 카테고리별로 불러오기
     useEffect(() => {
-    const fetchItemList = async () => {
-        try {
-            const { data } = await authInstance.get('/member/item/purchased', 
-                {
-                    params: {
-                        itemType: myCategory,
+        const fetchItemList = async () => {
+            try {
+                const { data } = await authInstance.get('/member/item/purchased', 
+                    {
+                        params: {
+                            itemType: myCategory,
+                        }
                     }
-                }
-            ); 
-            console.log('내가 구매한 아이템', data);
-            if (data && data.items.length > 0) {
-                setItemList(data.items);
-                console.log('내가 구매한 아이템 불러오기 성공', data);
-            } else {
-                console.log('API 데이터가 0개임', data);
+                ); 
+                if (data && data.items.length >= 0) {
+                    setItemList(data.items);
+                } 
+            }  
+            catch (error) {
+                console.log('내가 구매한 아이템 불러오기 실패', error);
             }
-        }  
-        catch (error) {
-            console.log('내가 구매한 아이템 불러오기 실패', error);
-        }
-    };
+        };
 
         fetchItemList();
     }, [myCategory]);
@@ -60,17 +63,29 @@ const MyItemList: React.FC = () => {
                     )
                 }
             </div>
-            {itemList.map(item => (
-                <MyItem
-                    key={item.itemId}
-                    itemId={item.itemId}
-                    itemName={item.name}
-                    itemImg={item.image}
-                    checked={item.id === checkedItemId}
-                    onEquip={handleEquipItem}
-                />
-            
-      ))}
+            {itemList ? (
+                itemList.map(item => (
+                    <MyItem
+                        key={item.itemId}
+                        itemId={item.itemId}
+                        itemName={item.name}
+                        itemImg={item.image}
+                        checked={checkedItemId[myCategory] === item.itemId}
+                        onEquip={handleEquipItem}
+                    />
+                
+                ))
+            ) : (
+                <div className={styles['loader']}>
+                <div className={styles['loader']}></div>
+                <div className={styles['loader']}></div>
+                <div className={styles['loader']}></div>
+                <div className={styles['loader']}></div> 
+                <div className={styles['loader']}></div> 
+                <div className={styles['loader']}></div>
+                <div className={styles['loader']}></div>
+                </div>
+            )}
           
         </div>
     )
