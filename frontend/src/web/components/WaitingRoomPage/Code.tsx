@@ -1,10 +1,9 @@
 import styles from './WaitingRoom.module.css';
 import { useState } from 'react';
 import { MouseEventHandler } from 'react';
-import { IoIosBriefcase } from 'react-icons/io';
 
 const Code: React.FC = () => {
-    const [value, setValue] = useState<string>("qwertyuiop12345");
+    const [value, setValue] = useState<string>("18181818");
     
     const code = value;
     const onClick: MouseEventHandler<HTMLButtonElement> = async (event) => {
