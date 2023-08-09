@@ -98,25 +98,24 @@ export default class Stage01 extends Phaser.Scene {
 
     // add collision
     map.setCollisionByExclusion([-1]);
-
     // create layer
     this.platformLayer = map.createLayer("platformLayer", ["terrain"]);
-
-    // create player with collision
-    this.player = new Player(this, 150, 460, "idle", [
-      this.platformLayer,
-      this.cannon,
-      this.cannonBalls,
-    ]);
-
-    // create cannon with collision
-    this.cannon = new Cannon(this, 800, 505, "cannon", [
-      this.platformLayer,
-      this.player,
-    ]);
-
+    // create player
+    this.player = new Player(this, 150, 460, "idle");
+    // create cannon
+    this.cannon = new Cannon(this, 800, 505, "cannon");
+    // create walls
+    this.walls = this.physics.add.group();
+    this.addWall();
     // create cannonBall
     this.cannonBalls = this.physics.add.group();
+    // create key
+    this.key = new Key(this, 30, 490, "key", [this.platformLayer]).setScale(
+      0.09
+    );
+    // create door
+    this.door = new Door(this, 600, 470, "doorIdle", [this.platformLayer]);
+
     this.shoot = this.time.addEvent({
       delay: 1000,
       callback: () => {
@@ -136,25 +135,6 @@ export default class Stage01 extends Phaser.Scene {
       loop: true,
     });
 
-    // create walls
-    this.walls = this.physics.add.group();
-    this.addWall();
-
-    this.physics.add.collider(this.walls, this.platformLayer!);
-    this.physics.add.collider(this.walls, this.walls);
-    this.physics.add.collider(
-      this.cannonBalls,
-      this.walls,
-      (cannonBall, wall) => {
-        cannonBall.destroy();
-        wall.destroy();
-      }
-    );
-
-    // create key
-    this.key = new Key(this, 30, 490, "key", [this.platformLayer]).setScale(
-      0.09
-    );
     this.physics.add.collider(this.key, this.player, () => {
       this.isKeyPicked = true;
     });
@@ -167,8 +147,6 @@ export default class Stage01 extends Phaser.Scene {
       }
     });
 
-    // create door
-    this.door = new Door(this, 600, 470, "doorIdle", [this.platformLayer]);
     this.events.once(
       "doorOpenEvent",
       () => {
@@ -180,12 +158,25 @@ export default class Stage01 extends Phaser.Scene {
       this
     );
 
+    // colliders
+    this.physics.add.collider(this.player, this.platformLayer!);
+    this.physics.add.collider(this.player, this.cannon);
+    this.physics.add.collider(this.player, this.cannonBalls);
+    this.physics.add.collider(this.cannon, this.platformLayer!);
+    this.physics.add.collider(this.walls, this.platformLayer!);
+    this.physics.add.collider(this.walls, this.walls);
+    this.physics.add.collider(
+      this.cannonBalls,
+      this.walls,
+      (cannonBall, wall) => {
+        cannonBall.destroy();
+        wall.destroy();
+      }
+    );
+
     this.physics.add.overlap(this.door, this.player, () => {
       if (this.isKeyPicked) {
-        this.scene.transition({
-          target: "StageSelect",
-          moveBelow: false,
-        });
+        this.scene.start("StageSelect");
       }
     });
 
