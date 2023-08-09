@@ -32,9 +32,6 @@ export default class Stage01 extends Phaser.Scene {
     super({
       key: "Stage01",
     });
-    if (this.isKeyPicked) {
-      this.scene.restart();
-    }
   }
   player!: Player;
   cannon!: Cannon;
@@ -79,14 +76,12 @@ export default class Stage01 extends Phaser.Scene {
       frameWidth: 46,
       frameHeight: 56,
     });
-    this.isKeyPicked = false;
-
-    console.log(this.scene.get(this));
   }
 
   create(): void {
     // add background
-    this.add.image(480, 360, "bg");
+    this.isKeyPicked = false;
+    this.add.image(480, 360, "bg").setDepth(-2);
 
     // create map
     const map = this.make.tilemap({
@@ -114,7 +109,9 @@ export default class Stage01 extends Phaser.Scene {
       0.09
     );
     // create door
-    this.door = new Door(this, 600, 470, "doorIdle", [this.platformLayer]);
+    this.door = new Door(this, 600, 470, "doorIdle", [
+      this.platformLayer,
+    ]).setDepth(-1);
 
     this.shoot = this.time.addEvent({
       delay: 1000,
@@ -161,7 +158,6 @@ export default class Stage01 extends Phaser.Scene {
     // colliders
     this.physics.add.collider(this.player, this.platformLayer!);
     this.physics.add.collider(this.player, this.cannon);
-    this.physics.add.collider(this.player, this.cannonBalls);
     this.physics.add.collider(this.cannon, this.platformLayer!);
     this.physics.add.collider(this.walls, this.platformLayer!);
     this.physics.add.collider(this.walls, this.walls);
