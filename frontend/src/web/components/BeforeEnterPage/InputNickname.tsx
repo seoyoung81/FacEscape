@@ -1,6 +1,5 @@
 import styles from './BeforeEnter.module.css';
 import { useState, ChangeEvent, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setNickName } from '../../store/nickNameSlice';
 
@@ -8,7 +7,7 @@ const InputNickname: React.FC = () => {
   const [value, setValue] = useState<string>("");
   const [defaultNickName, setDefaultNickName] = useState<string | null | readonly string[]>("");
   const [showError, setShowError] = useState(false); // 에러 표시 여부를 결정하는 상태 변수
-  const navigate = useNavigate();
+
   const dispatch = useDispatch();
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -21,8 +20,8 @@ const InputNickname: React.FC = () => {
   const handleClick = () => {
     if (value) {
       console.log("닉네임 : " + value);
-      navigate('/waiting');
       setNickName(value);
+      window.location.href = "/waiting";
     } else {
       setShowError(true); // 에러 상태를 표시합니다.
     }
