@@ -1,286 +1,37 @@
 import NavBar from "../components/NavBar/NavBar";
 import styles from "./RankingPage.module.css";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import RankingView from "../components/RankingPage/RankingView";
 import type {Rankings} from '../services/ranking';
+import { defaultInstance } from "../services/api";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
 
 const RankingPage :React.FC = () => {
     const [currentStage, setCurrentStage] = useState<number>(1);
-    const [gameRankings, setGameRankings] = useState<Rankings[]>([
-        {
-            "rank": 1,
-            "clearTime": "mm:ss",
-            "clearDate": "yyyy-MM-dd",
-            participants: [
-                {
-                    memberId: 1,
-                    nickname: "사람1",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 2,
-                    nickname: "사람2",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 3,
-                    nickname: "사람3",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 4,
-                    nickname: "사람4",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 5,
-                    nickname: "사람5",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 6,
-                    nickname: "사람6",
-                    icon: "/iconPath"
-                },
-            ],
-            currentPage: 1,
-            isLastPage: true
-        },
-        {
-            "rank": 1,
-            "clearTime": "mm:ss",
-            "clearDate": "yyyy-MM-dd",
-            participants: [
-                {
-                    memberId: 1,
-                    nickname: "사람1",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 2,
-                    nickname: "사람2",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 3,
-                    nickname: "사람3",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 4,
-                    nickname: "사람4",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 5,
-                    nickname: "사람5",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 6,
-                    nickname: "사람6",
-                    icon: "/iconPath"
-                },
-            ],
-            currentPage: 1,
-            isLastPage: true
-        },
-        {
-            "rank": 1,
-            "clearTime": "mm:ss",
-            "clearDate": "yyyy-MM-dd",
-            participants: [
-                {
-                    memberId: 1,
-                    nickname: "사람1",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 2,
-                    nickname: "사람2",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 3,
-                    nickname: "사람3",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 4,
-                    nickname: "사람4",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 5,
-                    nickname: "사람5",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 6,
-                    nickname: "사람6",
-                    icon: "/iconPath"
-                },
-            ],
-            currentPage: 1,
-            isLastPage: true
-        },
-        {
-            "rank": 1,
-            "clearTime": "mm:ss",
-            "clearDate": "yyyy-MM-dd",
-            participants: [
-                {
-                    memberId: 1,
-                    nickname: "사람1",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 2,
-                    nickname: "사람2",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 3,
-                    nickname: "사람3",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 4,
-                    nickname: "사람4",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 5,
-                    nickname: "사람5",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 6,
-                    nickname: "사람6",
-                    icon: "/iconPath"
-                },
-            ],
-            currentPage: 1,
-            isLastPage: true
-        },
-        {
-            "rank": 1,
-            "clearTime": "mm:ss",
-            "clearDate": "yyyy-MM-dd",
-            participants: [
-                {
-                    memberId: 1,
-                    nickname: "사람1",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 2,
-                    nickname: "사람2",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 3,
-                    nickname: "사람3",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 4,
-                    nickname: "사람4",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 5,
-                    nickname: "사람5",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 6,
-                    nickname: "사람6",
-                    icon: "/iconPath"
-                },
-            ],
-            currentPage: 1,
-            isLastPage: true
-        },
-        {
-            "rank": 1,
-            "clearTime": "mm:ss",
-            "clearDate": "yyyy-MM-dd",
-            participants: [
-                {
-                    memberId: 1,
-                    nickname: "사람1",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 2,
-                    nickname: "사람2",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 3,
-                    nickname: "사람3",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 4,
-                    nickname: "사람4",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 5,
-                    nickname: "사람5",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 6,
-                    nickname: "사람6",
-                    icon: "/iconPath"
-                },
-            ],
-            currentPage: 1,
-            isLastPage: true
-        },
-        {
-            "rank": 1,
-            "clearTime": "mm:ss",
-            "clearDate": "yyyy-MM-dd",
-            participants: [
-                {
-                    memberId: 1,
-                    nickname: "사람1",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 2,
-                    nickname: "사람2",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 3,
-                    nickname: "사람3",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 4,
-                    nickname: "사람4",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 5,
-                    nickname: "사람5",
-                    icon: "/iconPath"
-                },
-                {
-                    memberId: 6,
-                    nickname: "사람6",
-                    icon: "/iconPath"
-                },
-            ],
-            currentPage: 1,
-            isLastPage: true
-        }
-    ]);
+    const [gameRankings, setGameRankings] = useState<Rankings[]>([]);
+
+    const changeStage = useSelector((state: RootState) => state.setStage.stage)
+    // console.log('변경된 스테이지', changeStage);
+    useEffect(() => {
+        setCurrentStage(changeStage);
+    }, [changeStage])
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const { data } = await defaultInstance.get('/ranking', {
+                    params: {
+                        stage: changeStage
+                    }
+                })
+                setGameRankings(data.rankings);
+            } catch (error: any) {
+                console.error('랭킹 조회 에러났음', error);
+            }
+        };
+        fetchData();
+    }, []);
 
     return (
         <div className={styles['wrap-container']}>

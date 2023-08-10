@@ -30,16 +30,10 @@ const LogInForm: React.FC<closeModalProps> = ({ closeModal }) => {
             '/login',
             LogIndata
         )
-        
-        // 토큰 헤더에 저장
-        axios.defaults.headers.common['Authorization'] = `Bearer ${data.accessToken}`;
-        
         // 토큰 저장
-        localStorage.setItem('accessToken', `${data.accessToken}`)
-
+        sessionStorage.setItem('accessToken', `${data.accessToken}`)
         // 로그인 상태
         dispatch(setIsLogIn(true));
-
         // 모달창 닫기
         closeModal();
 

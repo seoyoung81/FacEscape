@@ -1,12 +1,13 @@
 import ControlIcon from '../Common/ControlIcon';
 import styles from './BeforeEnter.module.css';
-import { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setNickName } from '../../store/nickNameSlice';
 
 const InputNickname: React.FC = () => {
     const [value, setValue] = useState<string>("");
+    const [defaultNickName, setDefaultNickName] = useState<string | null | readonly string[]>("");
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -26,6 +27,17 @@ const InputNickname: React.FC = () => {
           handleClick();
         }
       };
+
+    useEffect(() => {
+
+        if (sessionStorage.getItem('accessToken')) {
+            setDefaultNickName("회원가입 된 유저임");
+        } else {
+            setDefaultNickName("");
+        }
+    }, [])
+    
+
     return (
         <div className={styles['chat-layout']}>
             <div>
@@ -34,11 +46,11 @@ const InputNickname: React.FC = () => {
             <div className={styles['input-container']}>
                 <input 
                     type="text" 
-                    placeholder='닉네임을 입력하세요'
                     className={styles['nickname-input']}
                     value={value}
                     onChange={onChange}
                     onKeyDown={handleKeyDown}
+                    defaultValue={defaultNickName ? defaultNickName : ""}
                 />
                 <button className={styles['enter-btn']} onClick={handleClick}>입장</button>
             </div>
