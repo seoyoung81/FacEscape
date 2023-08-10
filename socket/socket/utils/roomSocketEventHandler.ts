@@ -8,7 +8,7 @@ const createOrUpdateMemberByIp = (socket: Socket) => {
     const ip = socket.handshake.address;
 
     let member = memberManager.getMember(ip);
-    console.log(`사용자 ip: ${ip}`, member);
+   // console.log(`사용자 ip: ${ip}`, member);
     if(member) {
         member.updateSocket(socket);
     } else {
@@ -20,36 +20,41 @@ const createOrUpdateMemberByIp = (socket: Socket) => {
 export const createRoomEventHandler = (socket: Socket) => {
     const room = roomManager.createRoom();
     const member = createOrUpdateMemberByIp(socket);
-    room.host = member.gameUuid;
+    room.hostUUID = member.memberUUID;
     member.enterRoom(room);
-    const response = new RoomInfoResponse(room.members, room.host, member.gameUuid, room.roomId)
+
+    const response = new RoomInfoResponse(room.members, room.hostUUID, member.memberUUID, room.roomId)
+    
     socket.emit(MemberResponseEvent.joinSuccess, JSON.stringify(response));
 };
 
 export const joinRoomEventHandler = (roomId:string, socket: Socket) => {
     const room = roomManager.getRoom(roomId);
-    const member = createOrUpdateMemberByIp(socket);
-    console.log(room);
+    const enteringUser = createOrUpdateMemberByIp(socket);
+
+    //console.log(room);
     if(!room) {
         socket.emit(MemberResponseEvent.joinFail, `존재하지 않는 방입니다.`);
         return;
     }
 
     if(room.isFull()) {
-        socket.emit(MemberResponseEvent.joinFail, `이미 가득찬 방입니다.`);
+        socket.emit(MemberResponseEvent.joinFail, `이미 만원인 방입니다.`);
         return;
     }
 
-    if((room.state === "PLAY") && !room.checkInGameMember(member.ip)) {
+    if((room.state === "PLAY") && !room.checkInGameMember(enteringUser.ip)) {
         socket.emit(MemberResponseEvent.joinFail, "유효하지 않은 사용자 입니다.");
         return;
     }
 
-    member.enterRoom(room);
-    const response = new RoomInfoResponse(room.members, room.host)
-    socket.broadcast.to(roomId).emit(MemberResponseEvent.othersJoin, JSON.stringify(response));
-    response.setFullInfos(member.gameUuid, roomId);
+    enteringUser.enterRoom(room); // 
+    const response = new RoomInfoResponse(room.members, room.hostUUID)
+
+    socket.broadcast.to(roomId).emit(MemberResponseEvent.someoneEntered, JSON.stringify(response));
+    response.setFullInfos(enteringUser.memberUUID, roomId);
     socket.emit(MemberResponseEvent.joinSuccess, JSON.stringify(response));
+
 }
 
 export const exitEventHandler = (event: ExitEvent, socket: Socket) => {
@@ -63,7 +68,7 @@ export const exitEventHandler = (event: ExitEvent, socket: Socket) => {
     member.leaveRoom(event);
     
     if(room){
-        const response = new RoomInfoResponse(room.members, room.host);
+        const response = new RoomInfoResponse(room.members, room.hostUUID);
         socket.broadcast.to(room.roomId).emit(MemberResponseEvent.othersExit, JSON.stringify(response));
     }
 }
@@ -90,7 +95,7 @@ export const memberNickNameEventHandler = (socket: Socket, data: NickNameEventDa
     
     if(room && member){
         member.updateUserInfo(memberid, nickname);
-        const response = new RoomInfoResponse(room.members, room.host);
+        const response = new RoomInfoResponse(room.members, room.hostUUID);
         callBack(room.roomId, JSON.stringify(response));
     }
 }
@@ -106,7 +111,7 @@ export const gameStartEventhandler = (socket: Socket, callBack: (roomId:string, 
         return;
     }
 
-    if (room.host != member.gameUuid) {
+    if (room.hostUUID != member.memberUUID) {
         socket.emit(GameResponseEvent.startFail, `방장이 게임을 시작할 수 있습니다.`);
         return;
     }
@@ -117,6 +122,6 @@ export const gameStartEventhandler = (socket: Socket, callBack: (roomId:string, 
     }
     room.state = "PLAY";
     room.setInGameMember(room.members);
-    const response = new RoomInfoResponse(room.members, room.host);
+    const response = new RoomInfoResponse(room.members, room.hostUUID);
     callBack(room.roomId, JSON.stringify(response));
 }
