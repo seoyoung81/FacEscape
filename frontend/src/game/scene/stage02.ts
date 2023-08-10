@@ -6,8 +6,8 @@ import frogRun from "../assets/images/NinjaFrog/run.png";
 import frogJump from "../assets/images/NinjaFrog/jump.png";
 import frogFall from "../assets/images/NinjaFrog/fall.png";
 
-import timeGaugePNG from "../assets/images/timegauge.png";
-import timeGaugeJSON from "../assets/images/timegauge.json";
+// import timeGaugePNG from "../assets/images/timegauge.png";
+// import timeGaugeJSON from "../assets/images/timegauge.json";
 import cannonIdle from "../assets/images/Idle.png";
 import cannonShoot from "../assets/images/shoot.png";
 import cannonBall from "../assets/images/cannonBall.png";
@@ -15,7 +15,7 @@ import key from "../assets/images/key.png";
 import doorIdle from "../assets/images/Door/doorIdle.png";
 import doorOpening from "../assets/images/Door/doorOpening.png";
 
-import { TimeGauge } from "../object/timegauge";
+// import { TimeGauge } from "../object/timegauge";
 import { Player } from "../object/player";
 import { Cannon } from "../object/cannon";
 import { Key } from "../object/key";
@@ -30,7 +30,7 @@ export default class Stage02 extends Phaser.Scene {
 
   player!: Player;
   platformLayer!: Phaser.Tilemaps.TilemapLayer | any;
-  timeGauge!: TimeGauge;
+  // timeGauge!: TimeGauge;
   
   cannons: Cannon[] = [];
   cannonBalls!: Phaser.Physics.Arcade.Group;
@@ -62,7 +62,7 @@ export default class Stage02 extends Phaser.Scene {
       endFrame: 11,
     });
 
-    this.load.atlas("timeGauge", timeGaugePNG, timeGaugeJSON);
+    // this.load.atlas("timeGauge", timeGaugePNG, timeGaugeJSON);
 
     this.load.image("cannon", cannonIdle);
     this.load.spritesheet("shoot", cannonShoot, {
