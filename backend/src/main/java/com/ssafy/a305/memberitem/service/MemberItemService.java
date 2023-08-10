@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+import com.ssafy.a305.memberitem.dto.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,9 +17,6 @@ import com.ssafy.a305.member.domain.Member;
 import com.ssafy.a305.member.repository.MemberRepository;
 import com.ssafy.a305.memberitem.domain.MemberBuy;
 import com.ssafy.a305.memberitem.domain.MemberItem;
-import com.ssafy.a305.memberitem.dto.MemberItemReqDTO;
-import com.ssafy.a305.memberitem.dto.PurchasedItemElementDTO;
-import com.ssafy.a305.memberitem.dto.PurchasedItemResDTO;
 import com.ssafy.a305.memberitem.exception.ItemAlreadyPurchasedException;
 import com.ssafy.a305.memberitem.exception.MileageInsufficientException;
 import com.ssafy.a305.memberitem.repository.MemberBuyRepository;
@@ -57,7 +55,7 @@ public class MemberItemService {
 			throw new MileageInsufficientException();
 		}
 		// 2. 해당 아이템을 보유 여부 확인
-		List<MemberItem> purchasedItems = showItem(memberId);
+		List<MemberItem> purchasedItems = showPurchasedItem(memberId);
 		for (MemberItem purchasedItem : purchasedItems) {
 			if (purchasedItem.getItem().getId().equals(itemId)) {
 				throw new ItemAlreadyPurchasedException();
@@ -89,12 +87,12 @@ public class MemberItemService {
 	// 회원이 구매한 모든 아이템을 반환하는 메서드
 	// memberId가 일치하는 item 보유 목록을 리스트로 반환
 	@Transactional(readOnly = true)
-	public List<MemberItem> showItem(Integer memberId) {
+	public List<MemberItem> showPurchasedItem(Integer memberId) {
 		return memberItemRepository.findByMemberId(memberId);
 	}
 
 	@Transactional(readOnly = true)
-	public List<MemberItem> showSpecificTypeItem(String itemTypeName, Integer memberId) {
+	public List<MemberItem> showSpecificTypePurchasedItem(String itemTypeName, Integer memberId) {
 		return memberItemRepository.findByMemberIdAndItem_ItemType_Name(memberId, itemTypeName);
 	}
 
@@ -133,7 +131,7 @@ public class MemberItemService {
 
 	@Transactional(readOnly = true)
 	public PurchasedItemResDTO getPurchasedItem(String itemTypeName, Integer memberId) {
-		List<MemberItem> purchasedMemberItems = showSpecificTypeItem(itemTypeName, memberId);
+		List<MemberItem> purchasedMemberItems = showSpecificTypePurchasedItem(itemTypeName, memberId);
 		List<PurchasedItemElementDTO> purchasedItems = purchasedMemberItems.stream()
 			.map(memberItem -> {
 				Item item = memberItem.getItem();
@@ -143,4 +141,15 @@ public class MemberItemService {
 		return new PurchasedItemResDTO(purchasedItems);
 	}
 
+	@Transactional(readOnly = true)
+	public EquippedItemResDTO getEquippedItem(Integer memberId) {
+		List<MemberItem> equippedMemberItems = showEquippedItem(memberId);
+		List<EquippedItemElementDTO> equippedItems = equippedMemberItems.stream()
+			.map(memberItem -> {
+				Item item = memberItem.getItem();
+				return new EquippedItemElementDTO(item.getId(), item.getImage(), item.getItemType().getName());
+			})
+			.collect(Collectors.toList());
+		return new EquippedItemResDTO(equippedItems);
+	}
 }
