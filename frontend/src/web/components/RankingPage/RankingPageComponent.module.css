@@ -114,3 +114,23 @@
 .ranking-stage-dropdown-item:hover {
     background-color: #BDBABA;
 }
+
+.member-name {
+    display: flex;
+    width: 650px;
+}
+
+.name {
+    font-family: 'MyFont';
+    font-size: 24px;
+    margin: 10px;
+    letter-spacing: 2.4px;
+    text-overflow: ellipsis;   
+    white-space: nowrap;       
+    overflow: hidden;          
+    max-width: 200px;   
+}
+
+.time, .date {
+    letter-spacing: 4.8px;
+}

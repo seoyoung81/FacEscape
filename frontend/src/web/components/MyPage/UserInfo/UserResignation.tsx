@@ -14,7 +14,7 @@ const UserResignation: React.FC = () => {
     const withdraw = async () => {
         try {
             await authInstance.delete('/member');
-            localStorage.removeItem('accessToken');
+            sessionStorage.removeItem('accessToken');
             dispatch(setIsLogIn(false));
             navigate('/');
 
