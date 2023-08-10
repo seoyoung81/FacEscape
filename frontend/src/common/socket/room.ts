@@ -30,30 +30,43 @@ export function useSocketRooms() {
             console.log(roomData);
             const responseConverter = new ClientMembersResponse(roomData["members"]);
 
-            const newRoomInfo = new RoomInfo(
-                roomData["roomId"]
-               ,roomData["hostUUID"]
-               ,roomData["myUUID"]
-               ,responseConverter.convertToMembers()
-            );
-
             sessionStorage.setItem("roomId", roomData["roomId"]);
 
-            setRoomInfo(()=>{
-                return newRoomInfo;
-            });
+           // setRoomInfo(newRoomInfo); // update 안 됨
+            setRoomInfo(() => {
+                const updatedRoomInfo = new RoomInfo(
+                     roomData["roomId"]
+                    ,roomData["hostUUID"]
+                    ,roomData["myUUID"]
+                    ,responseConverter.convertToMembers()
+                );
+            
+                return updatedRoomInfo;
+              });
         });
 
         newSocket.on(ENTERED_EVENT, (data) => {
             const roomData = JSON.parse(data);
+            // console.log(roomData);
+            // console.log("누군가 입장하였습니다." );
+
             const responseConverter = new ClientMembersResponse(roomData);
 
-            setRoomInfo(new RoomInfo(
-                roomInfo!.roomId
-               ,roomInfo!.hostUUID
-               ,roomInfo!.myUUID
-               ,responseConverter.convertToMembers()
-           ));
+            setRoomInfo((prevRoomInfo) => {
+                if (!prevRoomInfo) {
+                    console.log("==== 비상 =====");
+                    return; 
+                }
+            
+                const updatedRoomInfo = new RoomInfo(
+                    prevRoomInfo.roomId,
+                    prevRoomInfo.hostUUID,
+                    prevRoomInfo.myUUID,
+                    responseConverter.convertToMembers()
+                );
+            
+                return updatedRoomInfo;
+              });
         });
 
 
@@ -62,7 +75,7 @@ export function useSocketRooms() {
         });
         newSocket.on(KICK_RESPONSE, (errMsg)=>{
             alert(errMsg);
-        })
+        });
         // newSocket.on(SEND_CHAT_EVENT, (chat)=>{
         //     console.log(chat);
         // });
@@ -83,17 +96,15 @@ export function useSocketRooms() {
         }
     }
 
-    const sendMessage = (message: string) => {
-        if(roomId) {
-            socket?.emit(SEND_CHAT_EVENT, message);
-        }
-    }
+    // const sendMessage = (message: string) => {
+    //     if(roomId) {
+    //         socket?.emit(SEND_CHAT_EVENT, message);
+    //     }
+    // }
 
     useEffect(() => {
         connect();
     }, []);
 
-
-
-    return [{createRoom, joinRoom, sendMessage, roomInfo, roomId}];
+    return [{createRoom, joinRoom, roomInfo, roomId}];
 };
