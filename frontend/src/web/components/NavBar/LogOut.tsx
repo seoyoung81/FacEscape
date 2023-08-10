@@ -24,7 +24,7 @@ const LogOut: React.FC = () => {
         }).then(result => {
             if (result.isConfirmed) {
                 // 로그아웃 로직
-                localStorage.removeItem('accessToken');
+                sessionStorage.removeItem('accessToken');
                 dispatch(setIsLogIn(false));
                 navigate('/');
 
@@ -33,7 +33,7 @@ const LogOut: React.FC = () => {
     };
 
     // 토큰 만료 시 로그아웃 시키기
-    if (isLogIn && !localStorage.getItem('accessToken')) {
+    if (isLogIn && !sessionStorage.getItem('accessToken')) {
         alert('토큰 만료 로그인 다시 고');
         dispatch(setIsLogIn(false));
         navigate('/');

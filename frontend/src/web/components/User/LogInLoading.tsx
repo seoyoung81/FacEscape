@@ -16,13 +16,13 @@ const LogInLoading: React.FC = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const { data } = await defaultInstance.post('/google', {
+                const { data } = await defaultInstance.get('/login/oauth2/google', {
                     params: {
                         code: code
                     }
                 })
                 // 토큰 저장
-                localStorage.setItem('accessToken', data);
+                sessionStorage.setItem('accessToken', data.accessToken);
                 // 로그인 상태 변경
                 dispatch(setIsLogIn(true));
                 console.log('구글 로그인 요청 응답: 토큰', data);

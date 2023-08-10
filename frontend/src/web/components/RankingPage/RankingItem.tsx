@@ -7,7 +7,6 @@ type RankingItemProps = {
 }
 
 const RankingItem = ({rankInfo}: RankingItemProps) => {
-    console.log('랭킹 정보', rankInfo);
     return (
         <div className={styles['ranking-item-container']}>
                 <img 
@@ -17,16 +16,29 @@ const RankingItem = ({rankInfo}: RankingItemProps) => {
                 />
                 
                 <div className={styles['rank-item-text-container']}>
-                    <div>
-                        r
+                    <div className={styles.time}>
+                        {rankInfo.clearTime}
                     </div> 
 
-                    <div>
-                        사람1 사람2 사람3 사람4 사람5 사람6
+                    <div className={styles['member-name']}>
+                        {rankInfo.participants ? (
+                            rankInfo.participants.map((member, index) => (
+                                <div 
+                                    key={index} 
+                                    className={styles['name']}
+                                    title={member.nickname}
+                                >
+                                    {member.nickname}
+                                </div>
+                            
+                            ))
+                        ) : (
+                            null   
+                        )}
                     </div> 
 
-                    <div>
-                        yyyy:MM:dd
+                    <div className={styles.date}>
+                        {rankInfo.clearDate}
                     </div> 
                 </div>
         </div>

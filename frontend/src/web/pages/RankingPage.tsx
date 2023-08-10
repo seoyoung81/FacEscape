@@ -4,22 +4,28 @@ import { useState, useEffect } from 'react';
 import RankingView from "../components/RankingPage/RankingView";
 import type {Rankings} from '../services/ranking';
 import { defaultInstance } from "../services/api";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
 
 const RankingPage :React.FC = () => {
     const [currentStage, setCurrentStage] = useState<number>(1);
     const [gameRankings, setGameRankings] = useState<Rankings[]>([]);
 
-    
+    const changeStage = useSelector((state: RootState) => state.setStage.stage)
+    // console.log('변경된 스테이지', changeStage);
+    useEffect(() => {
+        setCurrentStage(changeStage);
+    }, [changeStage])
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const { data } = await defaultInstance.get('/ranking', {
                     params: {
-                        stage: currentStage
+                        stage: changeStage
                     }
                 })
-                console.log('랭킹 데이터 조회', data);
-                setGameRankings(gameRankings);
+                setGameRankings(data.rankings);
             } catch (error: any) {
                 console.error('랭킹 조회 에러났음', error);
             }

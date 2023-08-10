@@ -5,6 +5,7 @@ import persistReducer from './authSlice';
 import nickNameReducer from './nickNameSlice';
 import userNickNameReducer from './userInfoSlice';
 import myItemCategoryReducer from './myItemCategorySlice';
+import stageReducer from './stageSlice';
 
 const store = configureStore({
     reducer: {
@@ -19,7 +20,9 @@ const store = configureStore({
       // 회원 정보
         userNickName: userNickNameReducer,
       // 내가 구매한 아이템 카테고리 관리
-        setMyItemType: myItemCategoryReducer
+        setMyItemType: myItemCategoryReducer,
+      // 랭킹 스테이지
+        setStage: stageReducer,
     },
     middleware: getDefaultMiddleware => getDefaultMiddleware({ serializableCheck: false}),
     devTools: true,

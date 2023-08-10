@@ -8,20 +8,8 @@ const GoogleLogin: React.FC = () => {
 
     const googleLogin = async () => {
         // 구글 로그인 코드
-        
-        const Google_URL = "https://accounts.google.com/o/oauth2/v2/auth";
-        const queries = {
-          response_type : "code",
-          client_id: "249028033375-3q56vn82p2jku86es16u191kflqp6p1o.apps.googleusercontent.com",
-          redirect_uri: "http://localhost:3000/login/loading",
-          scope : "email"
-        };
-      
-        const params = new URLSearchParams(queries).toString();
-        // localStorage.setItem("web", "google")
-        window.location.href = `${Google_URL}?${params}`
-        
-      }
+        window.location.href = "https://i9a305.p.ssafy.io/api/backend/login/oauth2"
+    }
     
 
    

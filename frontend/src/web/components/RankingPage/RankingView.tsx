@@ -3,6 +3,9 @@ import RankingItem from './RankingItem';
 import DropDownIcon from '../../assets/images/i-dropdown.svg'
 import type {Rankings} from '../../services/ranking';
 
+import { useDispatch } from 'react-redux';
+import { setStage } from '../../store/stageSlice';
+
 
 type RankingViewProps = {
     currentStage: number,
@@ -11,10 +14,12 @@ type RankingViewProps = {
 }
 
 const RankingView = ({currentStage, handlerStage, rankInfos}: RankingViewProps) => {
+    const dispatch = useDispatch();
     const stageOnclickHandler = (event: React.MouseEvent<HTMLDivElement>) => {
         event.preventDefault();
         const stage = Number(event.currentTarget.getAttribute("data-stage"));
         handlerStage(stage);
+        dispatch(setStage(stage));
     }
 
     return (

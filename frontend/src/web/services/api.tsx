@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://i9a305.p.ssafy.io:8081';
+const BASE_URL = 'https://i9a305.p.ssafy.io/api/backend';
 
 interface AxiosOptions {
     [key: string]: any; 
@@ -18,7 +18,7 @@ const axiosApi = (url: string, options?: AxiosOptions) => {
 
 // 인증 값이 필요한 경우
 const axiosAuthApi = (url: string, options?: AxiosOptions) => {
-    const token = localStorage.getItem('accessToken');
+    const token = sessionStorage.getItem('accessToken');
     const instance = axios.create({
       baseURL: url,
       headers: 
