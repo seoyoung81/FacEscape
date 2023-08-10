@@ -1,4 +1,3 @@
-import ControlIcon from '../Common/ControlIcon';
 import styles from './BeforeEnter.module.css';
 import { useState, ChangeEvent, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -44,22 +43,19 @@ const InputNickname: React.FC = () => {
   }, [])
 
   return (
-    <div className={styles['chat-layout']}>
-      <div>
-        <ControlIcon openVidu={undefined} />
-      </div>
-      <div className={styles['input-container']}>
-        <input
-          type="text"
-          className={styles['nickname-input']}
-          value={value}
-          onChange={onChange}
-          onKeyDown={handleKeyDown}
-          placeholder={showError ? "아이디를 입력해주세요" : ""}
-        />
-        <button className={styles['enter-btn']} onClick={handleClick}>입장</button>
-      </div>
-    </div>
+    <>
+        <div className={styles['input-container']}>
+          <input
+            type="text"
+            className={styles['nickname-input']}
+            value={value}
+            onChange={onChange}
+            onKeyDown={handleKeyDown}
+            placeholder={showError ? "아이디를 입력해주세요" : ""}
+          />
+          <button className={styles['enter-btn']} onClick={handleClick}>입장</button>
+        </div>
+    </>
   )
 }
 
