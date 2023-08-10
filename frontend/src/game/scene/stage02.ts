@@ -108,12 +108,12 @@ export default class Stage02 extends Phaser.Scene {
     this.platformLayer = map.createLayer("platformLayer", ["terrain"]);
 
     this.player = new Player(this, 850, 200, "idle");
-    this.timeGauge = new TimeGauge(
-      this,
-      this.game.canvas.width / 2,
-      this.game.canvas.height / 6,
-      "timeGauge"
-    );
+    // this.timeGauge = new TimeGauge(
+    //   this,
+    //   this.game.canvas.width / 2,
+    //   this.game.canvas.height / 6,
+    //   "timeGauge"
+    // );
     
     // create key
     this.key = new Key(this, 1200, 270, "key", [this.platformLayer]).setScale(

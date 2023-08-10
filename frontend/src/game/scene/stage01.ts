@@ -22,10 +22,12 @@ import { Key } from "../object/key";
 import { Door } from "../object/door";
 
 //====== wall setting ==============
-const WALL_START_X = 100;
-const WALL_START_Y = 490;
+const WALL_START_X = 200;
+const WALL_START_Y = 500;
 const WALL_GAP = 120;
-const WALL_Y_OFFSET = 20; // Positioned slightly above the wall below it
+const WALL_Y_OFFSET = 10; // Positioned slightly above the wall below it
+
+
 
 export default class Stage01 extends Phaser.Scene {
   constructor() {
@@ -42,6 +44,11 @@ export default class Stage01 extends Phaser.Scene {
   key!: Phaser.Physics.Arcade.Sprite;
   isKeyPicked!: boolean;
   door!: Door;
+
+  mapWidth: number = 95;
+  mapHeight: number = 46;
+  tileWidth: number = 16;
+  tileHeight: number = 16;
 
   preload(): void {
     this.load.tilemapTiledJSON("stage01", stage01);
@@ -81,7 +88,7 @@ export default class Stage01 extends Phaser.Scene {
   create(): void {
     // add background
     this.isKeyPicked = false;
-    this.add.image(480, 360, "bg").setDepth(-2);
+    // this.add.image(480, 360, "bg").setDepth(-2);
 
     // create map
     const map = this.make.tilemap({
@@ -96,20 +103,20 @@ export default class Stage01 extends Phaser.Scene {
     // create layer
     this.platformLayer = map.createLayer("platformLayer", ["terrain"]);
     // create player
-    this.player = new Player(this, 150, 460, "idle");
+    this.player = new Player(this, 350, 660, "idle");
     // create cannon
-    this.cannon = new Cannon(this, 800, 505, "cannon");
+    this.cannon = new Cannon(this, 1000, 660, "cannon");
     // create walls
     this.walls = this.physics.add.group();
     this.addWall();
     // create cannonBall
     this.cannonBalls = this.physics.add.group();
     // create key
-    this.key = new Key(this, 30, 490, "key", [this.platformLayer]).setScale(
+    this.key = new Key(this, 100, 660, "key", [this.platformLayer]).setScale(
       0.09
     );
     // create door
-    this.door = new Door(this, 600, 470, "doorIdle", [
+    this.door = new Door(this, 800, 660, "doorIdle", [
       this.platformLayer,
     ]).setDepth(-1);
 
