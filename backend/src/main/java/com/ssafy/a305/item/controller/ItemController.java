@@ -18,6 +18,7 @@ public class ItemController {
 
 	@GetMapping("/items")
 	public ResponseEntity<ItemsResDTO> getItems(ItemsReqDTO dto) {
+		System.out.println("cont: " + dto.getItemType());
 		return ResponseEntity.ok(itemService.getItems(dto));
 	}
 }
