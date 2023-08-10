@@ -36,14 +36,12 @@ export function useSocketRooms() {
                ,roomData["myUUID"]
                ,responseConverter.convertToMembers()
             );
-           
+
+            sessionStorage.setItem("roomId", roomData["roomId"]);
+
             setRoomInfo(()=>{
-                console.log("roomID :" + roomData["roomId"]);
-                sessionStorage.setItem("roomId", roomData["roomId"]);
                 return newRoomInfo;
             });
-
-           
         });
 
         newSocket.on(ENTERED_EVENT, (data) => {
