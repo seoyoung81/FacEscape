@@ -21,7 +21,6 @@ const RankingView = ({currentStage, handlerStage, rankInfos}: RankingViewProps) 
         handlerStage(stage);
         dispatch(setStage(stage));
     }
-
     return (
         <div className={styles['ranking-view-container']}>
             <div className={styles['ranking-header']}>
@@ -53,8 +52,8 @@ const RankingView = ({currentStage, handlerStage, rankInfos}: RankingViewProps) 
             
             <div className={styles['ranking-body']}>
                 {
-                    rankInfos.map((rankInfo)=>{
-                        return <RankingItem rankInfo={rankInfo}/>
+                    rankInfos.map((rankInfo, index)=>{
+                        return <RankingItem rankInfo={rankInfo} index={index} />
                     })
                 }
             </div>
