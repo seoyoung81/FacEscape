@@ -1,6 +1,6 @@
 import UserResignation from './UserResignation';
 import styles from './UserInfo.module.css';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Swal from 'sweetalert2';
 import { authInstance } from '../../../services/api';
 
@@ -8,8 +8,6 @@ interface UserProps {
     nickName: string | null,
     onEditModal: () => void;
 }
-
-// 닉네임 수정 되면 마이페이지 인포메이션 리렌더링 시키는 로직 필요
 
 const EditModal: React.FC<UserProps> = ({ nickName, onEditModal }) => {
     const [nickname, setNewNickName] = useState<string>(nickName || '');
