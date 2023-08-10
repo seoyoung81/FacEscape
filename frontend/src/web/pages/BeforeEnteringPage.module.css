@@ -18,3 +18,8 @@
     display: flex;
     min-width: 500px;
 }
+
+.action-container {
+    display: flex;
+    gap: 63px;
+}

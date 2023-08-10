@@ -9,50 +9,29 @@ import {
 } from 'react-icons/bs';
 
 type OpenViduProps = {
-    openVidu: any
+    audioIsActive: boolean,
+    videoIsActive: boolean,
+    toggleAudio: any,
+    toggleVideo: any,
 }
 
-const ControlIcon = ({openVidu}: OpenViduProps) => {
-    const [micControl, setMicControl] = useState<boolean>(sessionStorage.getItem("micControl")==="true");
-    const [cameraControl, setCameraControl] = useState<boolean>(sessionStorage.getItem("cameraControl")==="true");
-
-    const onCamera = () => {
-        setCameraControl(!cameraControl);
-    };
-
-    const onMic = () => {
-        setMicControl(!micControl);
-    }
-
-    useEffect(()=>{
-        if(openVidu) {
-            openVidu.setAudioState(micControl);
-        }
-        sessionStorage.setItem("micControl", micControl.toString());
-    }, [micControl]);
-
-    useEffect(()=>{
-        if(openVidu) {
-            openVidu.setVideoState(cameraControl);
-        }
-        sessionStorage.setItem("cameraControl", cameraControl.toString());
-    }, [cameraControl]);
+const ControlIcon = ({audioIsActive, videoIsActive, toggleAudio, toggleVideo}: OpenViduProps) => {
 
     return (
         <div className={styles.icon}>
 
             <div className={styles["icon-cursor"]}>
-                {cameraControl ? 
-                    <BsFillCameraVideoFill size={80} onClick={onCamera} /> 
+                {videoIsActive ? 
+                    <BsFillCameraVideoFill size={80} onClick={toggleVideo} /> 
                     : 
-                    <BsFillCameraVideoOffFill size={80} onClick={onCamera} />
+                    <BsFillCameraVideoOffFill size={80} onClick={toggleVideo} />
                 }
             </div>
             <div className={styles["icon-cursor"]}>
-                {micControl ? 
-                    <BsFillMicFill size={80} onClick={onMic} /> 
+                {audioIsActive ? 
+                    <BsFillMicFill size={80} onClick={toggleAudio} /> 
                     : 
-                    <BsFillMicMuteFill size={80} onClick={onMic} />
+                    <BsFillMicMuteFill size={80} onClick={toggleAudio} />
                 }
             </div>
         </div>
