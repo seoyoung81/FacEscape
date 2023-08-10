@@ -13,6 +13,9 @@ const WaitingRoomPage: React.FC = () => {
 
     const [openVidu] = useOpenVidu();
     const [value] = useState<string>("181815834618");
+
+    
+
     const renderEmptySpace = ()=>{
         const render = [];
         for(let i=0; i<5-openVidu.subscribers.length; ++i) {
