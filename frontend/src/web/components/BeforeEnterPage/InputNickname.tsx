@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setNickName } from '../../store/nickNameSlice';
 import { authInstance } from '../../services/api';
+import Swal from 'sweetalert2';
 
 const InputNickname: React.FC = () => {
     const [value, setValue] = useState<string>("");
@@ -19,9 +20,17 @@ const InputNickname: React.FC = () => {
     };
 
     const handleClick = () => {
-        console.log(value);
-        navigate('/waiting');
-        setNickName("");
+        if (value.length > 8) {
+            Swal.fire({
+                title: '닉네임을 8자 이하로 입력해주세요.',
+                confirmButtonColor: '#3479AD',
+                confirmButtonText: '확인',
+                width: '550px'
+              });
+        } else {
+            navigate('/waiting');
+            setNickName("");
+        }
     };
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
