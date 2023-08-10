@@ -21,7 +21,7 @@ const LogOut: React.FC = () => {
         }).then(result => {
             if (result.isConfirmed) {
                 // 로그아웃 로직
-                localStorage.removeItem('accessToken');
+                sessionStorage.removeItem('accessToken');
                 dispatch(setIsLogIn(false));
                 navigate('/');
 
