@@ -13,8 +13,26 @@ const WaitingRoomPage: React.FC = () => {
 
     const [openVidu] = useOpenVidu();
     const [value] = useState<string>("181815834618");
+    const [audioControl, setAudioControl] = useState<boolean>(sessionStorage.getItem("audioControl")==="true");
+    const [videoControl, setVideoControl] = useState<boolean>(sessionStorage.getItem("videoControl")==="true");
 
-    
+    const toggleAudio = () => {
+        setAudioControl((prev)=>{
+            const isActive = !prev;
+            sessionStorage.setItem("audioControl", isActive.toString());
+            openVidu.setAudioState(isActive);
+            return isActive;
+        });
+    }
+
+    const toggleVideo = () => {
+        setVideoControl((prev)=>{
+            const isActive = !prev;
+            sessionStorage.setItem("videoControl", isActive.toString());
+            openVidu.setVideoState(isActive);
+            return isActive;
+        });
+    }
 
     const renderEmptySpace = ()=>{
         const render = [];
@@ -25,6 +43,9 @@ const WaitingRoomPage: React.FC = () => {
     }
 
     useEffect(() => {
+        openVidu.setAudioState(audioControl);
+        openVidu.setVideoState(videoControl);
+
         const leaveSession = openVidu.leaveSession
         window.addEventListener('beforeunload', leaveSession);
         return () => {
@@ -56,7 +77,10 @@ const WaitingRoomPage: React.FC = () => {
                 </div>
 
                 <div className={styles['action-container']}>
-                    <ControlIcon openVidu={openVidu} />
+                    <ControlIcon audioIsActive={ audioControl } 
+                                videoIsActive={ videoControl }
+                                toggleAudio={ toggleAudio }
+                                toggleVideo={ toggleVideo }/>
                     <Chat />
                 </div>
             </div>
