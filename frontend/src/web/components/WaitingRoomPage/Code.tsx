@@ -1,11 +1,13 @@
 import styles from './WaitingRoom.module.css';
 import { useState } from 'react';
 import { MouseEventHandler } from 'react';
+import { useSocketRooms } from '../../../common/socket';
 
 const Code: React.FC = () => {
     const [value, setValue] = useState<string>("18181818");
-    
-    const code = value;
+    const [{roomId}] = useSocketRooms();
+    console.log("2 : " + roomId);
+    const code = roomId!;
     const onClick: MouseEventHandler<HTMLButtonElement> = async (event) => {
         try {
             await navigator.clipboard.writeText(code);
