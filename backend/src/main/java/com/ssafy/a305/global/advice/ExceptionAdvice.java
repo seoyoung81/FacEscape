@@ -67,12 +67,16 @@ public class ExceptionAdvice {
 	@ExceptionHandler(MileageInsufficientException.class)
 	public ResponseEntity mileageInsufficientException(MileageInsufficientException e) {
 		log.error("exception : ", e);
-		return new ResponseEntity(HttpStatus.BAD_REQUEST);
+		List<ValidationErrorDTO> errorList = new ArrayList<>();
+		errorList.add(new ValidationErrorDTO("mileage", e.getMessage()));
+		return new ResponseEntity<>(new ValidationFailedResDTO(errorList), HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(ItemAlreadyPurchasedException.class)
 	public ResponseEntity itemAlreadyPurchasedException(ItemAlreadyPurchasedException e) {
 		log.error("exception : ", e);
-		return new ResponseEntity(HttpStatus.BAD_REQUEST);
+		List<ValidationErrorDTO> errorList = new ArrayList<>();
+		errorList.add(new ValidationErrorDTO("item", e.getMessage()));
+		return new ResponseEntity<>(new ValidationFailedResDTO(errorList), HttpStatus.BAD_REQUEST);
 	}
 }
