@@ -12,7 +12,6 @@ const RankingPage :React.FC = () => {
     const [gameRankings, setGameRankings] = useState<Rankings[]>([]);
 
     const changeStage = useSelector((state: RootState) => state.setStage.stage)
-    // console.log('변경된 스테이지', changeStage);
     useEffect(() => {
         setCurrentStage(changeStage);
     }, [changeStage])
@@ -22,7 +21,7 @@ const RankingPage :React.FC = () => {
             try {
                 const { data } = await defaultInstance.get('/ranking', {
                     params: {
-                        stage: changeStage
+                        stage: currentStage
                     }
                 })
                 setGameRankings(data.rankings);
@@ -31,7 +30,7 @@ const RankingPage :React.FC = () => {
             }
         };
         fetchData();
-    }, []);
+    }, [changeStage]);
 
     return (
         <div className={styles['wrap-container']}>
