@@ -34,6 +34,7 @@ const PurchaseCheckModal: React.FC<purchaseProps> = ({ itemPrice, itemId, itemIm
         catch(error: any) {
             // 이미 구매한 아이템이면 구매 못하게
             if (error.response && error.response.status === 400) {
+                if ( itemPrice)
                 Swal.fire({
                     title: '이미 보유한 아이템입니다.',
                     confirmButtonColor: '#3479AD',

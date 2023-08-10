@@ -1,6 +1,8 @@
 import { useDispatch } from 'react-redux';
 import { setIsLogIn } from '../../store/authSlice';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
 
 import styles from './NavBar.module.css';
 import Swal from 'sweetalert2';
@@ -8,6 +10,7 @@ import Swal from 'sweetalert2';
 const LogOut: React.FC = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const isLogIn = useSelector((state: RootState) => state.setIsLogIn);
 
     const logOut = () => {
         Swal.fire({
@@ -28,7 +31,15 @@ const LogOut: React.FC = () => {
             } 
         })
     };
- 
+
+    // 토큰 만료 시 로그아웃 시키기
+    if (isLogIn && !sessionStorage.getItem('accessToken')) {
+        alert('토큰 만료 로그인 다시 고');
+        dispatch(setIsLogIn(false));
+        navigate('/');
+    }
+
+
     return (
         <div
             className={styles['login']}
