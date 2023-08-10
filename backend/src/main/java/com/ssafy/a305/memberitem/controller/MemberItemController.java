@@ -1,5 +1,6 @@
 package com.ssafy.a305.memberitem.controller;
 
+import com.ssafy.a305.memberitem.dto.EquippedItemResDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +38,12 @@ public class MemberItemController {
 		Authentication authentication) {
 		return ResponseEntity.ok(
 			memberItemService.getPurchasedItem(itemType, Integer.parseInt(authentication.getName())));
+	}
+
+	@GetMapping("/member/item/equipped")
+	public ResponseEntity<EquippedItemResDTO> getEquippedItem(Authentication authentication) {
+		return ResponseEntity.ok(
+				memberItemService.getEquippedItem(Integer.parseInt(authentication.getName())));
 	}
 
 }
