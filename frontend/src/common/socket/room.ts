@@ -32,7 +32,11 @@ export function useSocketRooms() {
 
             sessionStorage.setItem("roomId", roomData["roomId"]);
 
-           // setRoomInfo(newRoomInfo); // update 안 됨
+            setRoomId(() => {
+                console.log("1 : " + roomData["roomId"]);
+                return roomData["roomId"];
+            });
+
             setRoomInfo(() => {
                 const updatedRoomInfo = new RoomInfo(
                      roomData["roomId"]
@@ -57,14 +61,13 @@ export function useSocketRooms() {
                     console.log("==== 비상 =====");
                     return; 
                 }
-            
+
                 const updatedRoomInfo = new RoomInfo(
                     prevRoomInfo.roomId,
                     prevRoomInfo.hostUUID,
                     prevRoomInfo.myUUID,
                     responseConverter.convertToMembers()
                 );
-            
                 return updatedRoomInfo;
               });
         });
