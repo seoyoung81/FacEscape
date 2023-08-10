@@ -34,16 +34,12 @@ public class ItemDynamicQueryRepositoryImpl implements ItemDynamicQueryRepositor
 
 		// 아이템 카테고리(타입) 쿼리 조건 동적 추가
 		String searchItemType = dto.getItemType();
-		System.out.println(searchItemType);
 		if (searchItemType != null && !searchItemType.isEmpty()) {
 			predicates.add(cb.equal(itemTypes.get("name"), searchItemType));
 		}
-		System.out.println(itemTypes.get("name") + " vs " + searchItemType);
-		System.out.println(cb.equal(itemTypes.get("name"), searchItemType));
 
 		// 아이템명 쿼리 조건 동적 추가
 		String itemName = dto.getKeyword();
-		System.out.println(itemName);
 		if (itemName != null && !itemName.isEmpty()) {
 			predicates.add(cb.like(root.get("name"), "%" + itemName + "%"));
 		}

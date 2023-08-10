@@ -30,7 +30,6 @@ public class MemberController {
 
 	@GetMapping("/check-email")
 	public ResponseEntity<UniqueEmailCheckResDTO> checkPreExistEmail(@RequestParam String email) {
-		System.out.println(email);
 		return ResponseEntity.ok(memberService.checkPreExistEmail(email));
 	}
 
