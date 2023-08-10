@@ -10,7 +10,6 @@ const CodeInput :React.FC = () => {
 
     const onChange = (event: ChangeEvent<HTMLInputElement>) => {
         setCodeInput(event.target.value);
-        // console.log(codeInput);
     }
     const handleClick = () => {
         if(codeInput){
