@@ -7,11 +7,19 @@ import Inventory from '../components/WaitingRoomPage/Inventory';
 
 import { useState, useEffect } from "react"
 import { useOpenVidu } from "../../common/webrtc"
+import ControlIcon from "../components/Common/ControlIcon"
 
 const WaitingRoomPage: React.FC = () => {
 
     const [openVidu] = useOpenVidu();
     const [value] = useState<string>("181815834618");
+    const renderEmptySpace = ()=>{
+        const render = [];
+        for(let i=0; i<5-openVidu.subscribers.length; ++i) {
+            render.push(<Video streamManager={undefined} />);
+        }
+        return render;
+    }
 
     useEffect(() => {
         const leaveSession = openVidu.leaveSession
@@ -38,9 +46,14 @@ const WaitingRoomPage: React.FC = () => {
                     <div className={styles['box-container']}>
                         { openVidu.publisher && <Video streamManager={openVidu.publisher} /> }
                         { openVidu.subscribers.map((subscriber, i)=><Video streamManager={subscriber} key={i}/>) }
+
+                        { !openVidu.publisher && <Video streamManager={undefined} /> }
+                        { renderEmptySpace() }
                     </div>
                 </div>
-                <div className={styles['chat-container']}>
+
+                <div className={styles['action-container']}>
+                    <ControlIcon openVidu={openVidu} />
                     <Chat />
                 </div>
             </div>

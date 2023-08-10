@@ -3,7 +3,7 @@ import { StreamManager } from "openvidu-browser";
 import { useRef, useEffect } from 'react';
 
 type VideoProps = {
-    streamManager: StreamManager,
+    streamManager: StreamManager|undefined,
 }
 
 const Video = ({streamManager}: VideoProps) => {

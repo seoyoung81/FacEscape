@@ -1,19 +1,20 @@
-import { useState, ChangeEvent } from 'react';
+import { useState, useEffect,ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './MainPageComponent.module.css';
+import {useSocketRooms} from '../../../common/socket'
 
 const CodeInput :React.FC = () => {
     const [codeInput, setCodeInput] = useState<string>("");
+    const [{roomId, joinRoom}] = useSocketRooms();
     const navigate = useNavigate();
+
     const onChange = (event: ChangeEvent<HTMLInputElement>) => {
         setCodeInput(event.target.value);
         // console.log(codeInput);
     }
     const handleClick = () => {
         if(codeInput){
-            // 소켓서버로 join요청
-            // 성공시 세션스토리지에 저장
-            navigate('/before');
+            joinRoom(codeInput);
         }
         else{
             alert("입장 코드를 입력해주세요!");
@@ -22,9 +23,15 @@ const CodeInput :React.FC = () => {
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
-            handleClick();
+          handleClick();
         }
     };
+
+    useEffect(()=>{
+        if(roomId) {
+            navigate('/before');
+        }
+    }, [roomId])
 
     return (
         <div className={styles['code-container']}>
