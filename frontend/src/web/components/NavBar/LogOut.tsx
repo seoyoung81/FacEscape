@@ -34,7 +34,7 @@ const LogOut: React.FC = () => {
 
     // 토큰 만료 시 로그아웃 시키기
     if (isLogIn && !sessionStorage.getItem('accessToken')) {
-        alert('토큰 만료 로그인 다시 고');
+        // alert('토큰 만료 로그인 다시 고');
         dispatch(setIsLogIn(false));
         navigate('/');
     }

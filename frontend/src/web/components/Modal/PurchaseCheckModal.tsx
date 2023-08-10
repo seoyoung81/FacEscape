@@ -32,27 +32,20 @@ const PurchaseCheckModal: React.FC<purchaseProps> = ({ itemPrice, itemId, itemIm
             console.log('구매 동작 성공', response);
         }
         catch(error: any) {
-            // 이미 구매한 아이템이면 구매 못하게
-            if (error.response && error.response.status === 400) {
-                if ( itemPrice)
-                Swal.fire({
-                    title: '이미 보유한 아이템입니다.',
-                    confirmButtonColor: '#3479AD',
-                    confirmButtonText: '확인',
-                  });
-            } 
-            // 가격이 내 마일리지보다 높으면 구매 못하게
-            else if (error.response && error.response.status === 500) {
+            if (error.response.data && error.response.data.errors[0].field === 'mileage') {
                 Swal.fire({
                     title: '보유 마일리지가 부족합니다.',
                     confirmButtonColor: '#3479AD',
                     confirmButtonText: '확인',
-                  });
-                console.error('에러 번호', error);
-            } else {
-                console.log('구매 동작 실패', error);
-            }
-        }
+                });
+            } else if (error.response && error.response.status === 400) {
+                Swal.fire({
+                    title: '이미 보유한 아이템입니다.',
+                    confirmButtonColor: '#3479AD',
+                    confirmButtonText: '확인',
+                    });
+                } 
+            };
         setOpenPurchaseModal(false);
     };
 
