@@ -1,14 +1,16 @@
 // game 안에 들어갈 data를 manage 하는 class
+
 import { Socket, Server } from "socket.io";
-class GameManager {
+import { Player } from "./utils/player";
+export class GameManager {
   private scene: any;
-  private players: Map<string, Object> = new Map();
+  private players: Map<string,Player> = new Map();
   private walls: any;
   private cannonBalls: any;
 
   constructor(private io: Server) {}
 
-  addPlayer(socketId: string, player: Object) {
+  addPlayer(socketId: string, player: Player) {
     this.players.set(socketId, player);
   }
 
@@ -16,11 +18,24 @@ class GameManager {
     this.players.delete(socketId);
   }
 
-  updatePlayer(socketId: string, playerData: any) {
+  updatePlayer(socketId: string, playerData: Player) {
     const player = this.players.get(socketId);
     if (player) {
-      // Update player based on received data
+      player.setX(playerData.x);
+      player.setY(playerData.y);
     }
+  }
+
+  createWall() {
+    
+  }
+
+  destroyWall() {
+    
+  }
+
+  updateCannonBall() {
+    
   }
 
   broadcastGameState() {
