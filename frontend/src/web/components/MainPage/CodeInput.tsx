@@ -7,7 +7,6 @@ const CodeInput :React.FC = () => {
     const navigate = useNavigate();
     const onChange = (event: ChangeEvent<HTMLInputElement>) => {
         setCodeInput(event.target.value);
-        // console.log(codeInput);
     }
     const handleClick = () => {
         navigate('/before');
