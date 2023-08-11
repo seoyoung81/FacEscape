@@ -8,7 +8,6 @@ const createOrUpdateMemberByIp = (socket: Socket) => {
     const ip = socket.handshake.address;
 
     let member = memberManager.getMember(ip);
-   // console.log(`사용자 ip: ${ip}`, member);
     if(member) {
         member.updateSocket(socket);
     } else {
@@ -31,8 +30,7 @@ export const createRoomEventHandler = (socket: Socket) => {
 export const joinRoomEventHandler = (roomId:string, socket: Socket) => {
     const room = roomManager.getRoom(roomId);
     const enteringUser = createOrUpdateMemberByIp(socket);
-
-    //console.log(room);
+    
     if(!room) {
         socket.emit(MemberResponseEvent.joinFail, `존재하지 않는 방입니다.`);
         return;
@@ -48,7 +46,7 @@ export const joinRoomEventHandler = (roomId:string, socket: Socket) => {
         return;
     }
 
-    enteringUser.enterRoom(room); // 
+    enteringUser.enterRoom(room);
     const response = new RoomInfoResponse(room.members, room.hostUUID)
 
     socket.broadcast.to(roomId).emit(MemberResponseEvent.someoneEntered, JSON.stringify(response));
@@ -59,13 +57,10 @@ export const joinRoomEventHandler = (roomId:string, socket: Socket) => {
 
 export const exitEventHandler = (event: ExitEvent, socket: Socket) => {
     const member = createOrUpdateMemberByIp(socket);
-    // const ip = socket.handshake.address;
-    // const member = memberManager.getMember(ip+1); 
-    // const room = member?.room;
-    
-    // member?.leaveRoom(event);
     const room = member.room;
     member.leaveRoom(event);
+
+    console.log("Exit Event!");
     
     if(room){
         const response = new RoomInfoResponse(room.members, room.hostUUID);
@@ -76,7 +71,7 @@ export const exitEventHandler = (event: ExitEvent, socket: Socket) => {
 export const memberChatEventHandler = (socket: Socket, msg: string, callBack: (roomId:string, chat: string)=>{}) => {
     const ip = socket.handshake.address;
     //const member = memberManager.getMember(ip+0);
-    const member = memberManager.getMember(ip+0);
+    const member = memberManager.getMember(ip);
     member?.sendChat(msg, callBack);
 }
 
