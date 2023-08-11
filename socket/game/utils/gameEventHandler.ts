@@ -13,7 +13,6 @@ import { GameEventType } from "./gameEventTypes";
 
 export class GameEventHandler {
   constructor(private io: Server, private gameManager: GameManager) {}
-
   handleConnection(
     socket: Socket,
     currentScene: Phaser.Scene,
@@ -24,12 +23,10 @@ export class GameEventHandler {
     socket.on(GameEventType.enterScene, () => {});
 
     socket.on(GameEventType.createPlayer, () => {
-      const player = new Player(playerData.scene, 100, 100, "idle");
-      this.gameManager.addPlayer(socket.id, player);
       this.emitInitialGameData(socket);
     });
 
-    socket.on("playerAction", (playerData: any) => {
+    socket.on(GameEventType.updatePlayer, (playerData: Player) => {
       this.gameManager.updatePlayer(socket.id, playerData);
       this.gameManager.broadcastGameState();
     });

@@ -33,8 +33,6 @@ export class GameManager {
 
   destroyWall() {}
 
-  updateCannonBall() {}
-
   broadcastGameState() {
     const gameState = this.currentScene;
     this.io.emit("gameStateUpdate", gameState);
