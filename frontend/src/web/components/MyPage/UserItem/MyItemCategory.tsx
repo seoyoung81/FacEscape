@@ -33,8 +33,8 @@ const MyItemCategory: React.FC = () => {
                         type="radio" 
                         id="value-2" 
                         name="value-radio" 
-                        value="아이템" 
-                        checked={selectedValue === "아이템"}
+                        value="아이콘" 
+                        checked={selectedValue === "아이콘"}
                         onChange={handleRadioChange} 
                     />
                     <span>아이콘</span>
