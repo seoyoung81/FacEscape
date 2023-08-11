@@ -335,7 +335,7 @@ export default class Stage03 extends Phaser.Scene {
   }
 
   gameOver(): void {
-    this.player.setPosition(100, 660);
+    this.player.setPosition(100, 672);
 
     console.log("gameOver");
   }
