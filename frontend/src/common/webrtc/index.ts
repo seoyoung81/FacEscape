@@ -70,7 +70,7 @@ export function useOpenVidu () {
         try {
             const token = await getToken(roomId as string);
             await (session as Session).connect(token, { clientData: nickname });
-
+            
             const publisher = openViduInstance.initPublisher(undefined, {
                 audioSource: undefined, 
                 videoSource: undefined,
@@ -81,10 +81,11 @@ export function useOpenVidu () {
                 insertMode: 'APPEND',
                 mirror: false
             });
-
+            
             await (session as Session).publish(publisher);
             setPublisher(()=>publisher);
         } catch(e) {
+            console.log(e);
             Swal.fire({
                 title: "만료된 방입니다.",
                 confirmButtonColor: '#3479AD',
@@ -102,12 +103,6 @@ export function useOpenVidu () {
             setAudioState(false);
             session.disconnect();
         }
-
-        setSession(()=>undefined);
-        setSubscribers(()=>[]);
-        setRoomId(()=>'');
-        setNickname(()=>'Participant' + Math.floor(Math.random() * 100));
-        setPublisher(()=>undefined);
     }
 
     const setVideoState = (isActive: boolean) => {

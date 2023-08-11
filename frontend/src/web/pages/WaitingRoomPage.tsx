@@ -7,13 +7,17 @@ import Inventory from '../components/WaitingRoomPage/Inventory';
 
 import { useState, useEffect } from "react"
 import { useOpenVidu } from "../../common/webrtc"
+import { useSocketRooms } from '../../common/socket'
+
 import ControlIcon from "../components/Common/ControlIcon"
 import Swal from 'sweetalert2';
 
 const WaitingRoomPage: React.FC = () => {
 
+    const [useSocket] = useSocketRooms();
     const [openVidu] = useOpenVidu();
-    const [roomId, setRoomId] = useState<string>(new URLSearchParams(window.location.search).get("rid") || "");
+    const [connectionFlag, setConntectionFlag] = useState<boolean>(false);
+    const [roomId] = useState<string>(new URLSearchParams(window.location.search).get("rid") || "");
     const [audioControl, setAudioControl] = useState<boolean>(sessionStorage.getItem("audioControl")==="true");
     const [videoControl, setVideoControl] = useState<boolean>(sessionStorage.getItem("videoControl")==="true");
 
@@ -65,7 +69,7 @@ const WaitingRoomPage: React.FC = () => {
         return () => {
             window.removeEventListener('beforeunload', leaveSession);
         };
-    }, [openVidu]);
+    }, [openVidu])
 
     useEffect(()=>{
         if(roomId) {
@@ -73,21 +77,43 @@ const WaitingRoomPage: React.FC = () => {
         }
     }, [roomId]);
 
+    useEffect(()=>{
+        setConntectionFlag(roomId!==undefined && useSocket.socket !== undefined);
+    }, [roomId, useSocket.socket]);
+
+    useEffect(()=>{
+        if(connectionFlag) {
+            useSocket.joinRoom(roomId);
+        }
+    }, [connectionFlag]);
+
+    useEffect(()=>{
+        if(useSocket.isKick) {
+            openVidu.leaveSession();
+            Swal.fire({
+                title: '다른 클라이언트에서 접속하여<br/> 접속이 종료됩니다.',
+                confirmButtonColor: '#3479AD',
+                confirmButtonText: '확인',
+                width: '550px'
+            }).then(()=>{
+                window.location.href="/";
+            });
+        }
+    }, [useSocket.isKick, openVidu])
+
     return (
         <div className={styles['waitingroom-container']}>
             <div>
                 <div className={styles['top-container']}>
-                    <NickName />
+                    <NickName nickname={ useSocket.client?.nickname || "" } />
                     <Code roomId={roomId} />
                     <Inventory />
                 </div>
             
                 <div className={styles['camera-container']}>
                     <div className={styles['box-container']}>
-                        { openVidu.publisher && <Video streamManager={openVidu.publisher} /> }
+                        { openVidu.publisher ? <Video streamManager={openVidu.publisher} /> : <Video streamManager={undefined} /> }
                         { openVidu.subscribers.map((subscriber, i)=><Video streamManager={subscriber} key={i}/>) }
-
-                        { !openVidu.publisher && <Video streamManager={undefined} /> }
                         { renderEmptySpace() }
                     </div>
                 </div>
