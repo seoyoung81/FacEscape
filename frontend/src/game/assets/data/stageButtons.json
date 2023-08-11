@@ -3,71 +3,63 @@
     {
       "id": "1",
       "sceneName": "Stage01",
-      "y": 90,
-      "x": 100,
+      "y": 200,
+      "x": 200,
       "hasInteract": true,
       "texture": "stageBtn"
     },
     {
       "id": "2",
       "sceneName": "Stage02",
-      "y": 90,
-      "x": 250,
+      "y": 200,
+      "x": 400,
       "hasInteract": true,
       "texture": "stageBtn"
     },
     {
       "id": "3",
       "sceneName": "Stage03",
-      "y": 90,
-      "x": 400,
+      "y": 200,
+      "x": 600,
       "hasInteract": true,
       "texture": "stageBtn"
     },
     {
       "id": "-1",
-      "sceneName": "none",
-      "y": 90,
-      "x": 550,
+      "sceneName": "Stage04",
+      "y": 200,
+      "x": 800,
       "hasInteract": false,
       "texture": "lockBtn"
     },
     {
       "id": "-1",
       "sceneName": "none",
-      "y": 90,
-      "x": 700,
+      "y": 200,
+      "x": 1000,
       "hasInteract": false,
       "texture": "lockBtn"
     },
     {
       "id": "-1",
       "sceneName": "none",
-      "y": 90,
-      "x": 850,
+      "y": 200,
+      "x": 1200,
       "hasInteract": false,
       "texture": "lockBtn"
     },
     {
       "id": "-1",
       "sceneName": "none",
-      "y": 230,
-      "x": 100,
+      "y": 400,
+      "x": 200,
       "hasInteract": false,
       "texture": "lockBtn"
     },
     {
       "id": "-1",
       "sceneName": "none",
-      "y": 230,
-      "x": 250,
-      "hasInteract": false,
-      "texture": "lockBtn"
-    },
-    {
-      "id": "-1",
-      "sceneName": "none",
-      "y": 230,
+      "y": 400,
       "x": 400,
       "hasInteract": false,
       "texture": "lockBtn"
@@ -75,47 +67,47 @@
     {
       "id": "-1",
       "sceneName": "none",
-      "y": 230,
-      "x": 550,
+      "y": 400,
+      "x": 600,
       "hasInteract": false,
       "texture": "lockBtn"
     },
     {
       "id": "-1",
       "sceneName": "none",
-      "y": 230,
-      "x": 700,
+      "y": 400,
+      "x": 800,
       "hasInteract": false,
       "texture": "lockBtn"
     },
     {
       "id": "-1",
       "sceneName": "none",
-      "y": 230,
-      "x": 850,
+      "y": 400,
+      "x": 1000,
       "hasInteract": false,
       "texture": "lockBtn"
     },
     {
       "id": "-1",
       "sceneName": "none",
-      "y": 370,
-      "x": 100,
+      "y": 400,
+      "x": 1200,
       "hasInteract": false,
       "texture": "lockBtn"
     },
     {
       "id": "-1",
       "sceneName": "none",
-      "y": 370,
-      "x": 250,
+      "y": 600,
+      "x": 200,
       "hasInteract": false,
       "texture": "lockBtn"
     },
     {
       "id": "-1",
       "sceneName": "none",
-      "y": 370,
+      "y": 600,
       "x": 400,
       "hasInteract": false,
       "texture": "lockBtn"
@@ -123,48 +115,32 @@
     {
       "id": "-1",
       "sceneName": "none",
-      "y": 370,
-      "x": 550,
+      "y": 600,
+      "x": 600,
       "hasInteract": false,
       "texture": "lockBtn"
     },
     {
       "id": "-1",
       "sceneName": "none",
-      "y": 370,
-      "x": 700,
+      "y": 600,
+      "x": 800,
       "hasInteract": false,
       "texture": "lockBtn"
     },
     {
       "id": "-1",
       "sceneName": "none",
-      "y": 370,
-      "x": 850,
+      "y": 600,
+      "x": 1000,
       "hasInteract": false,
       "texture": "lockBtn"
     },
     {
       "id": "-1",
       "sceneName": "none",
-      "y": 510,
-      "x": 100,
-      "hasInteract": false,
-      "texture": "lockBtn"
-    },
-    {
-      "id": "-1",
-      "sceneName": "none",
-      "y": 510,
-      "x": 250,
-      "hasInteract": false,
-      "texture": "lockBtn"
-    },
-    {
-      "id": "-1",
-      "sceneName": "none",
-      "y": 510,
-      "x": 400,
+      "y": 600,
+      "x": 1200,
       "hasInteract": false,
       "texture": "lockBtn"
     }
