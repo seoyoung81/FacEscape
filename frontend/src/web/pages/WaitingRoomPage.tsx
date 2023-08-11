@@ -8,11 +8,12 @@ import Inventory from '../components/WaitingRoomPage/Inventory';
 import { useState, useEffect } from "react"
 import { useOpenVidu } from "../../common/webrtc"
 import ControlIcon from "../components/Common/ControlIcon"
+import Swal from 'sweetalert2';
 
 const WaitingRoomPage: React.FC = () => {
 
     const [openVidu] = useOpenVidu();
-    const [value] = useState<string>(sessionStorage.getItem("roomId")||"");
+    const [roomId, setRoomId] = useState<string>(new URLSearchParams(window.location.search).get("rid") || "");
     const [audioControl, setAudioControl] = useState<boolean>(sessionStorage.getItem("audioControl")==="true");
     const [videoControl, setVideoControl] = useState<boolean>(sessionStorage.getItem("videoControl")==="true");
 
@@ -37,10 +38,23 @@ const WaitingRoomPage: React.FC = () => {
     const renderEmptySpace = ()=>{
         const render = [];
         for(let i=0; i<5-openVidu.subscribers.length; ++i) {
-            render.push(<Video streamManager={undefined} />);
+            render.push(<Video streamManager={undefined} key={i+10}/>);
         }
         return render;
     }
+
+    useEffect(()=>{
+        if(!roomId) {
+            Swal.fire({
+                title: '비정상적인 접근입니다.',
+                confirmButtonColor: '#3479AD',
+                confirmButtonText: '확인',
+                width: '550px'
+            }).then(()=>{
+                window.location.href="/";
+            });
+        }
+    }, [])
 
     useEffect(() => {
         openVidu.setAudioState(audioControl);
@@ -54,15 +68,17 @@ const WaitingRoomPage: React.FC = () => {
     }, [openVidu]);
 
     useEffect(()=>{
-        openVidu.handleChangeRoomId(value);
-    }, [value]);
+        if(roomId) {
+            openVidu.handleChangeRoomId(roomId);
+        }
+    }, [roomId]);
 
     return (
         <div className={styles['waitingroom-container']}>
             <div>
                 <div className={styles['top-container']}>
                     <NickName />
-                    <Code roomId={value} />
+                    <Code roomId={roomId} />
                     <Inventory />
                 </div>
             

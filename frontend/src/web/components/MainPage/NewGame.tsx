@@ -1,16 +1,22 @@
 import styles from './MainPageComponent.module.css'
 import { useNavigate } from 'react-router-dom'
-import {useSocketRooms } from '../../../common/socket'
-
+import { useSocketRooms } from '../../../common/socket'
+import { useEffect } from 'react';
 
 const NewGame :React.FC = () => {
     const navigate = useNavigate();
-    const [{createRoom}] = useSocketRooms();
+    const [{roomId, createRoom}] = useSocketRooms();
 
     const handleClick = () => {
         createRoom();
-        navigate('/before');
     }
+
+    useEffect(()=>{
+        if(roomId) {
+            navigate(`/before?rid=${roomId}`);
+        }
+    }, [roomId]);
+    
     return (
         <div className={styles.conatiner}>
             <button

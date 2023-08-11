@@ -5,7 +5,11 @@ import { setNickName } from '../../store/nickNameSlice';
 import { authInstance } from '../../services/api';
 import Swal from 'sweetalert2';
 
-const InputNickname: React.FC = () => {
+type InputNickNameProps = {
+    roomId: string
+}
+
+const InputNickname = ({roomId}: InputNickNameProps) => {
 
     const [value, setValue] = useState<string>("");
     const [defaultNickName, setDefaultNickName] = useState<string>("");
@@ -26,7 +30,7 @@ const InputNickname: React.FC = () => {
                 width: '550px'
               });
         } else {
-            window.location.href = "/waiting";
+            window.location.href = `/waiting?rid=${roomId}`;
             setNickName("");
         }
     };

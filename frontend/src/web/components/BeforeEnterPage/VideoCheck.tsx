@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import styles from './BeforeEnter.module.css';
 
-const CONSTRAINTS = { video: true,  audio: true };
-
 type VideoCheckProps = {
   videoIsActive: boolean,
   audioIsActive: boolean,

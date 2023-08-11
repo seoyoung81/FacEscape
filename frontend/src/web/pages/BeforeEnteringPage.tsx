@@ -3,13 +3,26 @@ import VideoCheck from '../components/BeforeEnterPage/VideoCheck';
 import InputNickname from '../components/BeforeEnterPage/InputNickname';
 import ControlIcon from '../components/Common/ControlIcon';
 import { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
 
 const BeforeEnteringPage: React.FC = () => {
 
     const [audioControl, setAudioControl] = useState<boolean>(true);
     const [videoControl, setVideoControl] = useState<boolean>(true);
+    const [roomId, setRoomId] = useState<string>(new URLSearchParams(window.location.search).get("rid") || "");
 
     useEffect(()=>{
+        if(!roomId) {
+            Swal.fire({
+                title: '비정상적인 접근입니다.',
+                confirmButtonColor: '#3479AD',
+                confirmButtonText: '확인',
+                width: '550px'
+            }).then(()=>{
+                window.location.href="/";
+            });
+        }
+
         sessionStorage.setItem("audioControl", "true");
         sessionStorage.setItem("videoControl", "true");
     }, [])
@@ -39,7 +52,7 @@ const BeforeEnteringPage: React.FC = () => {
 
                     <div className={styles['action-container']}>
                         <ControlIcon audioIsActive={ audioControl } videoIsActive = { videoControl } toggleAudio={ toggleAudio } toggleVideo={ toggleVideo }/>
-                        <InputNickname />
+                        <InputNickname roomId={roomId} />
                     </div>
                 </div>
             </div>

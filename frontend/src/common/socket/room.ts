@@ -27,13 +27,9 @@ export function useSocketRooms() {
 
         newSocket.on(SUCCESS_RESPONSE, (data) => {
             const roomData = JSON.parse(data);
-            console.log(roomData);
             const responseConverter = new ClientMembersResponse(roomData["members"]);
 
-            sessionStorage.setItem("roomId", roomData["roomId"]);
-
             setRoomId(() => {
-                console.log("1 : " + roomData["roomId"]);
                 return roomData["roomId"];
             });
 
@@ -51,14 +47,10 @@ export function useSocketRooms() {
 
         newSocket.on(ENTERED_EVENT, (data) => {
             const roomData = JSON.parse(data);
-            // console.log(roomData);
-            // console.log("누군가 입장하였습니다." );
-
             const responseConverter = new ClientMembersResponse(roomData);
 
             setRoomInfo((prevRoomInfo) => {
                 if (!prevRoomInfo) {
-                    console.log("==== 비상 =====");
                     return; 
                 }
 
@@ -69,7 +61,7 @@ export function useSocketRooms() {
                     responseConverter.convertToMembers()
                 );
                 return updatedRoomInfo;
-              });
+            });
         });
 
 
