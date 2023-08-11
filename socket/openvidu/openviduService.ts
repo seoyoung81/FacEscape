@@ -1,4 +1,4 @@
-import openvidu from './openviduInstance';
+import openvidu from './OpenviduInstance';
 import { roomManager } from "../room/roomManager";
 import express from "express";
 
