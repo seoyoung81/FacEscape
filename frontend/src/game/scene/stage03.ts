@@ -129,7 +129,7 @@ export default class Stage03 extends Phaser.Scene {
     this.platformLayer = map.createLayer("platformLayer", ["terrain"]);
 
     // this.player = new Player(this, 100, 660, "idle", this.platformLayer);
-    this.player = new Player(this, 2500, 660, "idle", this.platformLayer);
+    this.player = new Player(this, 3500, 260, "idle", this.platformLayer);
     this.trafficLight = new TrafficLight(
       this,
       this.game.canvas.width / 2,
@@ -262,15 +262,14 @@ export default class Stage03 extends Phaser.Scene {
       );
     });
 
-    this.cannon = new Cannon(this, 3220, 420, "cannon", [
+    this.cannon = new Cannon(this, 4500, 420, "cannon", [
       this.platformLayer,
       this.player,
     ]);
-    this.cannon.flipX = true;
 
     this.cannonBalls = this.physics.add.group();
     this.time.addEvent({
-      delay: 1000,
+      delay: 2100,
       callback: () => {
         const cannonBall = this.physics.add.sprite(
           this.cannon.x,
@@ -279,7 +278,7 @@ export default class Stage03 extends Phaser.Scene {
         );
         this.cannonBalls.add(cannonBall);
         cannonBall.body.allowGravity = false;
-        cannonBall.setVelocityX(500);
+        cannonBall.setVelocityX(-500);
         this.physics.add.collider(this.player, cannonBall, () => {
           this.knockBack(this.player);
           cannonBall.destroy();
@@ -328,8 +327,8 @@ export default class Stage03 extends Phaser.Scene {
     player.setPosition(player.x, player.y - 20)
     setTimeout(() => {
       player.setPlayerState(1);
-      const pushBackVelocityX = 300;
-      const pushBackVelocityY = -500;
+      const pushBackVelocityX = -300;
+      const pushBackVelocityY = -300;
       player.setVelocity(pushBackVelocityX, pushBackVelocityY);
     }, 30);
   }
@@ -353,6 +352,13 @@ export default class Stage03 extends Phaser.Scene {
         console.log("game over");
       }
     }
+
+    this.cannonBalls.getChildren().forEach((cannonBall: Phaser.GameObjects.GameObject) => {
+      const sprite = cannonBall as Phaser.Physics.Arcade.Sprite;
+      if (sprite.x < 3000) {
+        sprite.destroy();
+      }
+    });
 
     this.prevPlayerX = this.player.x;
     this.prevPlayerY = this.player.y;

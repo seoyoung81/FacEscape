@@ -234,6 +234,7 @@ export default class Stage02 extends Phaser.Scene {
     this.cameras.main.scrollX = this.player.x - this.cameras.main.width / 2;
     this.cameras.main.scrollY = this.player.y - this.cameras.main.height / 2;
     
+
     if (this.isKeyPicked) {
       this.events.emit("doorOpenEvent");
     }
