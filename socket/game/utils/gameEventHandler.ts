@@ -2,7 +2,8 @@
 
 import { Socket, Server } from "socket.io";
 import { GameManager } from "../gameManager";
-import { Player } from "./player";
+import { Player } from "../objects/player";
+import { GameEventType } from "./gameEventTypes";
 
 // const createScene = (socket: Socket) => {};
 // const createPlayer = (socket: Socket) => {};
@@ -13,11 +14,20 @@ import { Player } from "./player";
 export class GameEventHandler {
   constructor(private io: Server, private gameManager: GameManager) {}
 
-  handleConnection(socket: Socket, playerData:Player) {
+  handleConnection(
+    socket: Socket,
+    currentScene: Phaser.Scene,
+    playerData: Player
+  ) {
     console.log(`Player connected: ${socket.id}`);
-    // const player = new Player();
-    // this.gameManager.addPlayer(socket.id, player);
-    this.emitInitialGameData(socket);
+
+    socket.on(GameEventType.enterScene, () => {});
+
+    socket.on(GameEventType.createPlayer, () => {
+      const player = new Player(playerData.scene, 100, 100, "idle");
+      this.gameManager.addPlayer(socket.id, player);
+      this.emitInitialGameData(socket);
+    });
 
     socket.on("playerAction", (playerData: any) => {
       this.gameManager.updatePlayer(socket.id, playerData);
