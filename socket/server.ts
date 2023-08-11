@@ -9,6 +9,7 @@ const app = express();
 const httpServer = createServer(app);
 const io = socketMapper(httpServer);
 
+app.use(express.json());
 app.use(cors());
 app.use('/api', opController);
 
