@@ -139,7 +139,8 @@ public class MemberItemService {
 		List<PurchasedItemElementDTO> purchasedItems = purchasedMemberItems.stream()
 			.map(memberItem -> {
 				Item item = memberItem.getItem();
-				return new PurchasedItemElementDTO(item.getId(), item.getName(), item.getImage());
+				return new PurchasedItemElementDTO(item.getId(), item.getName(), item.getImage(),
+					memberItem.getUsedYN());
 			})
 			.collect(Collectors.toList());
 		return new PurchasedItemResDTO(purchasedItems);
