@@ -12,7 +12,7 @@ import ControlIcon from "../components/Common/ControlIcon"
 const WaitingRoomPage: React.FC = () => {
 
     const [openVidu] = useOpenVidu();
-    const [value] = useState<string>("181815834618");
+    const [value] = useState<string>(sessionStorage.getItem("roomId")||"");
     const [audioControl, setAudioControl] = useState<boolean>(sessionStorage.getItem("audioControl")==="true");
     const [videoControl, setVideoControl] = useState<boolean>(sessionStorage.getItem("videoControl")==="true");
 
@@ -62,7 +62,7 @@ const WaitingRoomPage: React.FC = () => {
             <div>
                 <div className={styles['top-container']}>
                     <NickName />
-                    <Code />
+                    <Code roomId={value} />
                     <Inventory />
                 </div>
             

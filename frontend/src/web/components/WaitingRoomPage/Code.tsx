@@ -1,16 +1,14 @@
 import styles from './WaitingRoom.module.css';
-import { useState } from 'react';
 import { MouseEventHandler } from 'react';
-import { useSocketRooms } from '../../../common/socket';
 
-const Code: React.FC = () => {
-    const [value, setValue] = useState<string>("18181818");
-    const [{roomId}] = useSocketRooms();
-    console.log("2 : " + roomId);
-    const code = roomId!;
+type CodeProps = {
+    roomId: string
+};
+
+const Code = ({ roomId }: CodeProps) => {
     const onClick: MouseEventHandler<HTMLButtonElement> = async (event) => {
         try {
-            await navigator.clipboard.writeText(code);
+            await navigator.clipboard.writeText(roomId);
         } catch (error) {
         }
     };
@@ -20,7 +18,7 @@ const Code: React.FC = () => {
             <div>
                 <input 
                     type="text"
-                    value={value}
+                    value={roomId}
                     className={styles['code']}
                     readOnly
                 />
