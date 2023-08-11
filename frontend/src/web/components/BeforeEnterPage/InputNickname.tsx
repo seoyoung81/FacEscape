@@ -1,8 +1,7 @@
 import styles from './BeforeEnter.module.css';
 import { useState, ChangeEvent, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { setNickName } from '../../store/nickNameSlice';
 import { authInstance } from '../../services/api';
+import { memberService } from '../../services/member'
 import Swal from 'sweetalert2';
 
 type InputNickNameProps = {
@@ -11,27 +10,24 @@ type InputNickNameProps = {
 
 const InputNickname = ({roomId}: InputNickNameProps) => {
 
-    const [value, setValue] = useState<string>("");
-    const [defaultNickName, setDefaultNickName] = useState<string>("");
-    const dispatch = useDispatch();
-
+    const [memberId, setMemberId] = useState<number>(-1);
+    const [gameNickname, setGameNickname] = useState<string>("");
     const onChange = (event: ChangeEvent<HTMLInputElement>) => {
         const newNickName: string = event.target.value;
-        setValue(newNickName);
-        dispatch(setNickName(newNickName));
+        setGameNickname(newNickName);
     };
 
-    const handleClick = () => {
-        if (value.length < 1 || value.length > 8) {
+    const handleClick = async () => {
+        if (gameNickname.length < 1 || gameNickname.length > 8) {
             Swal.fire({
                 title: '닉네임을 1자 이상, 8자 이하로 <br/> 입력해주세요.',
                 confirmButtonColor: '#3479AD',
                 confirmButtonText: '확인',
                 width: '550px'
-              });
+            });
         } else {
+            await memberService.updateInGameMemberInfo(memberId, gameNickname);
             window.location.href = `/waiting?rid=${roomId}`;
-            setNickName("");
         }
     };
 
@@ -44,7 +40,8 @@ const InputNickname = ({roomId}: InputNickNameProps) => {
     const fetchData = async () => {
         try {
             const { data } = await authInstance.get('/member')
-            setDefaultNickName(data.nickname);   
+            setMemberId(data.id);
+            setGameNickname(data.nickname);
         } catch(error) {
             console.log(error);
         }
@@ -62,8 +59,8 @@ const InputNickname = ({roomId}: InputNickNameProps) => {
                     className={styles['nickname-input']}
                     onChange={onChange}
                     onKeyDown={handleKeyDown}
-                    defaultValue={sessionStorage.getItem('accessToken') ? defaultNickName : ""}
-                    placeholder={sessionStorage.getItem('accessToken') ? '' : '닉네임을 입력하세요.'}
+                    value={ gameNickname }
+                    placeholder={ '닉네임을 입력하세요.' }
                 />
                 <button className={styles['enter-btn']} onClick={handleClick}>입장</button>
             </div>

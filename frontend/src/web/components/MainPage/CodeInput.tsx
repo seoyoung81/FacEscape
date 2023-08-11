@@ -1,12 +1,10 @@
 import { useState, useEffect,ChangeEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
 import styles from './MainPageComponent.module.css';
 import {useSocketRooms} from '../../../common/socket'
 
 const CodeInput :React.FC = () => {
     const [codeInput, setCodeInput] = useState<string>("");
     const [{roomId, joinRoom}] = useSocketRooms();
-    const navigate = useNavigate();
 
     const onChange = (event: ChangeEvent<HTMLInputElement>) => {
         setCodeInput(event.target.value);
@@ -28,7 +26,7 @@ const CodeInput :React.FC = () => {
 
     useEffect(()=>{
         if(roomId) {
-            navigate(`/before?rid=${roomId}`);
+            window.location.href = `/before?rid=${roomId}`;
         }
     }, [roomId])
 

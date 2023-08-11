@@ -30,6 +30,9 @@ const axiosAuthApi = (url: string, options?: AxiosOptions) => {
 
 export const defaultInstance = axiosApi(BASE_URL);
 export const authInstance = axiosAuthApi(BASE_URL);
+export const expressAxios = axios.create({
+  baseURL: "http://localhost:3050"
+});
 
 authInstance.interceptors.request.use((config)=>{
   const token = sessionStorage.getItem("accessToken");
