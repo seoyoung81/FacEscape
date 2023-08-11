@@ -49,7 +49,7 @@ export default class Stage03 extends Phaser.Scene {
   prevPlayerY: number = 0;
 
   mapWidth: number = 300;
-  mapHeight: number = 46;
+  mapHeight: number = 47;
   tileWidth: number = 16;
   tileHeight: number = 16;
 
@@ -98,6 +98,11 @@ export default class Stage03 extends Phaser.Scene {
 
   create(): void {
     this.isKeyPicked = false;
+    const bg = this.add.image(0, 0, "bg").setOrigin(0).setScale(1);
+    bg.displayWidth = this.mapWidth * this.tileWidth;
+    bg.displayHeight = this.mapHeight * this.tileHeight;
+    bg.depth = -2;
+
     const map = this.make.tilemap({
       key: "stage03",
       tileWidth: 16,
@@ -117,13 +122,14 @@ export default class Stage03 extends Phaser.Scene {
       this.mapWidth * this.tileWidth,
       this.mapHeight * this.tileHeight
     );
-    this.cameras.main.scrollX = 900;
-    this.cameras.main.scrollY = 200;
+    // this.cameras.main.scrollX = 900;
+    // this.cameras.main.scrollY = 200;
 
     map.setCollisionByExclusion([-1], true);
     this.platformLayer = map.createLayer("platformLayer", ["terrain"]);
 
-    this.player = new Player(this, 4200, 400, "idle", this.platformLayer);
+    // this.player = new Player(this, 100, 660, "idle", this.platformLayer);
+    this.player = new Player(this, 2500, 660, "idle", this.platformLayer);
     this.trafficLight = new TrafficLight(
       this,
       this.game.canvas.width / 2,
@@ -326,18 +332,21 @@ export default class Stage03 extends Phaser.Scene {
   }
 
   gameOver(): void {
-    console.log("gameOVERRR");
+    this.player.setPosition(100, 660);
+
+    console.log("gameOver");
   }
 
   update(): void {
-    this.trafficLight.update();
     this.player.update();
+    this.trafficLight.update();
 
     if (this.trafficLight.getTrafficLightState() === "red") {
       if (
         this.player.x !== this.prevPlayerX ||
         this.player.y !== this.prevPlayerY
       ) {
+        this.gameOver()
         console.log("game over");
       }
     }

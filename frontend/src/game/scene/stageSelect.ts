@@ -40,7 +40,12 @@ export class StageSelect extends Phaser.Scene {
   }
 
   create(): void {
-    this.add.image(480, 300, "background");
+
+    const bg = this.add.image(0, 0, "background").setOrigin(0).setScale(1);
+    bg.displayWidth = this.cameras.main.width;
+    bg.displayHeight = this.cameras.main.height;
+    bg.depth = -1;
+    
     this.input.manager.enabled = true;
     this.addStageButtons();
     this.socket.on("test", (stage: string) => {
