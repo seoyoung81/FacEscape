@@ -22,7 +22,7 @@ import { Key } from "../object/key";
 import { Door } from "../object/door";
 
 //====== wall setting ==============
-const WALL_START_X = 250;
+const WALL_START_X = 270;
 const WALL_START_Y = 670;
 const WALL_GAP = 90;
 const WALL_Y_OFFSET = 10; // Positioned slightly above the wall below it
@@ -107,7 +107,7 @@ export default class Stage01 extends Phaser.Scene {
     // create layer
     this.platformLayer = map.createLayer("platformLayer", ["terrain"]);
     // create player
-    this.player = new Player(this, 350, 660, "idle");
+    this.player = new Player(this, 370, 660, "idle");
     // create cannon
     this.cannon = new Cannon(this, 1000, 660, "cannon");
     // create walls
@@ -116,7 +116,7 @@ export default class Stage01 extends Phaser.Scene {
     // create cannonBall
     this.cannonBalls = this.physics.add.group();
     // create key
-    this.key = new Key(this, 80, 660, "key", [this.platformLayer]).setScale(
+    this.key = new Key(this, 50, 660, "key", [this.platformLayer]).setScale(
       0.09
     );
     // create door
@@ -213,9 +213,8 @@ export default class Stage01 extends Phaser.Scene {
   }
 
   addWall() {
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 4; i++) {
       const positionX = WALL_START_X - 50 * i
-      // const positionY = WALL_START_Y - WALL_GAP * i + WALL_Y_OFFSET * i;
       const wall = this.physics.add
         .sprite(positionX, WALL_START_Y, "wall")
         .setScale(0.07)
@@ -227,11 +226,6 @@ export default class Stage01 extends Phaser.Scene {
         wall.body.moves = false;
       });
       
-      this.physics.add.collider(wall, wall, () => {
-        // wall.body.immovable = true;
-        wall.body.moves = false;
-      });
-
       this.walls.add(wall);
     }
   }

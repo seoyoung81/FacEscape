@@ -122,8 +122,8 @@ export default class Stage03 extends Phaser.Scene {
       this.mapWidth * this.tileWidth,
       this.mapHeight * this.tileHeight
     );
-    this.cameras.main.scrollX = 900;
-    this.cameras.main.scrollY = 200;
+    // this.cameras.main.scrollX = 900;
+    // this.cameras.main.scrollY = 200;
 
     map.setCollisionByExclusion([-1], true);
     this.platformLayer = map.createLayer("platformLayer", ["terrain"]);

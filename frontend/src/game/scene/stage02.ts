@@ -219,17 +219,21 @@ export default class Stage02 extends Phaser.Scene {
   }
 
   knockBack(player: Player) {
-    player.setPlayerState(1);
-    const pushBackVelocityX = 300;
-    const pushBackVelocityY = -300;
-    player.setVelocity(pushBackVelocityX, pushBackVelocityY);
+    player.setPosition(player.x, player.y - 40)
+    setTimeout(() => {
+      player.setPlayerState(1);
+      const pushBackVelocityX = 300;
+      const pushBackVelocityY = -300;
+      player.setVelocity(pushBackVelocityX, pushBackVelocityY);
+    }, 20);
   }
 
   update(): void {
+    this.player.getPlayerState();
     this.player.update();
     this.cameras.main.scrollX = this.player.x - this.cameras.main.width / 2;
     this.cameras.main.scrollY = this.player.y - this.cameras.main.height / 2;
-
+    
     if (this.isKeyPicked) {
       this.events.emit("doorOpenEvent");
     }
