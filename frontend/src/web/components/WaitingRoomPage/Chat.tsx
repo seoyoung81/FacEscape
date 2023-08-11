@@ -36,9 +36,9 @@ const Chat: React.FC = () => {
                         onKeyDown={handleKeyDown}
                     />
                     <button className={styles['enter-btn']} onClick={handleClick}>전송</button>
-                </div>
-                <div>
-                    <StartBtn />
+            </div>
+            <div>
+                <StartBtn />
             </div>
             <span className={styles['bubble-position']}>
                 <SpeechBubble text={text} align="right" />
