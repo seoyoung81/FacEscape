@@ -1,16 +1,14 @@
-import ControlIcon from '../Common/ControlIcon';
 import styles from './BeforeEnter.module.css';
 import { useState, ChangeEvent, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setNickName } from '../../store/nickNameSlice';
 import { authInstance } from '../../services/api';
 import Swal from 'sweetalert2';
 
 const InputNickname: React.FC = () => {
+
     const [value, setValue] = useState<string>("");
     const [defaultNickName, setDefaultNickName] = useState<string>("");
-    const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const onChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -28,7 +26,7 @@ const InputNickname: React.FC = () => {
                 width: '550px'
               });
         } else {
-            navigate('/waiting');
+            window.location.href = "/waiting";
             setNickName("");
         }
     };
