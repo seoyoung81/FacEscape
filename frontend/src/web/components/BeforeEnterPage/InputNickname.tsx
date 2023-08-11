@@ -18,9 +18,9 @@ const InputNickname: React.FC = () => {
     };
 
     const handleClick = () => {
-        if (value.length > 8) {
+        if (value.length < 1 || value.length > 8) {
             Swal.fire({
-                title: '닉네임을 8자 이하로 입력해주세요.',
+                title: '닉네임을 1자 이상, 8자 이하로 <br/> 입력해주세요.',
                 confirmButtonColor: '#3479AD',
                 confirmButtonText: '확인',
                 width: '550px'
@@ -51,10 +51,7 @@ const InputNickname: React.FC = () => {
     }, []);
 
     return (
-        <div className={styles['chat-layout']}>
-            <div>
-                <ControlIcon openVidu={undefined} />
-            </div>
+        <>
             <div className={styles['input-container']}>
                 <input 
                     type="text" 
@@ -66,7 +63,7 @@ const InputNickname: React.FC = () => {
                 />
                 <button className={styles['enter-btn']} onClick={handleClick}>입장</button>
             </div>
-        </div>
+        </>
     );
 }
 
