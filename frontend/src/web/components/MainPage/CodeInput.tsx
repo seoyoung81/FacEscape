@@ -28,7 +28,7 @@ const CodeInput :React.FC = () => {
 
     useEffect(()=>{
         if(roomId) {
-            navigate('/before');
+            navigate(`/before?rid=${roomId}`);
         }
     }, [roomId])
 

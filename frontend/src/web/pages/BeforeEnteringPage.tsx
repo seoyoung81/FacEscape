@@ -8,6 +8,7 @@ const BeforeEnteringPage: React.FC = () => {
 
     const [audioControl, setAudioControl] = useState<boolean>(true);
     const [videoControl, setVideoControl] = useState<boolean>(true);
+    const [roomId, setRoomId] = useState<string>(new URLSearchParams(window.location.search).get("rid") || "");
 
     useEffect(()=>{
         sessionStorage.setItem("audioControl", "true");
@@ -39,7 +40,7 @@ const BeforeEnteringPage: React.FC = () => {
 
                     <div className={styles['action-container']}>
                         <ControlIcon audioIsActive={ audioControl } videoIsActive = { videoControl } toggleAudio={ toggleAudio } toggleVideo={ toggleVideo }/>
-                        <InputNickname />
+                        <InputNickname roomId={roomId} />
                     </div>
                 </div>
             </div>

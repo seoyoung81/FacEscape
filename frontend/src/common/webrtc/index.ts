@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { getToken } from "./service"
 import { WebRTCStreamEvent } from "./utils/types"
 import { Session, Publisher, Subscriber } from "openvidu-browser";
+import Swal from 'sweetalert2';
 
 export function useOpenVidu () {
 
@@ -84,7 +85,14 @@ export function useOpenVidu () {
             await (session as Session).publish(publisher);
             setPublisher(()=>publisher);
         } catch(e) {
-            console.warn(e);
+            Swal.fire({
+                title: "만료된 방입니다.",
+                confirmButtonColor: '#3479AD',
+                confirmButtonText: '확인',
+                width: '550px'
+            }).then(()=>{
+                window.location.href="/";
+            });
         }           
     }   
 
