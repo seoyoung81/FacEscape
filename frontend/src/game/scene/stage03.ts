@@ -325,10 +325,13 @@ export default class Stage03 extends Phaser.Scene {
   }
 
   knockBack(player: Player) {
-    player.setPlayerState(1);
-    const pushBackVelocityX = 300;
-    const pushBackVelocityY = -500;
-    player.setVelocity(pushBackVelocityX, pushBackVelocityY);
+    player.setPosition(player.x, player.y - 30)
+    setTimeout(() => {
+      player.setPlayerState(1);
+      const pushBackVelocityX = 300;
+      const pushBackVelocityY = -500;
+      player.setVelocity(pushBackVelocityX, pushBackVelocityY);
+    }, 20);
   }
 
   gameOver(): void {
