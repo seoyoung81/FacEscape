@@ -4,9 +4,9 @@ import { Socket, Server } from "socket.io";
 import { Player } from "./utils/player";
 export class GameManager {
   private scene: any;
-  private players: Map<string,Player> = new Map();
-  private walls: any;
-  private cannonBalls: any;
+  private players: Map<string, Player> = new Map();
+  private walls: Map<String, Object> = new Map();
+  private cannonBalls: Map<String, Object> = new Map();
 
   constructor(private io: Server) {}
 
@@ -26,17 +26,11 @@ export class GameManager {
     }
   }
 
-  createWall() {
-    
-  }
+  createWall() {}
 
-  destroyWall() {
-    
-  }
+  destroyWall() {}
 
-  updateCannonBall() {
-    
-  }
+  updateCannonBall() {}
 
   broadcastGameState() {
     const gameState = this.scene;
