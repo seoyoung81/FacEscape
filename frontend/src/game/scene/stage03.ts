@@ -49,7 +49,7 @@ export default class Stage03 extends Phaser.Scene {
   prevPlayerY: number = 0;
 
   mapWidth: number = 300;
-  mapHeight: number = 46;
+  mapHeight: number = 47;
   tileWidth: number = 16;
   tileHeight: number = 16;
 
@@ -98,6 +98,11 @@ export default class Stage03 extends Phaser.Scene {
 
   create(): void {
     this.isKeyPicked = false;
+    const bg = this.add.image(0, 0, "bg").setOrigin(0).setScale(1);
+    bg.displayWidth = this.mapWidth * this.tileWidth;
+    bg.displayHeight = this.mapHeight * this.tileHeight;
+    bg.depth = -2;
+
     const map = this.make.tilemap({
       key: "stage03",
       tileWidth: 16,
@@ -124,7 +129,7 @@ export default class Stage03 extends Phaser.Scene {
     this.platformLayer = map.createLayer("platformLayer", ["terrain"]);
 
     // this.player = new Player(this, 100, 660, "idle", this.platformLayer);
-    this.player = new Player(this, 1300, 660, "idle", this.platformLayer);
+    this.player = new Player(this, 2500, 660, "idle", this.platformLayer);
     this.trafficLight = new TrafficLight(
       this,
       this.game.canvas.width / 2,

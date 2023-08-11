@@ -22,7 +22,7 @@ import { Key } from "../object/key";
 import { Door } from "../object/door";
 
 //====== wall setting ==============
-const WALL_START_X = 200;
+const WALL_START_X = 250;
 const WALL_START_Y = 670;
 const WALL_GAP = 90;
 const WALL_Y_OFFSET = 10; // Positioned slightly above the wall below it
@@ -86,9 +86,13 @@ export default class Stage01 extends Phaser.Scene {
   }
 
   create(): void {
-    // add background
     this.isKeyPicked = false;
-    // this.add.image(480, 360, "bg").setDepth(-2);
+    
+    // add background
+    const bg = this.add.image(0, 0, "bg").setOrigin(0).setScale(1);
+    bg.displayWidth = this.cameras.main.width;
+    bg.displayHeight = this.cameras.main.height;
+    bg.depth = -2;
 
     // create map
     const map = this.make.tilemap({
@@ -112,7 +116,7 @@ export default class Stage01 extends Phaser.Scene {
     // create cannonBall
     this.cannonBalls = this.physics.add.group();
     // create key
-    this.key = new Key(this, 100, 660, "key", [this.platformLayer]).setScale(
+    this.key = new Key(this, 80, 660, "key", [this.platformLayer]).setScale(
       0.09
     );
     // create door
@@ -210,15 +214,21 @@ export default class Stage01 extends Phaser.Scene {
 
   addWall() {
     for (let i = 0; i < 3; i++) {
-      const positionY = WALL_START_Y - WALL_GAP * i + WALL_Y_OFFSET * i;
+      const positionX = WALL_START_X - 50 * i
+      // const positionY = WALL_START_Y - WALL_GAP * i + WALL_Y_OFFSET * i;
       const wall = this.physics.add
-        .sprite(WALL_START_X, positionY, "wall")
+        .sprite(positionX, WALL_START_Y, "wall")
         .setScale(0.07)
         .setImmovable(false);
       wall.body.allowGravity = true;
 
       this.physics.add.collider(this.player, wall, () => {
         wall.body.immovable = true;
+        wall.body.moves = false;
+      });
+      
+      this.physics.add.collider(wall, wall, () => {
+        // wall.body.immovable = true;
         wall.body.moves = false;
       });
 

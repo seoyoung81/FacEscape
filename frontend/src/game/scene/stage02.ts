@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import stage02 from "../assets/data/stage02.json";
+import background from "../assets/images/background.png";
 import terrain from "../assets/images/terrain.png";
 import frogIdle from "../assets/images/NinjaFrog/idle.png";
 import frogRun from "../assets/images/NinjaFrog/run.png";
@@ -39,13 +40,15 @@ export default class Stage02 extends Phaser.Scene {
   isKeyPicked!: boolean;
   door!: Door;
 
-  mapWidth: number = 95;
+  mapWidth: number = 96;
   mapHeight: number = 160;
   tileWidth: number = 16;
   tileHeight: number = 16;
 
   preload(): void {
+
     this.load.tilemapTiledJSON("stage02", stage02);
+    this.load.image("bg", background);
     this.load.image("terrain", terrain);
     this.load.image("jump", frogJump);
     this.load.image("fall", frogFall);
@@ -82,6 +85,11 @@ export default class Stage02 extends Phaser.Scene {
 
   create(): void {
     this.isKeyPicked = false;
+    const bg = this.add.image(0, 0, "bg").setOrigin(0).setScale(1);
+    bg.displayWidth = this.mapWidth * this.tileWidth;
+    bg.displayHeight = this.mapHeight * this.tileHeight;
+    bg.depth = -2;
+
     const map = this.make.tilemap({
       key: "stage02",
       tileWidth: 16,
