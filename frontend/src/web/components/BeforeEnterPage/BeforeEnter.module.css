@@ -62,9 +62,9 @@
     border: none;
     color: rgba(0, 0, 0, 0.45);
     font-family: 'MyFont';
-    font-size: 32px;
+    font-size: 36px;
     font-weight: 400;
-    letter-spacing: 1.6px;
+    letter-spacing: 4.8px;
 }
 
 .nickname-input:focus {

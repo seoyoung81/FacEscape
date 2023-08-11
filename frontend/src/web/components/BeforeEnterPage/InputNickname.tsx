@@ -2,60 +2,69 @@ import styles from './BeforeEnter.module.css';
 import { useState, ChangeEvent, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { setNickName } from '../../store/nickNameSlice';
+import { authInstance } from '../../services/api';
+import Swal from 'sweetalert2';
 
 const InputNickname: React.FC = () => {
-  const [value, setValue] = useState<string>("");
-  const [defaultNickName, setDefaultNickName] = useState<string | null | readonly string[]>("");
-  const [showError, setShowError] = useState(false); // 에러 표시 여부를 결정하는 상태 변수
 
-  const dispatch = useDispatch();
+    const [value, setValue] = useState<string>("");
+    const [defaultNickName, setDefaultNickName] = useState<string>("");
+    const dispatch = useDispatch();
 
-  const onChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const newNickName: string = event.target.value;
-    setValue(newNickName);
-    dispatch(setNickName(newNickName));
-    setShowError(false); // 입력이 변경되었을 때 에러 상태를 숨깁니다.
-  }
+    const onChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const newNickName: string = event.target.value;
+        setValue(newNickName);
+        dispatch(setNickName(newNickName));
+    };
 
-  const handleClick = () => {
-    if (value) {
-      console.log("닉네임 : " + value);
-      setNickName(value);
-      window.location.href = "/waiting";
-    } else {
-      setShowError(true); // 에러 상태를 표시합니다.
-    }
-  }
+    const handleClick = () => {
+        if (value.length < 1 || value.length > 8) {
+            Swal.fire({
+                title: '닉네임을 1자 이상, 8자 이하로 <br/> 입력해주세요.',
+                confirmButtonColor: '#3479AD',
+                confirmButtonText: '확인',
+                width: '550px'
+              });
+        } else {
+            window.location.href = "/waiting";
+            setNickName("");
+        }
+    };
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      handleClick();
-    }
-  };
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            handleClick();
+        }
+    };
 
-  useEffect(() => {
-    if (sessionStorage.getItem('accessToken')) {
-      setDefaultNickName("회원가입 된 유저임");
-    } else {
-      setDefaultNickName("");
-    }
-  }, [])
+    const fetchData = async () => {
+        try {
+            const { data } = await authInstance.get('/member')
+            setDefaultNickName(data.nickname);   
+        } catch(error) {
+            console.log(error);
+        }
+    };
+    
+    useEffect(() => {
+        fetchData();
+    }, []);
 
-  return (
-    <>
-        <div className={styles['input-container']}>
-          <input
-            type="text"
-            className={styles['nickname-input']}
-            value={value}
-            onChange={onChange}
-            onKeyDown={handleKeyDown}
-            placeholder={showError ? "아이디를 입력해주세요" : ""}
-          />
-          <button className={styles['enter-btn']} onClick={handleClick}>입장</button>
-        </div>
-    </>
-  )
+    return (
+        <>
+            <div className={styles['input-container']}>
+                <input 
+                    type="text" 
+                    className={styles['nickname-input']}
+                    onChange={onChange}
+                    onKeyDown={handleKeyDown}
+                    defaultValue={sessionStorage.getItem('accessToken') ? defaultNickName : ""}
+                    placeholder={sessionStorage.getItem('accessToken') ? '' : '닉네임을 입력하세요.'}
+                />
+                <button className={styles['enter-btn']} onClick={handleClick}>입장</button>
+            </div>
+        </>
+    );
 }
 
 export default InputNickname;
