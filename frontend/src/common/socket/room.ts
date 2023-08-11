@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import { io, Socket } from "socket.io-client";
 import { ClientSocketEvent, ServerSocketResposneEvent, ServerSocketEvent } from "./utils"
-import { RoomMember  } from './dto/roomMember';
 import { RoomInfo } from './dto/roomInfo';
 import { ClientMembersResponse } from './dto/ClientMembersResponse';
+import { RoomMember } from './dto/roomMember';
 
 export function useSocketRooms() {
+
+    const [isKick, setIsKick] = useState<boolean>(false);
+    const [client, setClient] = useState<RoomMember>();
     const [socket, setSocket] = useState<Socket>();
     const [roomId, setRoomId] = useState<string>();
     const [roomInfo, setRoomInfo] = useState<RoomInfo>();
@@ -33,16 +36,18 @@ export function useSocketRooms() {
                 return roomData["roomId"];
             });
 
+            const updatedRoomInfo = new RoomInfo(
+                roomData["roomId"]
+               ,roomData["hostUUID"]
+               ,roomData["myUUID"]
+               ,responseConverter.convertToMembers());
+
             setRoomInfo(() => {
-                const updatedRoomInfo = new RoomInfo(
-                     roomData["roomId"]
-                    ,roomData["hostUUID"]
-                    ,roomData["myUUID"]
-                    ,responseConverter.convertToMembers()
-                );
-            
                 return updatedRoomInfo;
-              });
+            });
+
+            const currentClientInfo = updatedRoomInfo.members.filter(member=>member.uuid === updatedRoomInfo.myUUID)[0];
+            setClient(()=>currentClientInfo as RoomMember);
         });
 
         newSocket.on(ENTERED_EVENT, (data) => {
@@ -68,18 +73,15 @@ export function useSocketRooms() {
         newSocket.on(FAIL_RESPONSE, (errMsg) => {
             console.log(errMsg);
         });
-        newSocket.on(KICK_RESPONSE, (errMsg)=>{
-            alert(errMsg);
+
+        newSocket.on(KICK_RESPONSE, ()=>{
+            setIsKick(()=>true);
         });
-        // newSocket.on(SEND_CHAT_EVENT, (chat)=>{
-        //     console.log(chat);
-        // });
 
         setSocket(newSocket);
     };
 
     const createRoom = () => {
-        console.log(socket);
         if(socket) {
             socket.emit(CREATE_EVENT);
         }
@@ -91,15 +93,9 @@ export function useSocketRooms() {
         }
     }
 
-    // const sendMessage = (message: string) => {
-    //     if(roomId) {
-    //         socket?.emit(SEND_CHAT_EVENT, message);
-    //     }
-    // }
-
     useEffect(() => {
         connect();
     }, []);
 
-    return [{createRoom, joinRoom, roomInfo, roomId}];
+    return [{createRoom, joinRoom, roomInfo, roomId, socket, client, isKick}];
 };

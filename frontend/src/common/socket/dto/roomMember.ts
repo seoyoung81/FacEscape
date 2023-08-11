@@ -1,5 +1,3 @@
-import { Constraint } from "matter";
-
 export class RoomMember {
     id      : number;
     nickname: string;

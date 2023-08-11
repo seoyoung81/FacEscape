@@ -1,13 +1,14 @@
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store/store';
 import styles from './WaitingRoom.module.css';
 
-const NickName = () => {
-    const nickName = useSelector((state: RootState) => state.nickName.name);
+type NickNameProps = {
+    nickname: string
+};
+
+const NickName = ({nickname}: NickNameProps) => {
     return (
         <div className={styles['nickname-container']}>
             <div className={styles.nickname}>
-                {nickName}
+                {nickname || "GAME"}
             </div>
             <div className={styles.waitroom}>님의 대기실</div>
         </div>

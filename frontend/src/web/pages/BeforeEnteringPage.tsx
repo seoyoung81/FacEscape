@@ -8,7 +8,7 @@ const BeforeEnteringPage: React.FC = () => {
 
     const [audioControl, setAudioControl] = useState<boolean>(true);
     const [videoControl, setVideoControl] = useState<boolean>(true);
-    const [roomId, setRoomId] = useState<string>(new URLSearchParams(window.location.search).get("rid") || "");
+    const [roomId] = useState<string>(new URLSearchParams(window.location.search).get("rid") || "");
 
     useEffect(()=>{
         sessionStorage.setItem("audioControl", "true");

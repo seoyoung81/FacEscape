@@ -1,10 +1,8 @@
 import styles from './MainPageComponent.module.css'
-import { useNavigate } from 'react-router-dom'
 import { useSocketRooms } from '../../../common/socket'
 import { useEffect } from 'react';
 
 const NewGame :React.FC = () => {
-    const navigate = useNavigate();
     const [{roomId, createRoom}] = useSocketRooms();
 
     const handleClick = () => {
@@ -13,7 +11,7 @@ const NewGame :React.FC = () => {
 
     useEffect(()=>{
         if(roomId) {
-            navigate(`/before?rid=${roomId}`);
+            window.location.href = `/before?rid=${roomId}`;
         }
     }, [roomId]);
     
