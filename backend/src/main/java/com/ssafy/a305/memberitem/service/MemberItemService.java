@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-import com.ssafy.a305.memberitem.dto.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +16,11 @@ import com.ssafy.a305.member.domain.Member;
 import com.ssafy.a305.member.repository.MemberRepository;
 import com.ssafy.a305.memberitem.domain.MemberBuy;
 import com.ssafy.a305.memberitem.domain.MemberItem;
+import com.ssafy.a305.memberitem.dto.EquippedItemElementDTO;
+import com.ssafy.a305.memberitem.dto.EquippedItemResDTO;
+import com.ssafy.a305.memberitem.dto.MemberItemReqDTO;
+import com.ssafy.a305.memberitem.dto.PurchasedItemElementDTO;
+import com.ssafy.a305.memberitem.dto.PurchasedItemResDTO;
 import com.ssafy.a305.memberitem.exception.ItemAlreadyPurchasedException;
 import com.ssafy.a305.memberitem.exception.MileageInsufficientException;
 import com.ssafy.a305.memberitem.repository.MemberBuyRepository;
@@ -143,13 +147,18 @@ public class MemberItemService {
 
 	@Transactional(readOnly = true)
 	public EquippedItemResDTO getEquippedItem(Integer memberId) {
+		System.out.println(memberId);
 		List<MemberItem> equippedMemberItems = showEquippedItem(memberId);
+		System.out.println(equippedMemberItems.get(0));
+		System.out.println(equippedMemberItems.get(0).getItem().getName());
 		List<EquippedItemElementDTO> equippedItems = equippedMemberItems.stream()
 			.map(memberItem -> {
 				Item item = memberItem.getItem();
 				return new EquippedItemElementDTO(item.getId(), item.getImage(), item.getItemType().getName());
 			})
 			.collect(Collectors.toList());
+		System.out.println(equippedItems.get(0));
+		System.out.println(equippedItems.get(0).getItemType());
 		return new EquippedItemResDTO(equippedItems);
 	}
 }
