@@ -266,11 +266,10 @@ export default class Stage03 extends Phaser.Scene {
       this.platformLayer,
       this.player,
     ]);
-    this.cannon.flipX = true;
 
     this.cannonBalls = this.physics.add.group();
     this.time.addEvent({
-      delay: 1000,
+      delay: 2100,
       callback: () => {
         const cannonBall = this.physics.add.sprite(
           this.cannon.x,
