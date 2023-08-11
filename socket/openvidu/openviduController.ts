@@ -6,7 +6,7 @@ const router = express.Router();
 router.post(
   '/sessions',
   async (req: express.Request, res: express.Response) => {
-    const result = await opService.createSession(req.body.sessionId);
+    const result = await opService.createSession(req);
 
     if (result.error) {
       res.send(result.error);
@@ -21,7 +21,7 @@ router.post(
   '/sessions/:sessionId/connections',
   async (req: express.Request, res: express.Response) => {
     const result = await opService.createConnection(
-      req.params.roomId,
+      req.params.sessionId,
       req.body
     );
 
