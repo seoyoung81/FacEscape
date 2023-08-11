@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberInfoResDTO {
+	private Integer id;
 	private String email;
 	private String nickname;
 	private Integer mileage;
