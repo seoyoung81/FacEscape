@@ -43,7 +43,7 @@ public class MemberService {
 			formattedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(timestamp);
 		}
 
-		return new MemberInfoResDTO(member.getEmail(), member.getNickname(), member.getMileage(),
+		return new MemberInfoResDTO(member.getId(), member.getEmail(), member.getNickname(), member.getMileage(),
 			formattedDate);
 	}
 
