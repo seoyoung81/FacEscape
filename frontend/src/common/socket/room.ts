@@ -66,7 +66,7 @@ export function useSocketRooms() {
 
 
         newSocket.on(FAIL_RESPONSE, (errMsg) => {
-            alert(errMsg);
+            console.log(errMsg);
         });
         newSocket.on(KICK_RESPONSE, (errMsg)=>{
             alert(errMsg);
