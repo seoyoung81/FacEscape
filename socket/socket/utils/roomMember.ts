@@ -1,11 +1,11 @@
 export class RoomMember{
     private id: number;
     private nickname: string;
-    private gameUuid: string;
+    private uuid: string;
 
-    constructor(id: number, nickname: string, gameUuid: string) {
+    constructor(id: number, nickname: string, uuid: string) {
         this.id = id;
         this.nickname = nickname;
-        this.gameUuid = gameUuid;
+        this.uuid = uuid;
     }
 }
