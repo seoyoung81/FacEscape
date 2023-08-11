@@ -6,6 +6,7 @@ const router = express.Router();
 router.post(
   '/sessions',
   async (req: express.Request, res: express.Response) => {
+
     const result = await opService.createSession(req);
 
     if (result.error) {
@@ -20,7 +21,11 @@ router.post(
 router.post(
   '/sessions/:sessionId/connections',
   async (req: express.Request, res: express.Response) => {
+    const hostIp = req.socket.remoteAddress || "";
+
+    console.log(hostIp);
     const result = await opService.createConnection(
+      hostIp,
       req.params.sessionId,
       req.body
     );

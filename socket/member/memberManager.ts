@@ -22,6 +22,10 @@ class MemberManager {
     exitMember(ip: string) {
         this._members.delete(ip);
     }
+
+    exists(ip: string): boolean {
+        return this._members.has(ip);
+    }
 }
   
 export const memberManager = new MemberManager();
