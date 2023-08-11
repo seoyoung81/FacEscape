@@ -69,22 +69,20 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       this.play("idleAnims", true);
     }
     } else if (this.body && this.playerState === 1) {
-      if (cursor!.left.isDown) {
-        this.setVelocityX(this.body.velocity.x - 0.5);
+      if (cursor!.left.isDown && !this.body.blocked.down) {
+        this.setVelocityX(this.body.velocity.x - 1);
         this.flipX = true;
         this.play("runAnims", true);
-      } else if (cursor!.right.isDown) {
-        this.setVelocityX(this.body.velocity.x + 0.5);
+      } else if (cursor!.right.isDown && !this.body.blocked.down) {
+        this.setVelocityX(this.body.velocity.x + 1);
         this.flipX = false;
         this.play("runAnims", true);
       } else {
         if (this.body.blocked.down) {
-          // this.setVelocityX(0);
           this.playerState = 0;
           this.play("idleAnims", true);
         }
       }
-
     }
 
     if (cursor!.up.isDown && this.body!.blocked.down && this.playerState === 0) {
@@ -94,6 +92,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
     if (this.body!.velocity.y > 0) {
       this.play("fallAnims", true);
+      if (this.body!.velocity.y > 500) {
+        this.body!.velocity.y = 500;
+      }
     } else if (this.body!.velocity.y < 0 && !this.body!.touching.down) {
       this.play("jumpAnims", true);
     }

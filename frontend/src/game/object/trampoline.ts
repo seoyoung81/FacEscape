@@ -32,7 +32,9 @@ export class Trampoline extends Phaser.Physics.Arcade.Sprite {
 
   jumpTrampoline(player: any) {
     if (player.body.touching.down) {
-      player.setVelocityY(-400);
+      setTimeout(() => {
+        player.setVelocityY(-400);
+      }, 30);
     }
   }
 

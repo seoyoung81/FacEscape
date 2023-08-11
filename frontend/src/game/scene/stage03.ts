@@ -49,7 +49,7 @@ export default class Stage03 extends Phaser.Scene {
   prevPlayerY: number = 0;
 
   mapWidth: number = 300;
-  mapHeight: number = 46;
+  mapHeight: number = 47;
   tileWidth: number = 16;
   tileHeight: number = 16;
 
@@ -98,6 +98,11 @@ export default class Stage03 extends Phaser.Scene {
 
   create(): void {
     this.isKeyPicked = false;
+    const bg = this.add.image(0, 0, "bg").setOrigin(0).setScale(1);
+    bg.displayWidth = this.mapWidth * this.tileWidth;
+    bg.displayHeight = this.mapHeight * this.tileHeight;
+    bg.depth = -2;
+
     const map = this.make.tilemap({
       key: "stage03",
       tileWidth: 16,
@@ -117,13 +122,14 @@ export default class Stage03 extends Phaser.Scene {
       this.mapWidth * this.tileWidth,
       this.mapHeight * this.tileHeight
     );
-    this.cameras.main.scrollX = 900;
-    this.cameras.main.scrollY = 200;
+    // this.cameras.main.scrollX = 900;
+    // this.cameras.main.scrollY = 200;
 
     map.setCollisionByExclusion([-1], true);
     this.platformLayer = map.createLayer("platformLayer", ["terrain"]);
 
-    this.player = new Player(this, 4200, 400, "idle", this.platformLayer);
+    // this.player = new Player(this, 100, 660, "idle", this.platformLayer);
+    this.player = new Player(this, 3500, 260, "idle", this.platformLayer);
     this.trafficLight = new TrafficLight(
       this,
       this.game.canvas.width / 2,
@@ -256,15 +262,14 @@ export default class Stage03 extends Phaser.Scene {
       );
     });
 
-    this.cannon = new Cannon(this, 3220, 420, "cannon", [
+    this.cannon = new Cannon(this, 4500, 420, "cannon", [
       this.platformLayer,
       this.player,
     ]);
-    this.cannon.flipX = true;
 
     this.cannonBalls = this.physics.add.group();
     this.time.addEvent({
-      delay: 1000,
+      delay: 2100,
       callback: () => {
         const cannonBall = this.physics.add.sprite(
           this.cannon.x,
@@ -273,7 +278,7 @@ export default class Stage03 extends Phaser.Scene {
         );
         this.cannonBalls.add(cannonBall);
         cannonBall.body.allowGravity = false;
-        cannonBall.setVelocityX(500);
+        cannonBall.setVelocityX(-500);
         this.physics.add.collider(this.player, cannonBall, () => {
           this.knockBack(this.player);
           cannonBall.destroy();
@@ -319,28 +324,41 @@ export default class Stage03 extends Phaser.Scene {
   }
 
   knockBack(player: Player) {
-    player.setPlayerState(1);
-    const pushBackVelocityX = 300;
-    const pushBackVelocityY = -500;
-    player.setVelocity(pushBackVelocityX, pushBackVelocityY);
+    player.setPosition(player.x, player.y - 20)
+    setTimeout(() => {
+      player.setPlayerState(1);
+      const pushBackVelocityX = -300;
+      const pushBackVelocityY = -300;
+      player.setVelocity(pushBackVelocityX, pushBackVelocityY);
+    }, 30);
   }
 
   gameOver(): void {
-    console.log("gameOVERRR");
+    this.player.setPosition(100, 672);
+
+    console.log("gameOver");
   }
 
   update(): void {
-    this.trafficLight.update();
     this.player.update();
+    this.trafficLight.update();
 
     if (this.trafficLight.getTrafficLightState() === "red") {
       if (
         this.player.x !== this.prevPlayerX ||
         this.player.y !== this.prevPlayerY
       ) {
+        this.gameOver()
         console.log("game over");
       }
     }
+
+    this.cannonBalls.getChildren().forEach((cannonBall: Phaser.GameObjects.GameObject) => {
+      const sprite = cannonBall as Phaser.Physics.Arcade.Sprite;
+      if (sprite.x < 3000) {
+        sprite.destroy();
+      }
+    });
 
     this.prevPlayerX = this.player.x;
     this.prevPlayerY = this.player.y;

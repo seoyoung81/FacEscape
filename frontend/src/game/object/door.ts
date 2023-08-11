@@ -12,7 +12,7 @@ export class Door extends Phaser.Physics.Arcade.Sprite {
     this.scene = scene;
     this.scene.add.existing(this);
     this.scene.physics.add.existing(this);
-      this.scene.physics.add.collider(this, collider);
+    this.scene.physics.add.collider(this, collider);
       
     this.anims.create({
         key: "doorOpenAnims",

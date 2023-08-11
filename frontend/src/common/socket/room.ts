@@ -31,6 +31,7 @@ export function useSocketRooms() {
         newSocket.on(SUCCESS_RESPONSE, (data) => {
             const roomData = JSON.parse(data);
             const responseConverter = new ClientMembersResponse(roomData["members"]);
+
             setRoomId(() => {
                 return roomData["roomId"];
             });
