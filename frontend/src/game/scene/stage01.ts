@@ -24,8 +24,8 @@ import { Door } from "../object/door";
 //====== wall setting ==============
 const WALL_START_X = 270;
 const WALL_START_Y = 670;
-const WALL_GAP = 90;
-const WALL_Y_OFFSET = 10; // Positioned slightly above the wall below it
+// const WALL_GAP = 90;
+// const WALL_Y_OFFSET = 10;
 
 
 
@@ -120,7 +120,7 @@ export default class Stage01 extends Phaser.Scene {
       0.09
     );
     // create door
-    this.door = new Door(this, 800, 660, "doorIdle", [
+    this.door = new Door(this, 700, 660, "doorIdle", [
       this.platformLayer,
     ]).setDepth(-1);
 
@@ -134,8 +134,9 @@ export default class Stage01 extends Phaser.Scene {
         );
         this.cannonBalls.add(cannonBall);
         cannonBall.body.allowGravity = false;
-        cannonBall.setVelocityX(-1000);
+        cannonBall.setVelocityX(-1200);
         this.physics.add.collider(this.player, cannonBall, () => {
+          this.player.setPosition(this.player.x + 5, this.player.y)
           cannonBall.destroy();
         });
       },
