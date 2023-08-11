@@ -1,13 +1,14 @@
 import Phaser from "phaser";
 import stage02 from "../assets/data/stage02.json";
+import background from "../assets/images/background.png";
 import terrain from "../assets/images/terrain.png";
 import frogIdle from "../assets/images/NinjaFrog/idle.png";
 import frogRun from "../assets/images/NinjaFrog/run.png";
 import frogJump from "../assets/images/NinjaFrog/jump.png";
 import frogFall from "../assets/images/NinjaFrog/fall.png";
 
-import timeGaugePNG from "../assets/images/timegauge.png";
-import timeGaugeJSON from "../assets/images/timegauge.json";
+// import timeGaugePNG from "../assets/images/timegauge.png";
+// import timeGaugeJSON from "../assets/images/timegauge.json";
 import cannonIdle from "../assets/images/Idle.png";
 import cannonShoot from "../assets/images/shoot.png";
 import cannonBall from "../assets/images/cannonBall.png";
@@ -15,7 +16,7 @@ import key from "../assets/images/key.png";
 import doorIdle from "../assets/images/Door/doorIdle.png";
 import doorOpening from "../assets/images/Door/doorOpening.png";
 
-import { TimeGauge } from "../object/timegauge";
+// import { TimeGauge } from "../object/timegauge";
 import { Player } from "../object/player";
 import { Cannon } from "../object/cannon";
 import { Key } from "../object/key";
@@ -30,7 +31,7 @@ export default class Stage02 extends Phaser.Scene {
 
   player!: Player;
   platformLayer!: Phaser.Tilemaps.TilemapLayer | any;
-  timeGauge!: TimeGauge;
+  // timeGauge!: TimeGauge;
   
   cannons: Cannon[] = [];
   cannonBalls!: Phaser.Physics.Arcade.Group;
@@ -39,13 +40,15 @@ export default class Stage02 extends Phaser.Scene {
   isKeyPicked!: boolean;
   door!: Door;
 
-  mapWidth: number = 95;
+  mapWidth: number = 96;
   mapHeight: number = 160;
   tileWidth: number = 16;
   tileHeight: number = 16;
 
   preload(): void {
+
     this.load.tilemapTiledJSON("stage02", stage02);
+    this.load.image("bg", background);
     this.load.image("terrain", terrain);
     this.load.image("jump", frogJump);
     this.load.image("fall", frogFall);
@@ -62,7 +65,7 @@ export default class Stage02 extends Phaser.Scene {
       endFrame: 11,
     });
 
-    this.load.atlas("timeGauge", timeGaugePNG, timeGaugeJSON);
+    // this.load.atlas("timeGauge", timeGaugePNG, timeGaugeJSON);
 
     this.load.image("cannon", cannonIdle);
     this.load.spritesheet("shoot", cannonShoot, {
@@ -82,6 +85,11 @@ export default class Stage02 extends Phaser.Scene {
 
   create(): void {
     this.isKeyPicked = false;
+    const bg = this.add.image(0, 0, "bg").setOrigin(0).setScale(1);
+    bg.displayWidth = this.mapWidth * this.tileWidth;
+    bg.displayHeight = this.mapHeight * this.tileHeight;
+    bg.depth = -2;
+
     const map = this.make.tilemap({
       key: "stage02",
       tileWidth: 16,
@@ -108,12 +116,12 @@ export default class Stage02 extends Phaser.Scene {
     this.platformLayer = map.createLayer("platformLayer", ["terrain"]);
 
     this.player = new Player(this, 850, 200, "idle");
-    this.timeGauge = new TimeGauge(
-      this,
-      this.game.canvas.width / 2,
-      this.game.canvas.height / 6,
-      "timeGauge"
-    );
+    // this.timeGauge = new TimeGauge(
+    //   this,
+    //   this.game.canvas.width / 2,
+    //   this.game.canvas.height / 6,
+    //   "timeGauge"
+    // );
     
     // create key
     this.key = new Key(this, 1200, 270, "key", [this.platformLayer]).setScale(
@@ -211,17 +219,21 @@ export default class Stage02 extends Phaser.Scene {
   }
 
   knockBack(player: Player) {
-    player.setPlayerState(1);
-    const pushBackVelocityX = 300;
-    const pushBackVelocityY = -300;
-    player.setVelocity(pushBackVelocityX, pushBackVelocityY);
+    player.setPosition(player.x, player.y - 40)
+    setTimeout(() => {
+      player.setPlayerState(1);
+      const pushBackVelocityX = 300;
+      const pushBackVelocityY = -300;
+      player.setVelocity(pushBackVelocityX, pushBackVelocityY);
+    }, 20);
   }
 
   update(): void {
+    this.player.getPlayerState();
     this.player.update();
     this.cameras.main.scrollX = this.player.x - this.cameras.main.width / 2;
     this.cameras.main.scrollY = this.player.y - this.cameras.main.height / 2;
-
+    
     if (this.isKeyPicked) {
       this.events.emit("doorOpenEvent");
     }

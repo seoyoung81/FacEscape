@@ -22,10 +22,12 @@ import { Key } from "../object/key";
 import { Door } from "../object/door";
 
 //====== wall setting ==============
-const WALL_START_X = 100;
-const WALL_START_Y = 490;
-const WALL_GAP = 120;
-const WALL_Y_OFFSET = 20; // Positioned slightly above the wall below it
+const WALL_START_X = 270;
+const WALL_START_Y = 670;
+const WALL_GAP = 90;
+const WALL_Y_OFFSET = 10; // Positioned slightly above the wall below it
+
+
 
 export default class Stage01 extends Phaser.Scene {
   constructor() {
@@ -42,6 +44,11 @@ export default class Stage01 extends Phaser.Scene {
   key!: Phaser.Physics.Arcade.Sprite;
   isKeyPicked!: boolean;
   door!: Door;
+
+  mapWidth: number = 95;
+  mapHeight: number = 48;
+  tileWidth: number = 16;
+  tileHeight: number = 16;
 
   preload(): void {
     this.load.tilemapTiledJSON("stage01", stage01);
@@ -79,9 +86,13 @@ export default class Stage01 extends Phaser.Scene {
   }
 
   create(): void {
-    // add background
     this.isKeyPicked = false;
-    this.add.image(480, 360, "bg").setDepth(-2);
+    
+    // add background
+    const bg = this.add.image(0, 0, "bg").setOrigin(0).setScale(1);
+    bg.displayWidth = this.cameras.main.width;
+    bg.displayHeight = this.cameras.main.height;
+    bg.depth = -2;
 
     // create map
     const map = this.make.tilemap({
@@ -96,25 +107,25 @@ export default class Stage01 extends Phaser.Scene {
     // create layer
     this.platformLayer = map.createLayer("platformLayer", ["terrain"]);
     // create player
-    this.player = new Player(this, 150, 460, "idle");
+    this.player = new Player(this, 370, 660, "idle");
     // create cannon
-    this.cannon = new Cannon(this, 800, 505, "cannon");
+    this.cannon = new Cannon(this, 1000, 660, "cannon");
     // create walls
     this.walls = this.physics.add.group();
     this.addWall();
     // create cannonBall
     this.cannonBalls = this.physics.add.group();
     // create key
-    this.key = new Key(this, 30, 490, "key", [this.platformLayer]).setScale(
+    this.key = new Key(this, 50, 660, "key", [this.platformLayer]).setScale(
       0.09
     );
     // create door
-    this.door = new Door(this, 600, 470, "doorIdle", [
+    this.door = new Door(this, 800, 660, "doorIdle", [
       this.platformLayer,
     ]).setDepth(-1);
 
     this.shoot = this.time.addEvent({
-      delay: 1000,
+      delay: 3000,
       callback: () => {
         const cannonBall = this.physics.add.sprite(
           this.cannon.x,
@@ -123,7 +134,7 @@ export default class Stage01 extends Phaser.Scene {
         );
         this.cannonBalls.add(cannonBall);
         cannonBall.body.allowGravity = false;
-        cannonBall.setVelocityX(-500);
+        cannonBall.setVelocityX(-1000);
         this.physics.add.collider(this.player, cannonBall, () => {
           cannonBall.destroy();
         });
@@ -202,10 +213,10 @@ export default class Stage01 extends Phaser.Scene {
   }
 
   addWall() {
-    for (let i = 0; i < 3; i++) {
-      const positionY = WALL_START_Y - WALL_GAP * i + WALL_Y_OFFSET * i;
+    for (let i = 0; i < 4; i++) {
+      const positionX = WALL_START_X - 50 * i
       const wall = this.physics.add
-        .sprite(WALL_START_X, positionY, "wall")
+        .sprite(positionX, WALL_START_Y, "wall")
         .setScale(0.07)
         .setImmovable(false);
       wall.body.allowGravity = true;
@@ -214,7 +225,7 @@ export default class Stage01 extends Phaser.Scene {
         wall.body.immovable = true;
         wall.body.moves = false;
       });
-
+      
       this.walls.add(wall);
     }
   }
