@@ -1,4 +1,4 @@
-import { Session, Publisher, StreamManager } from "openvidu-browser";
+import { Session, Publisher, StreamManager, Subscriber } from "openvidu-browser";
 
 export type WebRTCState = {
     mySessionId: string,
@@ -8,9 +8,21 @@ export type WebRTCState = {
     publisher: Publisher | undefined,
     subscribers: StreamManager[],
 }
+
 export enum WebRTCStreamEvent {
     streamCreated = "streamCreated",
     streamDestroyed = "streamDestroyed",
     exception = "exception",
     othersExit = "othersExit",
+}
+
+export type RoomMember = {
+    id: number,
+    nickname: string,
+    uuid: string
+};
+
+export type WebRTCRemoteMember = {
+    stream: Subscriber,
+    member: RoomMember
 }
