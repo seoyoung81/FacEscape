@@ -38,8 +38,8 @@ export function useSocketRooms() {
 
             const updatedRoomInfo = new RoomInfo(
                 roomData["roomId"]
-               ,roomData["hostUUID"]
-               ,roomData["myUUID"]
+               ,roomData["hostGameUUID"]
+               ,roomData["myGameUUID"]
                ,responseConverter.convertToMembers());
 
             setRoomInfo(() => {
@@ -47,12 +47,12 @@ export function useSocketRooms() {
             });
 
             const currentClientInfo = updatedRoomInfo.members.filter(member=>member.uuid === updatedRoomInfo.myUUID)[0];
-            setClient(()=>currentClientInfo as RoomMember);
+            setClient(()=>currentClientInfo);
         });
 
         newSocket.on(ENTERED_EVENT, (data) => {
             const roomData = JSON.parse(data);
-            const responseConverter = new ClientMembersResponse(roomData);
+            const responseConverter = new ClientMembersResponse(roomData["members"]);
 
             setRoomInfo((prevRoomInfo) => {
                 if (!prevRoomInfo) {
