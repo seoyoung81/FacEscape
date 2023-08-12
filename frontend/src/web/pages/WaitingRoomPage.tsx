@@ -41,7 +41,7 @@ const WaitingRoomPage: React.FC = () => {
 
     const renderEmptySpace = ()=>{
         const render = [];
-        for(let i=0; i<5-openVidu.subscribers.length; ++i) {
+        for(let i=0; i<5-openVidu.remoteMembers.length; ++i) {
             render.push(<Video streamManager={undefined} key={i+10}/>);
         }
         return render;
@@ -59,6 +59,16 @@ const WaitingRoomPage: React.FC = () => {
             });
         }
     }, [])
+
+    useEffect(()=>{
+        if(connectionFlag) {
+            useSocket.joinRoom(roomId);
+        }
+    }, [connectionFlag]);
+
+    useEffect(()=>{
+        setConntectionFlag(roomId!==undefined && useSocket.socket !== undefined);
+    }, [roomId, useSocket.socket]);
 
     useEffect(() => {
         openVidu.setAudioState(audioControl);
@@ -78,14 +88,10 @@ const WaitingRoomPage: React.FC = () => {
     }, [roomId]);
 
     useEffect(()=>{
-        setConntectionFlag(roomId!==undefined && useSocket.socket !== undefined);
-    }, [roomId, useSocket.socket]);
-
-    useEffect(()=>{
-        if(connectionFlag) {
-            useSocket.joinRoom(roomId);
+        if(useSocket.client) {
+            openVidu.handleChangeClient(useSocket.client);
         }
-    }, [connectionFlag]);
+    }, [useSocket.client])
 
     useEffect(()=>{
         if(useSocket.isKick) {
@@ -113,7 +119,7 @@ const WaitingRoomPage: React.FC = () => {
                 <div className={styles['camera-container']}>
                     <div className={styles['box-container']}>
                         { openVidu.publisher ? <Video streamManager={openVidu.publisher} /> : <Video streamManager={undefined} /> }
-                        { openVidu.subscribers.map((subscriber, i)=><Video streamManager={subscriber} key={i}/>) }
+                        { openVidu.remoteMembers.map((remoteMember, i)=><Video streamManager={remoteMember.stream} key={i}/>) }
                         { renderEmptySpace() }
                     </div>
                 </div>

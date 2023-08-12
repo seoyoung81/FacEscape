@@ -1,24 +1,24 @@
 import { OpenVidu } from "openvidu-browser";
 import { useState, useEffect } from 'react';
 import { getToken } from "./service"
-import { WebRTCStreamEvent } from "./utils/types"
+import { WebRTCStreamEvent, WebRTCRemoteMember, RoomMember } from "./utils/types"
 import { Session, Publisher, Subscriber } from "openvidu-browser";
 import Swal from 'sweetalert2';
 
 export function useOpenVidu () {
 
     const [roomId, setRoomId] = useState<string>();
-    const [nickname, setNickname] = useState<string>('Participant' + Math.floor(Math.random() * 100));
+    const [client, setClient] = useState<RoomMember>();
     const [session, setSession] = useState<Session>();
     const [publisher, setPublisher] = useState<Publisher>();
-    const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
+    const [remoteMembers, setRemoteMembers] = useState<WebRTCRemoteMember[]>([]);
 
     const handleChangeRoomId = (id: string) => {
         setRoomId(()=>id);
     }
 
-    const handleChangeMemberNickname = (nickname: string) => {
-        setNickname(()=>nickname);
+    const handleChangeClient= (client: RoomMember) => {
+        setClient(()=>client);
     }
 
     useEffect(()=>{
@@ -31,31 +31,43 @@ export function useOpenVidu () {
         if(session) {
             session.on(WebRTCStreamEvent.streamCreated, (event)=>{
                 const subscriber = session.subscribe(event.stream, undefined);
-                setSubscribers((prev)=>[...prev, subscriber]);
+                const newRemoteMember: WebRTCRemoteMember = {
+                    stream: subscriber,
+                    member: JSON.parse(event.stream.connection.data).clientData
+                };
+                setRemoteMembers((prev)=>[...prev, newRemoteMember]);
             });
 
             session.on(WebRTCStreamEvent.streamDestroyed, (event)=>{
-                setSubscribers((prev)=>{
-                    const idx = prev.indexOf(event.stream.streamManager as Subscriber, 0);
-
-                    if(idx > -1) prev.splice(idx, 1);
+                
+                setRemoteMembers((prev)=>{
+                    for(let i=0; i<prev.length; ++i) {
+                        if(prev[i].stream === event.stream.streamManager) {
+                            prev.splice(i, 1);
+                            break;
+                        }
+                    }
                     return [...prev];
                 });
             });
 
             session.on(WebRTCStreamEvent.exception, (exception)=>{
             });
-
-            joinSession();
         }
-    }, [session])
+    }, [session]);
 
     useEffect(()=>{
         if(publisher) {
             setAudioState(sessionStorage.getItem("micControl")==="true");
             setVideoState(sessionStorage.getItem("cameraControl")==="true");
         }
-    }, [publisher])
+    }, [publisher]);
+
+    useEffect(()=>{
+        if(session && client) {
+            joinSession();
+        }
+    }, [session, client]);
 
     const initSession = () => {
         const openViduInstance = new OpenVidu();
@@ -69,7 +81,7 @@ export function useOpenVidu () {
 
         try {
             const token = await getToken(roomId as string);
-            await (session as Session).connect(token, { clientData: nickname });
+            await (session as Session).connect(token, { clientData: client });
             
             const publisher = openViduInstance.initPublisher(undefined, {
                 audioSource: undefined, 
@@ -119,5 +131,5 @@ export function useOpenVidu () {
         }
     }
 
-    return [{ publisher, subscribers, handleChangeRoomId, handleChangeMemberNickname, joinSession, leaveSession, setVideoState, setAudioState }];
+    return [{ publisher, remoteMembers, handleChangeRoomId, handleChangeClient, joinSession, leaveSession, setVideoState, setAudioState }];
 }; 
