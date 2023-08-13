@@ -1,6 +1,5 @@
 import * as Phaser from "phaser";
 export class Player extends Phaser.Physics.Arcade.Sprite {
-  
   private playerState: number = 0;
 
   constructor(
@@ -9,7 +8,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     y: number,
     texture: string,
     // frame?: number,
-    collider?: any
+    collider?: any,
+    socketId?: string
   ) {
     super(scene, x, y, texture, 0);
     this.scene = scene;
@@ -52,22 +52,21 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
   update(): void {
     // this.play("idleAnims");
-    
+
     const cursor = this.scene.input.keyboard!.createCursorKeys();
     if (this.playerState === 0) {
-
-    if (cursor!.left.isDown) {
-      this.setVelocityX(-130);
-      this.flipX = true;
-      this.play("runAnims", true);
-    } else if (cursor!.right.isDown) {
-      this.setVelocityX(130);
-      this.flipX = false;
-      this.play("runAnims", true);
-    } else {
-      this.setVelocityX(0);
-      this.play("idleAnims", true);
-    }
+      if (cursor!.left.isDown) {
+        this.setVelocityX(-130);
+        this.flipX = true;
+        this.play("runAnims", true);
+      } else if (cursor!.right.isDown) {
+        this.setVelocityX(130);
+        this.flipX = false;
+        this.play("runAnims", true);
+      } else {
+        this.setVelocityX(0);
+        this.play("idleAnims", true);
+      }
     } else if (this.body && this.playerState === 1) {
       if (cursor!.left.isDown && !this.body.blocked.down) {
         this.setVelocityX(this.body.velocity.x - 1);
@@ -100,7 +99,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  
   getPlayerState() {
     console.log(this.playerState);
     return this.playerState;
@@ -109,6 +107,4 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   setPlayerState(stateNumber: number) {
     this.playerState = stateNumber;
   }
-
-
 }

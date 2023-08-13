@@ -1,4 +1,5 @@
 import * as Phaser from "phaser";
+import * as Socket from "socket.io-client";
 import Button from "../components/Button";
 import ButtonBackGround from "../components/ButtonBackGround";
 
@@ -8,7 +9,7 @@ import stageBtn from "../assets/images/stageBtn.svg";
 import lockBtn from "../assets/images/lockBtn.svg";
 import stageButtons from "../assets/data/stageButtons.json";
 
-import { STAGE_EVENT } from "../event"
+import { STAGE_EVENT } from "../event";
 
 interface StageSelectButton {
   id: string;
@@ -20,13 +21,12 @@ interface StageSelectButton {
 }
 
 export class StageSelect extends Phaser.Scene {
-
   constructor() {
     super({
       key: "StageSelect",
     });
   }
-
+  socket = Socket.io("http://localhost:3050");
   preload(): void {
     this.load.image("background", background);
     this.load.svg("stageBtn", stageBtn);
@@ -34,25 +34,27 @@ export class StageSelect extends Phaser.Scene {
     this.load.svg("lockBtn", lockBtn);
     this.load.json("stageButtons", stageButtons);
 
-    this.events.addListener(STAGE_EVENT.SELECT_SUCCES, (stage: string)=>{
+    this.events.addListener(STAGE_EVENT.SELECT_SUCCES, (stage: string) => {
       this.scene.start(stage);
-    })
+    });
   }
 
   create(): void {
-
     const bg = this.add.image(0, 0, "background").setOrigin(0).setScale(1);
     bg.displayWidth = this.cameras.main.width;
     bg.displayHeight = this.cameras.main.height;
     bg.depth = -1;
-    
+
     this.input.manager.enabled = true;
     this.addStageButtons();
+
+    this.socket.on(STAGE_EVENT.SELECT_SUCCES, (sceneName) =>
+      this.game.events.emit(STAGE_EVENT.SELECT, sceneName)
+    );
   }
 
   addStageButtons(): void {
-    const stages: StageSelectButton[] =
-    this.cache.json.get("stageButtons").stages;
+    const stages: StageSelectButton[] = this.cache.json.get("stageButtons").stages;
     stages.forEach((stage) => {
       if (stage.hasInteract) {
         this.add.existing(this.makeInteractButton(stage));
@@ -70,7 +72,8 @@ export class StageSelect extends Phaser.Scene {
 
     button
       .setOnClick(() => {
-        this.game.events.emit(STAGE_EVENT.SELECT, stage.sceneName);
+        // this.game.events.emit(STAGE_EVENT.SELECT, stage.sceneName);
+        this.socket.emit(STAGE_EVENT.SELECT, stage.sceneName);
       })
       .setOnPointerOver("focusBtn", "white")
       .setOnPointOut("stageBtn", "#DB7500");
@@ -78,14 +81,7 @@ export class StageSelect extends Phaser.Scene {
   }
 
   makeLockButtonBackGround(stage: any): ButtonBackGround {
-    const button = new ButtonBackGround(
-      this,
-      stage.x,
-      stage.y,
-      stage.texture,
-      0xffffff,
-      false
-    );
+    const button = new ButtonBackGround(this, stage.x, stage.y, stage.texture, 0xffffff, false);
     return button;
   }
 }
