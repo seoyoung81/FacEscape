@@ -31,7 +31,6 @@ export function useSocketRooms() {
         newSocket.on(SUCCESS_RESPONSE, (data) => {
             const roomData = JSON.parse(data);
             const responseConverter = new ClientMembersResponse(roomData["members"]);
-
             setRoomId(() => {
                 return roomData["roomId"];
             });
@@ -53,7 +52,6 @@ export function useSocketRooms() {
         newSocket.on(ENTERED_EVENT, (data) => {
             const roomData = JSON.parse(data);
             const responseConverter = new ClientMembersResponse(roomData["members"]);
-
             setRoomInfo((prevRoomInfo) => {
                 if (!prevRoomInfo) {
                     return; 
@@ -93,9 +91,14 @@ export function useSocketRooms() {
         }
     }
 
+    const getHostNickName = () => {
+        const host = roomInfo?.members.filter(member=>member.uuid === roomInfo.hostUUID)[0];
+        return host?.nickname || "";
+    }
+
     useEffect(() => {
         connect();
     }, []);
 
-    return [{createRoom, joinRoom, roomInfo, roomId, socket, client, isKick}];
+    return [{createRoom, joinRoom, getHostNickName, roomInfo, roomId, socket, client, isKick}];
 };
