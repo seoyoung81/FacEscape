@@ -6,17 +6,15 @@ import Stage03 from "./scene/stage03";
 import Stage04 from "./scene/stage04";
 
 export const createGame = (
-  width: number | string,
-  height: number | string,
-  tagName: string
+  canvas: HTMLCanvasElement
 ) => {
   const scaleObject: Phaser.Types.Core.ScaleConfig = {
-    width: width,
-    height: height,
+    mode: Phaser.Scale.FIT,
+    autoCenter: Phaser.Scale.CENTER_BOTH,
   };
 
   const gameConfig: Phaser.Types.Core.GameConfig = {
-    type: Phaser.AUTO,
+    type: Phaser.WEBGL,
     backgroundColor: "#6061ab",
     physics: {
       default: "arcade",
@@ -26,7 +24,7 @@ export const createGame = (
         checkCollision: { up: true, down: true, left: true, right: true },
       },
     },
-    parent: tagName,
+    canvas: canvas,
     scale: scaleObject,
     scene: [StageSelect, Stage01, Stage02, Stage03, Stage04],
   };
