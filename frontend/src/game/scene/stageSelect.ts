@@ -1,13 +1,14 @@
 import * as Phaser from "phaser";
 import Button from "../components/Button";
 import ButtonBackGround from "../components/ButtonBackGround";
-import { io } from "socket.io-client";
 
 import background from "../assets/images/background.png";
 import focusBtn from "../assets/images/focusBtn.svg";
 import stageBtn from "../assets/images/stageBtn.svg";
 import lockBtn from "../assets/images/lockBtn.svg";
 import stageButtons from "../assets/data/stageButtons.json";
+
+import { STAGE_EVENT } from "../event"
 
 interface StageSelectButton {
   id: string;
@@ -19,7 +20,6 @@ interface StageSelectButton {
 }
 
 export class StageSelect extends Phaser.Scene {
-  private socket: any;
 
   constructor() {
     super({
@@ -28,15 +28,15 @@ export class StageSelect extends Phaser.Scene {
   }
 
   preload(): void {
-    this.socket = io("http://localhost:3050", {
-      transports: ["websocket", "polling"],
-    });
-    console.log(this.socket);
     this.load.image("background", background);
     this.load.svg("stageBtn", stageBtn);
     this.load.svg("focusBtn", focusBtn);
     this.load.svg("lockBtn", lockBtn);
     this.load.json("stageButtons", stageButtons);
+
+    this.events.addListener(STAGE_EVENT.SELECT_SUCCES, (stage: string)=>{
+      this.scene.start(stage);
+    })
   }
 
   create(): void {
@@ -48,14 +48,11 @@ export class StageSelect extends Phaser.Scene {
     
     this.input.manager.enabled = true;
     this.addStageButtons();
-    this.socket.on("test", (stage: string) => {
-      // this.scene.start(stage);
-    });
   }
 
   addStageButtons(): void {
     const stages: StageSelectButton[] =
-      this.cache.json.get("stageButtons").stages;
+    this.cache.json.get("stageButtons").stages;
     stages.forEach((stage) => {
       if (stage.hasInteract) {
         this.add.existing(this.makeInteractButton(stage));
@@ -73,9 +70,7 @@ export class StageSelect extends Phaser.Scene {
 
     button
       .setOnClick(() => {
-        this.socket.emit("stageChange", stage.sceneName);
-        // this.scene.stop(stage.sceneName);
-        this.scene.start(stage.sceneName);
+        this.game.events.emit(STAGE_EVENT.SELECT, stage.sceneName);
       })
       .setOnPointerOver("focusBtn", "white")
       .setOnPointOut("stageBtn", "#DB7500");

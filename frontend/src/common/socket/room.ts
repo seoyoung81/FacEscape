@@ -13,22 +13,12 @@ export function useSocketRooms() {
     const [roomId, setRoomId] = useState<string>();
     const [roomInfo, setRoomInfo] = useState<RoomInfo>();
 
-    const CREATE_EVENT   : ClientSocketEvent = "createRoom";
-    const JOIN_EVENT     : ClientSocketEvent = "joinRoom";
-    const SEND_CHAT_EVENT: ClientSocketEvent = "chat";
-
-    const SUCCESS_RESPONSE : ServerSocketResposneEvent = "joinSuccess";
-    const FAIL_RESPONSE    : ServerSocketResposneEvent = "joinFail";
-    const KICK_RESPONSE    : ServerSocketResposneEvent = "kick";
-
-    const ENTERED_EVENT : ServerSocketEvent = "someoneEntered";
-  
     const connect = () => {
         const newSocket = io("http://localhost:3050", {
             transports: ["websocket", "polling"]
         });
 
-        newSocket.on(SUCCESS_RESPONSE, (data) => {
+        newSocket.on(ServerSocketResposneEvent.JOIN_SUCCESS, (data) => {
             const roomData = JSON.parse(data);
             const responseConverter = new ClientMembersResponse(roomData["members"]);
             setRoomId(() => {
@@ -49,7 +39,7 @@ export function useSocketRooms() {
             setClient(()=>currentClientInfo);
         });
 
-        newSocket.on(ENTERED_EVENT, (data) => {
+        newSocket.on(ServerSocketEvent.SOMEONE_ENTER, (data) => {
             const roomData = JSON.parse(data);
             const responseConverter = new ClientMembersResponse(roomData["members"]);
             setRoomInfo((prevRoomInfo) => {
@@ -67,27 +57,35 @@ export function useSocketRooms() {
             });
         });
 
-
-        newSocket.on(FAIL_RESPONSE, (errMsg) => {
+        newSocket.on(ServerSocketResposneEvent.JOIN_FAIL, (errMsg) => {
             console.log(errMsg);
         });
 
-        newSocket.on(KICK_RESPONSE, ()=>{
+        newSocket.on(ServerSocketResposneEvent.KICK, ()=>{
             setIsKick(()=>true);
         });
+
+        newSocket.on("startSuccess", ()=>{
+            const rid = new URLSearchParams(window.location.search).get("rid");
+            window.location.href = `/game?rid=${rid}`;
+        });
+
+        newSocket.on("startFail", (data)=>{
+            console.log(data);
+        })
 
         setSocket(newSocket);
     };
 
     const createRoom = () => {
         if(socket) {
-            socket.emit(CREATE_EVENT);
+            socket.emit(ClientSocketEvent.CREATE_ROOM);
         }
     };
 
     const joinRoom = (roomId: string) => {
         if(roomId) {
-            socket?.emit(JOIN_EVENT, roomId);
+            socket?.emit(ClientSocketEvent.JOIN_ROOM, roomId);
         }
     }
 
@@ -96,9 +94,15 @@ export function useSocketRooms() {
         return host?.nickname || "";
     }
 
+    const emitGameEvent = (eventType: any, data: any) => {
+        if(socket) {
+            socket.emit(eventType, data);
+        }
+    }
+
     useEffect(() => {
         connect();
     }, []);
 
-    return [{createRoom, joinRoom, getHostNickName, roomInfo, roomId, socket, client, isKick}];
+    return [{createRoom, joinRoom, getHostNickName, emitGameEvent, roomInfo, roomId, socket, client, isKick}];
 };

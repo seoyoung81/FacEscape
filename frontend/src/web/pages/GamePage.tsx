@@ -1,20 +1,106 @@
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createGame } from "../../game";
+import { useSocketRooms } from "../../common/socket";
+import { useOpenVidu } from "../../common/webrtc";
+import { STAGE_EVENT } from "../../game/event"
+
+import Phaser from "phaser";
+import Swal from 'sweetalert2';
 
 const GamePage = () => {
-  /**
-   *  게임 페이지는 현재 접속중인 사용자들의 정보를 모두 가지고 있어야한다.
-   *  게임 페이지는 현재 접속중인 모든 유저들의 rtc정보를 가지고 있어야한다. 
-   *  게임 페이지는 웹소캣을 통해 멀티 플레이 게임을 지원해야한다.
-   *  phaser와, 외부 시스템은 event를 통해 통신이 가능하다. 
-   */
+
+  const [roomId] = useState<string>(new URLSearchParams(window.location.search).get("rid") || "");
+  const [useSocket] = useSocketRooms();
+  const [openVidu] = useOpenVidu();
+  const [connectionFlag, setConntectionFlag] = useState<boolean>(false);
+  const [game, setGame] = useState<Phaser.Game>();
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
   useEffect(()=>{
-    if(canvasRef.current) {
-      createGame(canvasRef.current);
+    if(canvasRef.current && useSocket.socket) {
+      const game = createGame(canvasRef.current);
+      setGame(()=> game);
     }
-  }, [canvasRef])
+  }, [canvasRef, useSocket.socket]);
+
+  useEffect(()=>{
+    if(game && useSocket.socket && useSocket.client) {
+      game.events.removeListener(STAGE_EVENT.SELECT);
+      useSocket.socket.removeListener(STAGE_EVENT.SELECT_SUCCES);
+
+      useSocket.socket.on(STAGE_EVENT.SELECT_SUCCES, (data: any)=>{
+        const selectScene = game.scene.scenes[0];
+        selectScene.events.emit(STAGE_EVENT.SELECT_SUCCES, data);
+      })
+
+      game.events.addListener(STAGE_EVENT.SELECT, (stageName: string)=>{
+        useSocket.emitGameEvent(STAGE_EVENT.SELECT, {
+          roomId: useSocket.roomId,
+          uuid: useSocket.client?.uuid,
+          stageName: stageName
+        });
+      });
+    }
+  }, [game, useSocket.socket, useSocket.client]);
+
+  useEffect(()=>{
+    if(!roomId) {
+        Swal.fire({
+            title: '비정상적인 접근입니다.',
+            confirmButtonColor: '#3479AD',
+            confirmButtonText: '확인',
+            width: '550px'
+        }).then(()=>{
+            window.location.href="/";
+        });
+    }
+  }, []);
+  
+  useEffect(()=>{
+      if(connectionFlag) {
+          useSocket.joinRoom(roomId);
+      }
+  }, [connectionFlag]);
+
+  useEffect(()=>{
+      setConntectionFlag(roomId!==undefined && useSocket.socket !== undefined);
+  }, [roomId, useSocket.socket]);
+
+  useEffect(() => {
+      const leaveSession = openVidu.leaveSession
+      window.addEventListener('beforeunload', leaveSession);
+      return () => {
+          window.removeEventListener('beforeunload', leaveSession);
+      };
+  }, [openVidu]);
+
+  useEffect(()=>{
+      if(roomId) {
+          openVidu.handleChangeRoomId(roomId);
+      }
+  }, [roomId]);
+
+  useEffect(()=>{
+      if(useSocket.client) {
+          openVidu.handleChangeClient(useSocket.client);
+      }
+  }, [useSocket.client]);
+
+  useEffect(()=>{
+      if(useSocket.isKick) {
+          openVidu.leaveSession();
+          Swal.fire({
+              title: '다른 클라이언트에서 접속하여<br/> 접속이 종료됩니다.',
+              confirmButtonColor: '#3479AD',
+              confirmButtonText: '확인',
+              width: '550px'
+          }).then(()=>{
+              window.location.href="/";
+          });
+      }
+  }, [useSocket.isKick, openVidu])
+
   return (
     <div id="game" style={{display: 'flex', width:'100vw', height:'100vh', background:"black"}}>
       <canvas ref={canvasRef} style={{display:'flex'}} width="100%" height="100%"/>
