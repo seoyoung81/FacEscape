@@ -111,10 +111,10 @@ export const gameStartEventhandler = (socket: Socket, callBack: (roomId:string, 
         return;
     }
 
-    // if(!room.isFull()) {
-    //     socket.emit(GameResponseEvent.startFail, `인원이 부족합니다.`);
-    //     return;
-    // }
+    if(!room.isFull()) {
+        socket.emit(GameResponseEvent.startFail, `인원이 부족합니다.`);
+        return;
+    }
     room.state = "PLAY";
     room.setInGameMember(room.members);
     const response = new RoomInfoResponse(room.members, room.hostUUID);
