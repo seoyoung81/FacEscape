@@ -140,10 +140,10 @@ export default class Stage04 extends Phaser.Scene {
       }
     });
     
-    // this.physics.add.collider(this.key, this.platformLayer!, () => {
-    //   this.key.setPosition(100, 460);
-    //   this.key.setVelocity(0, 0);
-    // });
+    this.physics.add.collider(this.key, this.platformLayer!, () => {
+      this.key.setPosition(100, 460);
+      this.key.setVelocity(0, 0);
+    });
 
     this.physics.add.overlap(this.door, this.key, () => {
       this.isKeyPicked = true;
