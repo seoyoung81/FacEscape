@@ -25,12 +25,12 @@
       "texture": "stageBtn"
     },
     {
-      "id": "-1",
+      "id": "4",
       "sceneName": "Stage04",
       "y": 200,
       "x": 800,
-      "hasInteract": false,
-      "texture": "lockBtn"
+      "hasInteract": true,
+      "texture": "stageBtn"
     },
     {
       "id": "-1",

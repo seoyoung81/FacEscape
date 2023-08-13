@@ -8,7 +8,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     x: number,
     y: number,
     texture: string,
-    // frame?: number,
     collider?: any
   ) {
     super(scene, x, y, texture, 0);
@@ -48,6 +47,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       frames: [{ key: "fall" }],
       frameRate: 1,
     });
+    
   }
 
   update(): void {
