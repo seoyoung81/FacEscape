@@ -2,7 +2,7 @@ import styles from './WaitingRoom.module.css';
 
 const StartBtn: React.FC = () => {
     const onClick = () => {
-        window.location.href = '/gametest'
+        window.location.href = '/game'
     }
     
     return (
