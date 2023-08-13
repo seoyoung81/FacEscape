@@ -11,19 +11,12 @@ import MarketPage from './web/pages/MarketPage';
 import BeforeEnteringPage from './web/pages/BeforeEnteringPage';
 import WaitingRoomPage from './web/pages/WaitingRoomPage';
 import GamePage from './web/pages/GamePage';
-import GameTestPage from './web/pages/GameTestPage';
 import LogInLoading from './web/components/User/LogInLoading';
-
-// background image
-// import BackgroundImage from '../src/assets/images/background_img.png';
 
 const App: React.FC = () => {
   return (
     <div className='app-container'>
       {/* <div className="background-image" style={{ backgroundImage: `url(${BackgroundImage})` }}> */}
-      <div className="background-image">
-      </div>
-      
       <Routes>
         <Route path='/' element={<MainPage />} />
         <Route path='/rank' element={<RankingPage />} />
@@ -32,7 +25,6 @@ const App: React.FC = () => {
         <Route path='/before' element={<BeforeEnteringPage />} />
         <Route path='/waiting' element={<WaitingRoomPage />} />
         <Route path='/game' element={<GamePage />} />
-        <Route path='/gametest' element={<GameTestPage />} />
         <Route path='/login/oauth2/google' element={<LogInLoading />} />
       </Routes>
     </div>
