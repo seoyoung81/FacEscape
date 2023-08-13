@@ -127,19 +127,23 @@ export default class Stage04 extends Phaser.Scene {
 
     this.physics.add.collider(this.key, this.player, () => {
       const playerX = this.player.x;
+      const playerY = this.player.y;
       const keyX = this.key.x;
+      const keyY = this.key.y;
       // 7~8 정도가 적당한 듯
       const multiplier = 8
 
-      const velocityX = (keyX - playerX) * multiplier;
-      const velocityY = -400;
-      this.key.setVelocity(velocityX, velocityY);
+      if (playerY > keyY) {
+        const velocityX = (keyX - playerX) * multiplier;
+        const velocityY = -400;
+        this.key.setVelocity(velocityX, velocityY);
+      }
     });
     
-    this.physics.add.collider(this.key, this.platformLayer!, () => {
-      this.key.setPosition(100, 460);
-      this.key.setVelocity(0, 0);
-    });
+    // this.physics.add.collider(this.key, this.platformLayer!, () => {
+    //   this.key.setPosition(100, 460);
+    //   this.key.setVelocity(0, 0);
+    // });
 
     this.physics.add.overlap(this.door, this.key, () => {
       this.isKeyPicked = true;
