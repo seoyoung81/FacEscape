@@ -4,6 +4,8 @@ import Code from '../components/WaitingRoomPage/Code';
 import Video from '../components/WaitingRoomPage/Video';
 import Chat from '../components/WaitingRoomPage/Chat';
 import Inventory from '../components/WaitingRoomPage/Inventory';
+import StartBtn from "../components/WaitingRoomPage/StartBtn";
+
 
 import { useState, useEffect } from "react"
 import { useOpenVidu } from "../../common/webrtc"
@@ -45,6 +47,29 @@ const WaitingRoomPage: React.FC = () => {
             render.push(<Video streamManager={undefined} key={i+10}/>);
         }
         return render;
+    }
+
+    const handleClickStartBtn = () => {
+        if(useSocket.roomInfo?.hostUUID !== openVidu.client?.uuid) {
+            Swal.fire({
+                title: '방장만 게임 시작이 가능합니다.',
+                confirmButtonColor: '#3479AD',
+                confirmButtonText: '확인',
+                width: '550px'
+            });
+            return;
+        }
+
+        if(openVidu.remoteMembers.length < 5) {
+            Swal.fire({
+                title: '모두가 입장 해야 시작 가능합니다.',
+                confirmButtonColor: '#3479AD',
+                confirmButtonText: '확인',
+                width: '550px'
+            });
+            return;
+        }
+        window.location.href = `/game?rid=${useSocket.roomId}`
     }
 
     useEffect(()=>{
@@ -111,7 +136,7 @@ const WaitingRoomPage: React.FC = () => {
         <div className={styles['waitingroom-container']}>
             <div>
                 <div className={styles['top-container']}>
-                    <NickName nickname={ useSocket.client?.nickname || "" } />
+                    <NickName getHostNickname = { useSocket.getHostNickName }/>
                     <Code roomId={roomId} />
                     <Inventory />
                 </div>
@@ -130,6 +155,7 @@ const WaitingRoomPage: React.FC = () => {
                                 toggleAudio={ toggleAudio }
                                 toggleVideo={ toggleVideo }/>
                     <Chat />
+                    <StartBtn handleClick={handleClickStartBtn} />
                 </div>
             </div>
         </div>

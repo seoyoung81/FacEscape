@@ -1,6 +1,5 @@
 import styles from './WaitingRoom.module.css';
 import { useState, ChangeEvent, useEffect } from 'react';
-import StartBtn from "./StartBtn";
 import SpeechBubble from "./SpeechBubble";
 
 const Chat: React.FC = () => {
@@ -36,9 +35,6 @@ const Chat: React.FC = () => {
                         onKeyDown={handleKeyDown}
                     />
                     <button className={styles['enter-btn']} onClick={handleClick}>전송</button>
-            </div>
-            <div>
-                <StartBtn />
             </div>
             <span className={styles['bubble-position']}>
                 <SpeechBubble text={text} align="right" />
