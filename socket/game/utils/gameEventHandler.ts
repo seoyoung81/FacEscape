@@ -5,29 +5,28 @@ import { GameManager } from "../gameManager";
 import { Player } from "../objects/player";
 import { GameEventType } from "./gameEventTypes";
 
-// const createScene = (socket: Socket) => {};
-// const createPlayer = (socket: Socket) => {};
-// const destroyPlayer = (socket: Socket) => {};
-// const updatePlayer = (socket: Socket) => {};
-// const collidePlayer = (socket: Socket) => {};
-
 export class GameEventHandler {
   constructor(private io: Server, private gameManager: GameManager) {}
-  handleConnection(
-    socket: Socket,
-    currentScene: Phaser.Scene,
-    playerData: Player
-  ) {
-    console.log(`Player connected: ${socket.id}`);
 
-    socket.on(GameEventType.enterScene, () => {});
+  handleConnection(socket: Socket) {
+    socket.on("connection", () => {
+      console.log(`Player connected: ${socket.id}`);
+      this.gameManager.addPlayer(socket.id, new Player(100, 100, "idle"));
+    });
 
-    socket.on(GameEventType.createPlayer, () => {
+    socket.on(GameEventType.stageSelect, (sceneName) => {
+      console.log(sceneName);
+      socket.emit(GameEventType.stageSelect);
+    });
+
+    socket.on(GameEventType.createOtherPlayers, (socketId) => {
+      socket.emit("createOtherPlayers", this.gameManager.getOtherPlayers(socketId));
       this.emitInitialGameData(socket);
     });
 
-    socket.on(GameEventType.updatePlayer, (playerData: Player) => {
-      this.gameManager.updatePlayer(socket.id, playerData);
+    socket.on(GameEventType.updatePlayer, (playerData) => {
+      this.gameManager.updatePlayer(playerData);
+      socket.emit("updateOtherPlayers", this.gameManager.getOtherPlayers(playerData.socketId));
       this.gameManager.broadcastGameState();
     });
 

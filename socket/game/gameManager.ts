@@ -9,10 +9,26 @@ export class GameManager {
 
   constructor(private io: Server) {}
 
-  enterScene(socketId: string, scene: Phaser.Scene) {
+  enterScene(scene: Phaser.Scene) {
     this.currentScene = scene;
   }
 
+  // players return
+  getPlayers() {
+    return this.players;
+  }
+
+  // 나를 제외한 players return
+  getOtherPlayers(socketId: string) {
+    const otherPlayers: Map<string, Player> = new Map<string, Player>();
+    this.players.forEach((player, id) => {
+      if (id !== socketId) {
+        otherPlayers.set(id, player);
+      }
+    });
+    return otherPlayers;
+  }
+  // players에 player 추가
   addPlayer(socketId: string, player: Player) {
     this.players.set(socketId, player);
   }
@@ -21,12 +37,9 @@ export class GameManager {
     this.players.delete(socketId);
   }
 
-  updatePlayer(socketId: string, playerData: Player) {
-    const player = this.players.get(socketId);
-    if (player) {
-      player.setX(playerData.x);
-      player.setY(playerData.y);
-    }
+  updatePlayer(playerInfo: any) {
+    this.players.get(playerInfo.socketId)!.x = playerInfo.x;
+    this.players.get(playerInfo.socketId)!.y = playerInfo.y;
   }
 
   killPlayer(socket: string, player: Player) {}

@@ -1,4 +1,4 @@
-import { Room } from "../room/utils/room"
+import { Room } from "../room/utils/room";
 import * as uuid from "uuid";
 
 class RoomManager {
@@ -15,7 +15,7 @@ class RoomManager {
     return newRoom;
   }
 
-  getRoom(roomId: string): Room|undefined {
+  getRoom(roomId: string): Room | undefined {
     return this._rooms.get(roomId);
   }
 
