@@ -1,15 +1,15 @@
 import styles from './WaitingRoom.module.css';
 
-const StartBtn: React.FC = () => {
-    const onClick = () => {
-        window.location.href = '/game'
-    }
-    
+type StartBtnProps = {
+    handleClick: ()=>void
+};
+
+const StartBtn = ({handleClick}: StartBtnProps) => {
     return (
         <div>
             <button 
                 className={styles['start-btn']}
-                onClick={onClick}
+                onClick={handleClick}
             >START</button>
         </div>
     )

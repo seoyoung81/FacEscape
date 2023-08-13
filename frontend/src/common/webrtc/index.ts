@@ -131,5 +131,5 @@ export function useOpenVidu () {
         }
     }
 
-    return [{ publisher, remoteMembers, handleChangeRoomId, handleChangeClient, joinSession, leaveSession, setVideoState, setAudioState }];
+    return [{ client, publisher, remoteMembers, handleChangeRoomId, handleChangeClient, joinSession, leaveSession, setVideoState, setAudioState }];
 }; 
