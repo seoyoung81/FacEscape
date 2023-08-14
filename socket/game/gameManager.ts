@@ -1,15 +1,34 @@
 // game 안에 들어갈 data를 manage 하는 class
 
 import { Socket, Server } from "socket.io";
-import { Player } from "./utils/player";
+import { Player } from "./objects/player";
 export class GameManager {
-  private scene: any;
+  private currentScene!: Phaser.Scene;
   private players: Map<string, Player> = new Map();
-  private walls: Map<String, Object> = new Map();
   private cannonBalls: Map<String, Object> = new Map();
 
   constructor(private io: Server) {}
 
+  enterScene(scene: Phaser.Scene) {
+    this.currentScene = scene;
+  }
+
+  // players return
+  getPlayers() {
+    return this.players;
+  }
+
+  // 나를 제외한 players return
+  getOtherPlayers(socketId: string) {
+    const otherPlayers: Map<string, Player> = new Map<string, Player>();
+    this.players.forEach((player, id) => {
+      if (id !== socketId) {
+        otherPlayers.set(id, player);
+      }
+    });
+    return otherPlayers;
+  }
+  // players에 player 추가
   addPlayer(socketId: string, player: Player) {
     this.players.set(socketId, player);
   }
@@ -18,23 +37,17 @@ export class GameManager {
     this.players.delete(socketId);
   }
 
-  updatePlayer(socketId: string, playerData: Player) {
-    const player = this.players.get(socketId);
-    if (player) {
-      player.setX(playerData.x);
-      player.setY(playerData.y);
-    }
+  updatePlayer(playerInfo: any) {
+    this.players.get(playerInfo.socketId)!.x = playerInfo.x;
+    this.players.get(playerInfo.socketId)!.y = playerInfo.y;
   }
 
-  createWall() {}
+  killPlayer(socket: string, player: Player) {}
 
   destroyWall() {}
 
-  updateCannonBall() {}
-
   broadcastGameState() {
-    const gameState = this.scene;
-    this.scene.test;
+    const gameState = this.currentScene;
     this.io.emit("gameStateUpdate", gameState);
   }
 }
