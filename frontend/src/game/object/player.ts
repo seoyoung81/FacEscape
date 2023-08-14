@@ -7,13 +7,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     x: number,
     y: number,
     texture: string,
-<<<<<<< HEAD
     collider?: any
-=======
-    // frame?: number,
-    collider?: any,
-    socketId?: string
->>>>>>> feat/create-players
   ) {
     super(scene, x, y, texture, 0);
     this.scene = scene;
@@ -52,7 +46,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       frames: [{ key: "fall" }],
       frameRate: 1,
     });
-    
   }
 
   update(): void {
@@ -89,7 +82,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       }
     }
 
-    if (cursor!.up.isDown && this.body!.blocked.down && this.playerState === 0) {
+    if (
+      cursor!.up.isDown &&
+      this.body!.blocked.down &&
+      this.playerState === 0
+    ) {
       this.setVelocityY(-260);
       this.play("jumpAnims", true);
     }

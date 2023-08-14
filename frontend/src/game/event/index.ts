@@ -5,4 +5,6 @@ export enum STAGE_EVENT {
   CREATE_PLAYER_SUCCESS = "createPlayerSuccess",
   UPDATE_PLAYER = "updatePlayer",
   UPDATE_PLAYER_SUCCESS = "updatePlayerSuccess",
+  SET_PLAYER_ID = "setPlayerId",
+  SET_PLAYER_ID_SUCCESS = "setPlayerIdSuccess",
 }

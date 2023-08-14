@@ -30,10 +30,17 @@ const GamePage = () => {
       game.events.removeListener(STAGE_EVENT.SELECT);
       useSocket.socket.removeListener(STAGE_EVENT.SELECT_SUCCESS);
 
+      game.events.addListener(STAGE_EVENT.SET_PLAYER_ID, () => {
+        game.events.emit(
+          STAGE_EVENT.SET_PLAYER_ID_SUCCESS,
+          openVidu.client?.id
+        );
+      });
+
       game.events.addListener(STAGE_EVENT.SELECT, (stageName: string) => {
         useSocket.emitGameEvent(STAGE_EVENT.SELECT, {
           roomId: useSocket.roomId,
-          id: useSocket.client?.id,
+          id: openVidu.client?.id,
           stageName: stageName,
         });
       });

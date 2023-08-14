@@ -21,7 +21,6 @@ import { Key } from "../object/key";
 import { Door } from "../object/door";
 
 import { STAGE_EVENT } from "../event";
-import { PlayerData } from "../object/playerData";
 
 //====== wall setting ==============
 const WALL_START_X = 270;
@@ -36,9 +35,9 @@ export default class Stage01 extends Phaser.Scene {
     });
   }
   player!: Player;
-  socketId!: string;
+  playerId!: number;
   // otherPlayersData!: Map<string, PlayerData>;
-  otherPlayers: { [id: string]: Player } = {};
+  otherPlayers: { [id: number]: Player } = {};
   cannon!: Cannon;
   cannonBalls!: Phaser.Physics.Arcade.Group;
   shoot!: Phaser.Time.TimerEvent;
@@ -86,6 +85,34 @@ export default class Stage01 extends Phaser.Scene {
       frameWidth: 46,
       frameHeight: 56,
     });
+
+    this.events.emit(STAGE_EVENT.SET_PLAYER_ID);
+
+    this.events.addListener(
+      STAGE_EVENT.SET_PLAYER_ID_SUCCESS,
+      (id: number) => (this.playerId = id)
+    );
+
+    this.events.addListener(
+      STAGE_EVENT.CREATE_PLAYER_SUCCESS,
+      (playerData: any) => {
+        this.otherPlayers[playerData.id] = new Player(
+          this,
+          playerData.x,
+          playerData.y,
+          "idle",
+          null
+        );
+      }
+    );
+
+    this.events.addListener(
+      STAGE_EVENT.UPDATE_PLAYER_SUCCESS,
+      (playerData: any) => {
+        this.otherPlayers[playerData.id].setX = playerData.x;
+        this.otherPlayers[playerData.id].setY = playerData.y;
+      }
+    );
   }
 
   create(): void {
@@ -113,31 +140,10 @@ export default class Stage01 extends Phaser.Scene {
     this.player = new Player(this, 370, 660, "idle");
 
     this.events.emit(STAGE_EVENT.CREATE_PLAYER, {
-      //id
+      id: this.playerId,
       x: this.player.x,
       y: this.player.y,
     });
-
-    this.events.addListener(
-      STAGE_EVENT.CREATE_PLAYER_SUCCESS,
-      (playerData: any) => {
-        this.otherPlayers[playerData.socketId] = new Player(
-          this,
-          playerData.x,
-          playerData.y,
-          "idle",
-          null
-        );
-      }
-    );
-
-    this.events.addListener(
-      STAGE_EVENT.UPDATE_PLAYER_SUCCESS,
-      (playerData: any) => {
-        this.otherPlayers[playerData.socketId].setX = playerData.x;
-        this.otherPlayers[playerData.socketId].setX = playerData.y;
-      }
-    );
 
     // create cannon
     this.cannon = new Cannon(this, 1000, 660, "cannon");
@@ -227,7 +233,7 @@ export default class Stage01 extends Phaser.Scene {
   update(): void {
     this.player.update();
     this.events.emit(STAGE_EVENT.UPDATE_PLAYER, {
-      // socketId: this.socket.id,
+      id: this.playerId,
       x: this.player.x,
       y: this.player.y,
     });
