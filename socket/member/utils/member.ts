@@ -81,10 +81,10 @@ export class Member {
         if(this._room) {
             const roomId = this._room.roomId;
             this._room.removeMember(this);
-            if(this._room.isEmpty() && this._room.state === "PLAY") {
-                roomManager.deleteRoom(roomId);
-                console.log(`delete empty room: ${roomId}`);
-            }
+            // if(this._room.isEmpty() && this._room.state === "PLAY") {
+            //     roomManager.deleteRoom(roomId);
+            //     console.log(`delete empty room: ${roomId}`);
+            // }
 
             this._room = undefined;
             if(event === ExitEvent.leave) {
