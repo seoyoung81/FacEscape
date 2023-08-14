@@ -47,8 +47,8 @@ const GamePage = () => {
       });
 
       useSocket.socket.on(STAGE_EVENT.SELECT_SUCCESS, (data: any) => {
-        // const selectScene = game.scene.scenes[0];
-        game.events.emit(STAGE_EVENT.SELECT_SUCCESS, data);
+        const selectScene = game.scene.scenes[0];
+        selectScene.events.emit(STAGE_EVENT.SELECT_SUCCESS, data);
       });
 
       game.events.addListener(STAGE_EVENT.CREATE_PLAYER, (playerData: any) => {
