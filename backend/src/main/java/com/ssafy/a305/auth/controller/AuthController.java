@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.a305.auth.dto.LoginReqDTO;
 import com.ssafy.a305.auth.dto.LoginResDTO;
 import com.ssafy.a305.auth.util.JWTUtils;
+import com.ssafy.a305.member.dto.TokenValidateDTO;
 
 import javax.validation.Valid;
 
@@ -38,5 +40,10 @@ public class AuthController {
 
 		String accessToken = jwtUtils.generateAccessToken(authenticate);
 		return ResponseEntity.ok(new LoginResDTO(TOKEN_TYPE, accessToken));
+	}
+
+	@GetMapping("/validate-token")
+	public ResponseEntity<TokenValidateDTO> getMemberInfo(Authentication authentication) {
+		return ResponseEntity.ok(new TokenValidateDTO(Integer.parseInt(authentication.getName()), true));
 	}
 }
