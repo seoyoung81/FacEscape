@@ -43,7 +43,9 @@ public class AuthController {
 	}
 
 	@GetMapping("/validate-token")
-	public ResponseEntity<TokenValidateDTO> getMemberInfo(Authentication authentication) {
-		return ResponseEntity.ok(new TokenValidateDTO(Integer.parseInt(authentication.getName()), true));
+	public ResponseEntity<TokenValidateDTO> checkToken(Authentication authentication) {
+		boolean isValid = (authentication != null);
+		int memberId = isValid ? Integer.parseInt(authentication.getName()) : -1;
+		return ResponseEntity.ok(new TokenValidateDTO(memberId, isValid));
 	}
 }
