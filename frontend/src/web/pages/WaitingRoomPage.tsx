@@ -50,26 +50,7 @@ const WaitingRoomPage: React.FC = () => {
     }
 
     const handleClickStartBtn = () => {
-        if(useSocket.roomInfo?.hostUUID !== openVidu.client?.uuid) {
-            Swal.fire({
-                title: '방장만 게임 시작이 가능합니다.',
-                confirmButtonColor: '#3479AD',
-                confirmButtonText: '확인',
-                width: '550px'
-            });
-            return;
-        }
-
-        if(openVidu.remoteMembers.length < 5) {
-            Swal.fire({
-                title: '모두가 입장 해야 시작 가능합니다.',
-                confirmButtonColor: '#3479AD',
-                confirmButtonText: '확인',
-                width: '550px'
-            });
-            return;
-        }
-        window.location.href = `/game?rid=${useSocket.roomId}`
+        useSocket.socket?.emit("start");
     }
 
     useEffect(()=>{
@@ -83,7 +64,7 @@ const WaitingRoomPage: React.FC = () => {
                 window.location.href="/";
             });
         }
-    }, [])
+    }, []);
 
     useEffect(()=>{
         if(connectionFlag) {
