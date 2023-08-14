@@ -9,8 +9,11 @@ class RoomManager {
   }
 
   createRoom(): Room {
+    
     const roomId = uuid.v4();
+    
     const newRoom = new Room(roomId);
+    
     this._rooms.set(roomId, newRoom);
     return newRoom;
   }

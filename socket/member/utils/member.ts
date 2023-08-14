@@ -10,7 +10,7 @@ export class Member {
     private _nickname: string;
     private _room: Room | undefined;
     private _socket: Socket
-    private _gameUuid: string;
+    private _memberUUID: string;
 
     constructor(ipOrMember: string | Member, socket?: Socket) {
         if (typeof ipOrMember === 'string' && socket instanceof Socket) {
@@ -18,7 +18,7 @@ export class Member {
             this._memberId = -1;
             this._nickname = "";
             this._socket = socket;
-            this._gameUuid = uuid.v4();
+            this._memberUUID = uuid.v4();
         } else if(ipOrMember instanceof Member) {
             const member = ipOrMember;
             this._memberId = member._memberId;
@@ -26,7 +26,7 @@ export class Member {
             this._nickname = member._nickname;
             this._room = member._room;
             this._socket = member._socket;
-            this._gameUuid = member._gameUuid;
+            this._memberUUID = member._memberUUID;
         } else {
             throw new Error("Invalid args");
         }
@@ -48,15 +48,16 @@ export class Member {
         return this._room;
     }
 
-    get gameUuid(): string{
-        return this._gameUuid;
+    get memberUUID(): string{
+        return this._memberUUID;
     }
 
     updateSocket(socket: Socket) {
-        //동일 IP로 동일한 방에 여러 개의 연결을 할 수 없도록, 기존 접속c을 끊고 새로운 연결을 만든다.
+        // 동일 IP로 동일한 방에 여러 개의 연결을 할 수 없도록, 기존 접속을 끊고 새로운 연결을 만든다.
         if(this._socket && this._room) {
             this._socket.leave(this._room.roomId);
             this._socket.emit("kick", "다른 클라이언트에서 접속하여 접속이 종료됩니다.");
+            this._socket.disconnect();
         }
 
         this._socket = socket;
@@ -80,10 +81,10 @@ export class Member {
         if(this._room) {
             const roomId = this._room.roomId;
             this._room.removeMember(this);
-            if(this._room.isEmpty()) {
-                roomManager.deleteRoom(roomId);
-                console.log(`delete empty room: ${roomId}`);
-            }
+            // if(this._room.isEmpty() && this._room.state === "PLAY") {
+            //     roomManager.deleteRoom(roomId);
+            //     console.log(`delete empty room: ${roomId}`);
+            // }
 
             this._room = undefined;
             if(event === ExitEvent.leave) {

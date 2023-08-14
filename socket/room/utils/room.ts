@@ -8,8 +8,8 @@ export class Room {
     private _roomId: string;
     private _stage: number;
     private _state: RoomState;
-    private _host: string|undefined;
-    private _members: Map<string, Member>; // 방에 입장한 유저
+    private _hostUUID: string|undefined;
+    private _members: Map<string, Member>; // 방에 입장한 유저, ip가 키다.
     private _inGameMember: Map<string, Member>; // 게임 시작 시점에 있던 유저, 시작 이후 해당 유저들만 재입장이 가능하다.
 
     constructor(roomId: string) {
@@ -28,8 +28,8 @@ export class Room {
         return this._state;
     }
 
-    get host(): string|undefined{
-        return this._host;
+    get hostUUID(): string|undefined{
+        return this._hostUUID;
     }
 
     get members(): Map<string, Member>{
@@ -48,8 +48,8 @@ export class Room {
         this._stage = stage;
     }
 
-    set host(uuid: string) {
-        this._host = uuid;
+    set hostUUID(uuid: string) {
+        this._hostUUID = uuid;
     }
 
     setInGameMember(map: Map<string,Member>){
@@ -59,7 +59,7 @@ export class Room {
     }
 
     checkInGameMember(ip: string) {
-        return !this._inGameMember.has(ip);
+        return this._inGameMember.has(ip);
     }
 
     joinMember(member: Member) {
@@ -69,8 +69,8 @@ export class Room {
 
     removeMember(member: Member) {
         this._members.delete(member.ip);
-        if(this._host === member.gameUuid){
-            this.changeHost();
+        if(this._hostUUID === member.memberUUID){
+            this.changehostUUID();
         }
     }
 
@@ -86,10 +86,10 @@ export class Room {
         return this._members.size === 0;
     }
 
-    changeHost(){
+    changehostUUID(){
         this._members.forEach((member) => {
-            if(this._host != member.gameUuid){
-                this._host = member.gameUuid;
+            if(this._hostUUID != member.memberUUID){
+                this._hostUUID = member.memberUUID;
                 return; 
             }
         })

@@ -1,7 +1,7 @@
 import { Server } from "socket.io";
 import { ConnectEvent, JoinEvent, ExitEvent, MemberActionEvent, GameActionEvent, GameResponseEvent, MemberResponseEvent } from "../socket/utils/eventType";
 import { createRoomEventHandler, joinRoomEventHandler, exitEventHandler, memberChatEventHandler, memberNickNameEventHandler, gameStartEventhandler } from "./utils/roomSocketEventHandler"
-import { RoomInfoResponse } from "./utils/roomInfoResponse";
+import { GameEventType } from "../game/utils/gameEventTypes"
 
 const socketMapper = (httpServer: any) => {
     const io = new Server(httpServer, {
@@ -13,11 +13,9 @@ const socketMapper = (httpServer: any) => {
     });
 
     io.on(ConnectEvent.connection, (socket) => {
-        console.log(`Connected: ${socket.id}`);
-        console.log(`address :  ${socket.handshake.address}`)
-      
         // 방 생성 Event Handler
         socket.on(JoinEvent.create, () => {
+          console.log("방 생성 요청 감지 : createRoomEventHandle 실행");
           createRoomEventHandler(socket);
         });
         
@@ -29,16 +27,10 @@ const socketMapper = (httpServer: any) => {
         // 방 떠나기 또는 소켓 연결이 끊어진 경우(브라우저 종료 등)
         Object.values(ExitEvent).forEach(event=>{
           socket.on(event, ()=>{
-            console.log(`Disconnected: ${socket.id}`);
-            console.log(io.sockets.adapter.rooms);
+           console.log(`Disconnected: ${socket.id}`);
+           console.log(io.sockets.adapter.rooms);
             exitEventHandler(event, socket);
           })
-        });
-
-        socket.on(MemberActionEvent.chat, (msg: string)=>{
-          memberChatEventHandler(socket, msg, (roomId:string, chat: string) => {
-            return io.to(roomId).emit(MemberActionEvent.chat, chat);
-          });
         });
 
         socket.on(MemberActionEvent.updateNickName, (data: any)=>{
@@ -51,6 +43,10 @@ const socketMapper = (httpServer: any) => {
           gameStartEventhandler(socket, (roomId:string, response: string) => {
             return io.to(roomId).emit(GameResponseEvent.startSuccess, response);
           });
+        });
+
+        socket.on(GameEventType.stageSelect, (data: any)=>{
+          io.to(data.roomId).emit(GameEventType.stageSelectSucess, data.stageName);
         })
     });
 
