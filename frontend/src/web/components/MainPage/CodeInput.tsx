@@ -9,9 +9,12 @@ const CodeInput :React.FC = () => {
     const onChange = (event: ChangeEvent<HTMLInputElement>) => {
         setCodeInput(event.target.value);
     }
+
+    const token = sessionStorage.getItem("accessToken") || "";
     const handleClick = () => {
         if(codeInput){
-            joinRoom(codeInput);
+            console.log(token);
+            joinRoom(codeInput, token);
         }
         else{
             alert("입장 코드를 입력해주세요!");

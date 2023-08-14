@@ -15,7 +15,8 @@ export function useSocketRooms() {
 
     const connect = () => {
         const newSocket = io("http://localhost:3050", {
-            transports: ["websocket", "polling"]
+            transports: ["websocket", "polling"],
+            query: {token: sessionStorage.getItem("accessToken") || ""}
         });
 
         newSocket.on(ServerSocketResposneEvent.JOIN_SUCCESS, (data) => {
@@ -77,15 +78,15 @@ export function useSocketRooms() {
         setSocket(newSocket);
     };
 
-    const createRoom = () => {
+    const createRoom = (token: string) => {
         if(socket) {
-            socket.emit(ClientSocketEvent.CREATE_ROOM);
+            socket.emit(ClientSocketEvent.CREATE_ROOM, token);
         }
     };
 
-    const joinRoom = (roomId: string) => {
+    const joinRoom = (roomId: string, token: string) => {
         if(roomId) {
-            socket?.emit(ClientSocketEvent.JOIN_ROOM, roomId);
+            socket?.emit(ClientSocketEvent.JOIN_ROOM, { roomId: roomId, token: token});
         }
     }
 
