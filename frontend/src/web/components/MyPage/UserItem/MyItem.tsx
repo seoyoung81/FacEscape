@@ -56,12 +56,11 @@ const MyItem: React.FC<MyItemProps> = ({ itemId, itemName, itemImg, myCategory }
     }, [myCategory, render])
     
     return (
-        <div>
+        <div className={styles['myitem-container']} >
             <div 
-                className={styles['myitem-container']}
                 onClick={onEquipItemClick}
             >
-                <div>
+                <div >
                     <MyItemImg itemImg={itemImg} />
                 </div>
                 <MyItemName itemName={itemName} />

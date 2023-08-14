@@ -44,17 +44,10 @@ const MyItemList: React.FC = () => {
 
     
     return (
+        <div>
+
         <div className={styles['myitem-wrap']}>
-            <div>
-                {itemList.length === 0 ? (
-                    <div className={styles['go-market']}>
-                        <button onClick={goMarket}>아이템 구매하러 가기</button>
-                    </div>
-                    ) : (
-                        null
-                    )
-                }
-            </div>
+            
             {itemList ? (
                 itemList.map(item => (
                     <MyItem
@@ -67,9 +60,15 @@ const MyItemList: React.FC = () => {
                 
                 ))
             ) : (
-               null
+              
+                <div className={styles['go-market']}>
+                    <button onClick={goMarket}>아이템 구매하러 가기</button>
+                </div>
+                    
+               
             )}
           
+        </div>
         </div>
     )
 };
