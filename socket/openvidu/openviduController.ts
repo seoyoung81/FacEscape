@@ -21,13 +21,9 @@ router.post(
 router.post(
   '/sessions/:sessionId/connections',
   async (req: express.Request, res: express.Response) => {
-    const hostIp = req.socket.remoteAddress || "";
-
-    console.log(hostIp);
     const result = await opService.createConnection(
-      hostIp,
       req.params.sessionId,
-      req.body
+      req
     );
 
     if (result.error) {
