@@ -8,9 +8,9 @@ export class Room {
     private _roomId: string;
     private _stage: number;
     private _state: RoomState;
-    private _hostUUID: string|undefined;
-    private _members: Map<string, Member>; // 방에 입장한 유저, ip가 키다.
-    private _inGameMember: Map<string, Member>; // 게임 시작 시점에 있던 유저, 시작 이후 해당 유저들만 재입장이 가능하다.
+    private _hostId: number|undefined;
+    private _members: Map<number, Member>; // 방에 입장한 유저, member pk가 키다.
+    private _inGameMember: Map<number, Member>; // 게임 시작 시점에 있던 유저, 시작 이후 해당 유저들만 재입장이 가능하다.
 
     constructor(roomId: string) {
         this._roomId = roomId;
@@ -28,15 +28,15 @@ export class Room {
         return this._state;
     }
 
-    get hostUUID(): string|undefined{
-        return this._hostUUID;
+    get hostId(): number|undefined{
+        return this._hostId;
     }
 
-    get members(): Map<string, Member>{
+    get members(): Map<number, Member>{
         return this._members;
     }
 
-    get inGameMember(): Map<string, Member>{
+    get inGameMember(): Map<number, Member>{
         return this._inGameMember;
     }
 
@@ -48,28 +48,27 @@ export class Room {
         this._stage = stage;
     }
 
-    set hostUUID(uuid: string) {
-        this._hostUUID = uuid;
+    set hostId(id: number) {
+        this._hostId = id;
     }
 
-    setInGameMember(map: Map<string,Member>){
+    setInGameMember(map: Map<number,Member>){
         for (const [key, value] of map) {
             this._inGameMember.set(key, new Member(value));
         }
     }
 
-    checkInGameMember(ip: string) {
-        return this._inGameMember.has(ip);
+    checkInGameMember(id: number) {
+        return this._inGameMember.has(id);
     }
 
     joinMember(member: Member) {
-        this._members.set(member.ip, member);
-        //this._members.set(member.ip+this.members.size, member);
+        this._members.set(member.id, member);
     }
 
     removeMember(member: Member) {
-        this._members.delete(member.ip);
-        if(this._hostUUID === member.memberUUID){
+        this._members.delete(member.id);
+        if(this._hostId === member.id){
             this.changehostUUID();
         }
     }
@@ -88,8 +87,8 @@ export class Room {
 
     changehostUUID(){
         this._members.forEach((member) => {
-            if(this._hostUUID != member.memberUUID){
-                this._hostUUID = member.memberUUID;
+            if(this._hostId != member.id) {
+                this.hostId = member.id;
                 return; 
             }
         })

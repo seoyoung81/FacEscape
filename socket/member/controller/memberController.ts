@@ -9,7 +9,7 @@ router.post(
     const hostIp = req.socket.remoteAddress || "";
     const memberId = parseInt(req.body.memberId as string);
     const nickname = req.body.nickname as string;
-    res.send(memberService.updateMemberNickname(hostIp, memberId, nickname));
+    res.send(memberService.updateMemberNickname(memberId, nickname));
   }
 );
 
