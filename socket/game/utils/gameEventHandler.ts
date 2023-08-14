@@ -9,31 +9,22 @@ export class GameEventHandler {
   constructor(private io: Server, private gameManager: GameManager) {}
 
   handleConnection(socket: Socket) {
-    socket.on("connection", () => {
-      console.log(`Player connected: ${socket.id}`);
-      this.gameManager.addPlayer(socket.id, new Player(100, 100, "idle"));
-    });
-
     socket.on(GameEventType.stageSelect, (sceneName) => {
       console.log(sceneName);
-      socket.emit(GameEventType.stageSelect);
+      socket.emit(GameEventType.stageSelectSucess, sceneName);
     });
 
-    socket.on(GameEventType.createOtherPlayers, (socketId) => {
-      socket.emit("createOtherPlayers", this.gameManager.getOtherPlayers(socketId));
-      this.emitInitialGameData(socket);
+    socket.on(GameEventType.createPlayer, (playerData) => {
+      socket.broadcast.emit(GameEventType.createPlayerSuccess, playerData);
     });
 
     socket.on(GameEventType.updatePlayer, (playerData) => {
-      this.gameManager.updatePlayer(playerData);
-      socket.emit("updateOtherPlayers", this.gameManager.getOtherPlayers(playerData.socketId));
-      this.gameManager.broadcastGameState();
+      socket.emit(GameEventType.updatePlayerSuccess, playerData);
     });
 
     socket.on("disconnect", () => {
       console.log(`Player disconnected: ${socket.id}`);
-      this.gameManager.removePlayer(socket.id);
-      this.gameManager.broadcastGameState();
+      socket.emit(GameEventType.destroyPlayer, socket.id);
     });
   }
 
