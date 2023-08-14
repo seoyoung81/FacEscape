@@ -4,6 +4,7 @@ export enum GameEventType {
   stageSelectSucess = "stageSelectSucess",
   createPlayer = "createPlayer",
   createPlayerSuccess = "createPlayerSuccess",
+  createOtherPlayers = "createOtherPlayers",
   updatePlayer = "updatePlayer",
   updatePlayerSuccess = "updatePlayerSuccess",
 

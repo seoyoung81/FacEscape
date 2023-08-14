@@ -2,30 +2,29 @@ import { Socket } from 'socket.io';
 import { Member } from "./utils/member"
 
 class MemberManager {
-    private _members: Map<string, Member>;
+    private _members: Map<number, Member>;
     
     constructor() {
-      this._members = new Map<string, Member>();
+      this._members = new Map<number, Member>();
     }
 
-    createMember(ip: string, socket: Socket) {
-        const newMember = new Member(ip, socket);
-        this._members.set(ip, newMember);
-        //this._members.set(ip+this._members.size, newMember);
+    createMember(id: number, socket: Socket) {
+        const newMember = new Member(id, socket);
+        this._members.set(id, newMember);
         return newMember;
     }
 
-    getMember(ip: string): Member|undefined {
-        return this._members.get(ip);
+    getMember(id: number): Member|undefined {
+        return this._members.get(id);
     }
 
-    exitMember(ip: string) {
-        this._members.delete(ip);
+    exitMember(id: number) {
+        this._members.delete(id);
     }
 
-    exists(ip: string): boolean {
-        return this._members.has(ip);
+    exists(id: number): boolean {
+        return this._members.has(id);
     }
 }
-  
+
 export const memberManager = new MemberManager();
