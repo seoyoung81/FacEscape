@@ -1,4 +1,17 @@
 
-export type ClientSocketEvent = "createRoom" | "chat" | "joinRoom";
-export type ServerSocketResposneEvent = "joinSuccess" | "joinFail" | "kick";
-export type ServerSocketEvent = "hostChanged"|"someoneEntered";
+export enum ClientSocketEvent {
+    CREATE_ROOM="createRoom",
+    CHAT="chat",
+    JOIN_ROOM="joinRoom"
+}
+
+export enum ServerSocketResposneEvent {
+    JOIN_SUCCESS="joinSuccess",
+    JOIN_FAIL="joinFail",
+    KICK="kick"
+}
+
+export enum ServerSocketEvent {
+    HOST_ChANGED="hostChanged",
+    SOMEONE_ENTER="someoneEntered"
+}
