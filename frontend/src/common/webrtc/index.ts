@@ -2,7 +2,7 @@ import { OpenVidu } from "openvidu-browser";
 import { useState, useEffect } from 'react';
 import { getToken } from "./service"
 import { WebRTCStreamEvent, WebRTCRemoteMember, RoomMember } from "./utils/types"
-import { Session, Publisher, Subscriber } from "openvidu-browser";
+import { Session, Publisher } from "openvidu-browser";
 import Swal from 'sweetalert2';
 
 export function useOpenVidu () {
@@ -80,7 +80,7 @@ export function useOpenVidu () {
         openViduInstance.enableProdMode();
 
         try {
-            const token = await getToken(roomId as string);
+            const token = await getToken(roomId as string, (client as RoomMember).id);
             await (session as Session).connect(token, { clientData: client });
             
             const publisher = openViduInstance.initPublisher(undefined, {
