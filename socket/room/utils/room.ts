@@ -59,7 +59,7 @@ export class Room {
     }
 
     checkInGameMember(ip: string) {
-        return !this._inGameMember.has(ip);
+        return this._inGameMember.has(ip);
     }
 
     joinMember(member: Member) {

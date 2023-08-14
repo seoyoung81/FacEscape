@@ -1,5 +1,7 @@
 // game에서 발생하는 Event Type 정의
 export enum GameEventType {
+  stageSelect="stageSelect",
+  stageSelectSucess="stageSelectSucess",
   enterScene="enterScene",
   createPlayer="createPlayer",
   updatePlayer="updatePlayer",
