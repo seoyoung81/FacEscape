@@ -1,32 +1,20 @@
 import { OpenVidu } from "openvidu-browser";
-import { useState, useEffect } from "react";
-import { getToken } from "./service";
-import {
-  WebRTCStreamEvent,
-  WebRTCRemoteMember,
-  RoomMember,
-} from "./utils/types";
-import { Session, Publisher, Subscriber } from "openvidu-browser";
-import Swal from "sweetalert2";
+import { useState, useEffect } from 'react';
+import { getToken } from "./service"
+import { WebRTCStreamEvent, WebRTCRemoteMember, RoomMember } from "./utils/types"
+import { Session, Publisher } from "openvidu-browser";
+import Swal from 'sweetalert2';
 
-export function useOpenVidu() {
-  const [roomId, setRoomId] = useState<string>();
-  const [client, setClient] = useState<RoomMember>();
-  const [session, setSession] = useState<Session>();
-  const [publisher, setPublisher] = useState<Publisher>();
-  const [remoteMembers, setRemoteMembers] = useState<WebRTCRemoteMember[]>([]);
+export function useOpenVidu () {
 
-  const handleChangeRoomId = (id: string) => {
-    setRoomId(() => id);
-  };
+    const [roomId, setRoomId] = useState<string>();
+    const [client, setClient] = useState<RoomMember>();
+    const [session, setSession] = useState<Session>();
+    const [publisher, setPublisher] = useState<Publisher>();
+    const [remoteMembers, setRemoteMembers] = useState<WebRTCRemoteMember[]>([]);
 
-  const handleChangeClient = (client: RoomMember) => {
-    setClient(() => client);
-  };
-
-  useEffect(() => {
-    if (roomId) {
-      initSession();
+    const handleChangeRoomId = (id: string) => {
+        setRoomId(()=>id);
     }
   }, [roomId]);
 
@@ -64,49 +52,46 @@ export function useOpenVidu() {
     }
   }, [publisher]);
 
-  useEffect(() => {
-    if (session && client) {
-      joinSession();
-    }
-  }, [session, client]);
+    const joinSession = async () => {
+        const openViduInstance = new OpenVidu();
+        openViduInstance.enableProdMode();
 
-  const initSession = () => {
-    const openViduInstance = new OpenVidu();
-    openViduInstance.enableProdMode();
-    setSession(() => openViduInstance.initSession());
-  };
+        try {
+            const token = await getToken(roomId as string, (client as RoomMember).id);
+            await (session as Session).connect(token, { clientData: client });
+            
+            const publisher = openViduInstance.initPublisher(undefined, {
+                audioSource: undefined, 
+                videoSource: undefined,
+                publishAudio: true, 
+                publishVideo: true,
+                resolution: '640x480',
+                frameRate: 30, 
+                insertMode: 'APPEND',
+                mirror: false
+            });
+            
+            await (session as Session).publish(publisher);
+            setPublisher(()=>publisher);
+        } catch(e) {
+            console.log(e);
+            Swal.fire({
+                title: "만료된 방입니다.",
+                confirmButtonColor: '#3479AD',
+                confirmButtonText: '확인',
+                width: '550px'
+            }).then(()=>{
+                window.location.href="/";
+            });
+        }           
+    }   
 
-  const joinSession = async () => {
-    const openViduInstance = new OpenVidu();
-    openViduInstance.enableProdMode();
-
-    try {
-      const token = await getToken(roomId as string);
-      await (session as Session).connect(token, { clientData: client });
-
-      const publisher = openViduInstance.initPublisher(undefined, {
-        audioSource: undefined,
-        videoSource: undefined,
-        publishAudio: true,
-        publishVideo: true,
-        resolution: "640x480",
-        frameRate: 30,
-        insertMode: "APPEND",
-        mirror: false,
-      });
-
-      await (session as Session).publish(publisher);
-      setPublisher(() => publisher);
-    } catch (e) {
-      console.log(e);
-      Swal.fire({
-        title: "만료된 방입니다.",
-        confirmButtonColor: "#3479AD",
-        confirmButtonText: "확인",
-        width: "550px",
-      }).then(() => {
-        window.location.href = "/";
-      });
+    const leaveSession = () => {
+        if(session) {
+            setVideoState(false);
+            setAudioState(false);
+            session.disconnect();
+        }
     }
   };
 

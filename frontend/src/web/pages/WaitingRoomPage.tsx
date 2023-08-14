@@ -22,6 +22,7 @@ const WaitingRoomPage: React.FC = () => {
     const [roomId] = useState<string>(new URLSearchParams(window.location.search).get("rid") || "");
     const [audioControl, setAudioControl] = useState<boolean>(sessionStorage.getItem("audioControl")==="true");
     const [videoControl, setVideoControl] = useState<boolean>(sessionStorage.getItem("videoControl")==="true");
+    const token = sessionStorage.getItem("accessToken") || "";
 
     const toggleAudio = () => {
         setAudioControl((prev)=>{
@@ -50,7 +51,7 @@ const WaitingRoomPage: React.FC = () => {
     }
 
     const handleClickStartBtn = () => {
-        useSocket.socket?.emit("start");
+        useSocket.socket?.emit("start", {id: useSocket.client?.id || "-1"});
     }
 
     useEffect(()=>{
@@ -68,7 +69,7 @@ const WaitingRoomPage: React.FC = () => {
 
     useEffect(()=>{
         if(connectionFlag) {
-            useSocket.joinRoom(roomId);
+            useSocket.joinRoom(roomId, token);
         }
     }, [connectionFlag]);
 
