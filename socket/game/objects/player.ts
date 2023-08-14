@@ -1,5 +1,4 @@
-﻿import * as Phaser from "phaser";
-export class Player {
+﻿export class Player {
   x: number;
   y: number;
   texture: string;

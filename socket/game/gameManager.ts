@@ -5,7 +5,7 @@ import { Player } from "./objects/player";
 export class GameManager {
   private currentScene!: Phaser.Scene;
   private players: Map<string, Player> = new Map();
-  private cannonBalls: Map<String, Object> = new Map();
+  // private cannonBalls: Map<String, Object> = new Map();
 
   constructor(private io: Server) {}
 
@@ -37,17 +37,10 @@ export class GameManager {
     this.players.delete(socketId);
   }
 
-  updatePlayer(playerInfo: any) {
-    this.players.get(playerInfo.socketId)!.x = playerInfo.x;
-    this.players.get(playerInfo.socketId)!.y = playerInfo.y;
-  }
+  // updatePlayer(playerInfo: any) {
+  //   this.players.get(playerInfo.socketId)!.x = playerInfo.x;
+  //   this.players.get(playerInfo.socketId)!.y = playerInfo.y;
+  // }
 
   killPlayer(socket: string, player: Player) {}
-
-  destroyWall() {}
-
-  broadcastGameState() {
-    const gameState = this.currentScene;
-    this.io.emit("gameStateUpdate", gameState);
-  }
 }
