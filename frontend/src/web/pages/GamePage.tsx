@@ -15,8 +15,9 @@ const GamePage = () => {
   const [openVidu] = useOpenVidu();
   const [connectionFlag, setConntectionFlag] = useState<boolean>(false);
   const [game, setGame] = useState<Phaser.Game>();
-
+  
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const token = sessionStorage.getItem("accessToken")||"";
 
   useEffect(() => {
     if (canvasRef.current && useSocket.socket) {
@@ -86,11 +87,11 @@ const GamePage = () => {
       });
     }
   }, []);
-
-  useEffect(() => {
-    if (connectionFlag) {
-      useSocket.joinRoom(roomId);
-    }
+  
+  useEffect(()=>{
+      if(connectionFlag) {
+          useSocket.joinRoom(roomId, token);
+      }
   }, [connectionFlag]);
 
   useEffect(() => {

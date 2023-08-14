@@ -4,9 +4,11 @@ import { useEffect } from 'react';
 
 const NewGame :React.FC = () => {
     const [{roomId, createRoom}] = useSocketRooms();
+    const token = sessionStorage.getItem("accessToken")||"";
 
     const handleClick = () => {
-        createRoom();
+        console.log(token);
+        createRoom(token);
     }
 
     useEffect(()=>{

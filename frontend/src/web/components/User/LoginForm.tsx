@@ -36,7 +36,7 @@ const LogInForm: React.FC<closeModalProps> = ({ closeModal }) => {
         dispatch(setIsLogIn(true));
         // 모달창 닫기
         closeModal();
-
+        window.location.reload();
         return data;
     } catch (error: any) {
         console.log('로그인 실패', error);
