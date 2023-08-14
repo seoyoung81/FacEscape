@@ -16,41 +16,64 @@ export function useOpenVidu () {
     const handleChangeRoomId = (id: string) => {
         setRoomId(()=>id);
     }
-  }, [roomId]);
 
-  useEffect(() => {
-    if (session) {
-      session.on(WebRTCStreamEvent.streamCreated, (event) => {
-        const subscriber = session.subscribe(event.stream, undefined);
-        const newRemoteMember: WebRTCRemoteMember = {
-          stream: subscriber,
-          member: JSON.parse(event.stream.connection.data).clientData,
-        };
-        setRemoteMembers((prev) => [...prev, newRemoteMember]);
-      });
-
-      session.on(WebRTCStreamEvent.streamDestroyed, (event) => {
-        setRemoteMembers((prev) => {
-          for (let i = 0; i < prev.length; ++i) {
-            if (prev[i].stream === event.stream.streamManager) {
-              prev.splice(i, 1);
-              break;
-            }
-          }
-          return [...prev];
-        });
-      });
-
-      session.on(WebRTCStreamEvent.exception, (exception) => {});
+    const handleChangeClient= (client: RoomMember) => {
+        setClient(()=>client);
     }
-  }, [session]);
 
-  useEffect(() => {
-    if (publisher) {
-      setAudioState(sessionStorage.getItem("micControl") === "true");
-      setVideoState(sessionStorage.getItem("cameraControl") === "true");
+    useEffect(()=>{
+        if(roomId) {
+            initSession();
+        }
+    }, [roomId]);
+
+    useEffect(()=>{
+        if(session) {
+            session.on(WebRTCStreamEvent.streamCreated, (event)=>{
+                const subscriber = session.subscribe(event.stream, undefined);
+                const newRemoteMember: WebRTCRemoteMember = {
+                    stream: subscriber,
+                    member: JSON.parse(event.stream.connection.data).clientData
+                };
+                setRemoteMembers((prev)=>[...prev, newRemoteMember]);
+            });
+
+            session.on(WebRTCStreamEvent.streamDestroyed, (event)=>{
+                
+                setRemoteMembers((prev)=>{
+                    for(let i=0; i<prev.length; ++i) {
+                        if(prev[i].stream === event.stream.streamManager) {
+                            prev.splice(i, 1);
+                            break;
+                        }
+                    }
+                    return [...prev];
+                });
+            });
+
+            session.on(WebRTCStreamEvent.exception, (exception)=>{
+            });
+        }
+    }, [session]);
+
+    useEffect(()=>{
+        if(publisher) {
+            setAudioState(sessionStorage.getItem("micControl")==="true");
+            setVideoState(sessionStorage.getItem("cameraControl")==="true");
+        }
+    }, [publisher]);
+
+    useEffect(()=>{
+        if(session && client) {
+            joinSession();
+        }
+    }, [session, client]);
+
+    const initSession = () => {
+        const openViduInstance = new OpenVidu();
+        openViduInstance.enableProdMode();
+        setSession(()=>openViduInstance.initSession());
     }
-  }, [publisher]);
 
     const joinSession = async () => {
         const openViduInstance = new OpenVidu();
@@ -93,41 +116,20 @@ export function useOpenVidu () {
             session.disconnect();
         }
     }
-  };
 
-  const leaveSession = () => {
-    if (session) {
-      setVideoState(false);
-      setAudioState(false);
-      session.disconnect();
+    const setVideoState = (isActive: boolean) => {
+        if(publisher){
+            publisher.publishVideo(isActive);
+            setPublisher(publisher);
+        }
     }
-  };
 
-  const setVideoState = (isActive: boolean) => {
-    if (publisher) {
-      publisher.publishVideo(isActive);
-      setPublisher(publisher);
+    const setAudioState = (isActive: boolean) => {
+        if(publisher) {
+            publisher.publishAudio(isActive);
+            setPublisher(publisher);
+        }
     }
-  };
 
-  const setAudioState = (isActive: boolean) => {
-    if (publisher) {
-      publisher.publishAudio(isActive);
-      setPublisher(publisher);
-    }
-  };
-
-  return [
-    {
-      client,
-      publisher,
-      remoteMembers,
-      handleChangeRoomId,
-      handleChangeClient,
-      joinSession,
-      leaveSession,
-      setVideoState,
-      setAudioState,
-    },
-  ];
-}
+    return [{ client, publisher, remoteMembers, handleChangeRoomId, handleChangeClient, joinSession, leaveSession, setVideoState, setAudioState }];
+};
