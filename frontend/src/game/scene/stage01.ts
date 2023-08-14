@@ -1,5 +1,4 @@
 import * as Phaser from "phaser";
-import io from "socket.io-client";
 import stage01 from "../assets/data/stage01.json";
 import background from "../assets/images/background.png";
 import terrain from "../assets/images/terrain.png";
@@ -22,7 +21,6 @@ import { Key } from "../object/key";
 import { Door } from "../object/door";
 
 import { STAGE_EVENT } from "../event";
-import { StringMappingType } from "typescript";
 import { PlayerData } from "../object/playerData";
 
 //====== wall setting ==============
@@ -38,8 +36,9 @@ export default class Stage01 extends Phaser.Scene {
     });
   }
   player!: Player;
+  socketId!: string;
   // otherPlayersData!: Map<string, PlayerData>;
-  otherPlayersGroup!: Phaser.Physics.Arcade.Group;
+  otherPlayers: { [id: string]: Player } = {};
   cannon!: Cannon;
   cannonBalls!: Phaser.Physics.Arcade.Group;
   shoot!: Phaser.Time.TimerEvent;
@@ -53,7 +52,6 @@ export default class Stage01 extends Phaser.Scene {
   mapHeight: number = 48;
   tileWidth: number = 16;
   tileHeight: number = 16;
-  socket = io("http://localhost:3050");
 
   preload(): void {
     this.load.tilemapTiledJSON("stage01", stage01);
@@ -113,16 +111,33 @@ export default class Stage01 extends Phaser.Scene {
     this.platformLayer = map.createLayer("platformLayer", ["terrain"]);
     // create player
     this.player = new Player(this, 370, 660, "idle");
-    this.socket.emit(STAGE_EVENT.CREATE_OTHER_PLAYERS, this.socket.id);
-    this.socket.on("createOtherPlayers", (playersInfo) => {
-      playersInfo.forEach((otherPlayer: Player, socketId: string) => {
-        this.otherPlayersGroup.add(
-          new Player(this, otherPlayer.x, otherPlayer.y, "idle", null, socketId)
-        );
-      });
 
-      this.socket.emit("playerCreated");
+    this.events.emit(STAGE_EVENT.CREATE_PLAYER, {
+      //id
+      x: this.player.x,
+      y: this.player.y,
     });
+
+    this.events.addListener(
+      STAGE_EVENT.CREATE_PLAYER_SUCCESS,
+      (playerData: any) => {
+        this.otherPlayers[playerData.socketId] = new Player(
+          this,
+          playerData.x,
+          playerData.y,
+          "idle",
+          null
+        );
+      }
+    );
+
+    this.events.addListener(
+      STAGE_EVENT.UPDATE_PLAYER_SUCCESS,
+      (playerData: any) => {
+        this.otherPlayers[playerData.socketId].setX = playerData.x;
+        this.otherPlayers[playerData.socketId].setX = playerData.y;
+      }
+    );
 
     // create cannon
     this.cannon = new Cannon(this, 1000, 660, "cannon");
@@ -132,14 +147,22 @@ export default class Stage01 extends Phaser.Scene {
     // create cannonBall
     this.cannonBalls = this.physics.add.group();
     // create key
-    this.key = new Key(this, 50, 660, "key", [this.platformLayer]).setScale(0.09);
+    this.key = new Key(this, 50, 660, "key", [this.platformLayer]).setScale(
+      0.09
+    );
     // create door
-    this.door = new Door(this, 700, 660, "doorIdle", [this.platformLayer]).setDepth(-1);
+    this.door = new Door(this, 700, 660, "doorIdle", [
+      this.platformLayer,
+    ]).setDepth(-1);
 
     this.shoot = this.time.addEvent({
       delay: 3000,
       callback: () => {
-        const cannonBall = this.physics.add.sprite(this.cannon.x, this.cannon.y, "cannonBall");
+        const cannonBall = this.physics.add.sprite(
+          this.cannon.x,
+          this.cannon.y,
+          "cannonBall"
+        );
         this.cannonBalls.add(cannonBall);
         cannonBall.body.allowGravity = false;
         cannonBall.setVelocityX(-1200);
@@ -181,10 +204,14 @@ export default class Stage01 extends Phaser.Scene {
     this.physics.add.collider(this.cannon, this.platformLayer!);
     this.physics.add.collider(this.walls, this.platformLayer!);
     this.physics.add.collider(this.walls, this.walls);
-    this.physics.add.collider(this.cannonBalls, this.walls, (cannonBall, wall) => {
-      cannonBall.destroy();
-      wall.destroy();
-    });
+    this.physics.add.collider(
+      this.cannonBalls,
+      this.walls,
+      (cannonBall, wall) => {
+        cannonBall.destroy();
+        wall.destroy();
+      }
+    );
 
     this.physics.add.overlap(this.door, this.player, () => {
       if (this.isKeyPicked) {
@@ -199,14 +226,10 @@ export default class Stage01 extends Phaser.Scene {
 
   update(): void {
     this.player.update();
-    this.socket.emit(STAGE_EVENT.UPDATE_PLYAER, {
-      socketId: this.socket.id,
+    this.events.emit(STAGE_EVENT.UPDATE_PLAYER, {
+      // socketId: this.socket.id,
       x: this.player.x,
       y: this.player.y,
-    });
-    this.socket.on(STAGE_EVENT.UPDATE_OTHER_PLAYERS, (otherPlayersData: any) => {
-      this.otherPlayersData.get(otherPlayersData.socketId)?.setX(otherPlayersData.x);
-      this.otherPlayersData.get(otherPlayersData.socketId)?.setY(otherPlayersData.y);
     });
 
     if (!this.isKeyPicked) {

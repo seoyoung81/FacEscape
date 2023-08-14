@@ -1,5 +1,4 @@
 import * as Phaser from "phaser";
-import * as Socket from "socket.io-client";
 import Button from "../components/Button";
 import ButtonBackGround from "../components/ButtonBackGround";
 
@@ -26,7 +25,6 @@ export class StageSelect extends Phaser.Scene {
       key: "StageSelect",
     });
   }
-  socket = Socket.io("http://localhost:3050");
   preload(): void {
     this.load.image("background", background);
     this.load.svg("stageBtn", stageBtn);
@@ -34,7 +32,7 @@ export class StageSelect extends Phaser.Scene {
     this.load.svg("lockBtn", lockBtn);
     this.load.json("stageButtons", stageButtons);
 
-    this.events.addListener(STAGE_EVENT.SELECT_SUCCES, (stage: string) => {
+    this.events.addListener(STAGE_EVENT.SELECT_SUCCESS, (stage: string) => {
       this.scene.start(stage);
     });
   }
@@ -47,14 +45,11 @@ export class StageSelect extends Phaser.Scene {
 
     this.input.manager.enabled = true;
     this.addStageButtons();
-
-    this.socket.on(STAGE_EVENT.SELECT_SUCCES, (sceneName) =>
-      this.game.events.emit(STAGE_EVENT.SELECT, sceneName)
-    );
   }
 
   addStageButtons(): void {
-    const stages: StageSelectButton[] = this.cache.json.get("stageButtons").stages;
+    const stages: StageSelectButton[] =
+      this.cache.json.get("stageButtons").stages;
     stages.forEach((stage) => {
       if (stage.hasInteract) {
         this.add.existing(this.makeInteractButton(stage));
@@ -72,8 +67,7 @@ export class StageSelect extends Phaser.Scene {
 
     button
       .setOnClick(() => {
-        // this.game.events.emit(STAGE_EVENT.SELECT, stage.sceneName);
-        this.socket.emit(STAGE_EVENT.SELECT, stage.sceneName);
+        this.game.events.emit(STAGE_EVENT.SELECT, stage.sceneName);
       })
       .setOnPointerOver("focusBtn", "white")
       .setOnPointOut("stageBtn", "#DB7500");
@@ -81,7 +75,14 @@ export class StageSelect extends Phaser.Scene {
   }
 
   makeLockButtonBackGround(stage: any): ButtonBackGround {
-    const button = new ButtonBackGround(this, stage.x, stage.y, stage.texture, 0xffffff, false);
+    const button = new ButtonBackGround(
+      this,
+      stage.x,
+      stage.y,
+      stage.texture,
+      0xffffff,
+      false
+    );
     return button;
   }
 }
