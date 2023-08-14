@@ -7,9 +7,10 @@ import { authInstance } from '../../../services/api';
 interface UserProps {
     nickName: string | null,
     onEditModal: () => void;
+    setNickName: any;
 }
 
-const EditModal: React.FC<UserProps> = ({ nickName, onEditModal }) => {
+const EditModal: React.FC<UserProps> = ({ nickName, onEditModal, setNickName  }) => {
     const [nickname, setNewNickName] = useState<string>(nickName || '');
     const [password, setNewPassword] = useState<string>("");
   
@@ -52,7 +53,9 @@ const EditModal: React.FC<UserProps> = ({ nickName, onEditModal }) => {
                     ...(nickname ? {nickname} : {}),
                     ...(password ? { password } : {})
                 }
-                )
+                ).then(() => {
+                    setNickName(nickname);
+                })
                 
             Swal.fire({
                 title: '회원정보수정이 완료되었습니다.',
@@ -102,7 +105,7 @@ const EditModal: React.FC<UserProps> = ({ nickName, onEditModal }) => {
                     </button>
                 </div>
                 <div className={styles['resign-container']}>
-                    <UserResignation />
+                    <UserResignation  />
                 </div>
             </div> 
         </div>
