@@ -75,7 +75,7 @@ const GamePage = () => {
       );
 
       game.events.addListener("getClearTime", (playerID: number, stageNumber: number) => {
-        //if (useSocket.roomInfo?.hostID === playerID) {
+        //if (useSocket.roomInfo?.hostId === playerID) {
           useSocket.emitGameEvent("getClearTime", {
             roomId: useSocket.roomId,
             stageNumber: stageNumber
@@ -97,11 +97,7 @@ const GamePage = () => {
           const seconds = String(now.getSeconds()).padStart(2, '0');
       
           const clearDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-        console.log(startTime);
-        console.log(now.getTime());
-        console.log(now.getTime() - startTime);
           const clearTime = Math.floor((now.getTime() - startTime) / 1000);
-          console.log(clearTime);
           
           await defaultInstance.post(
             '/game-record',
