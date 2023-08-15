@@ -1,18 +1,20 @@
 import styles from './UserItem.module.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { setMyItemType } from '../../../store/myItemCategorySlice';
-
 
 
 const MyItemCategory: React.FC = () => {
     const [selectedValue, setSelectedValue] = useState<string>('말풍선');
     const dispatch = useDispatch();
-    dispatch(setMyItemType(selectedValue));
 
     const handleRadioChange = (event: any) => {
         setSelectedValue(event.target.value);
     };
+
+    useEffect(() => {
+        dispatch(setMyItemType(selectedValue));
+    }, [selectedValue, dispatch]);
 
     return (
         <div>

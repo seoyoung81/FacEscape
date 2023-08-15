@@ -10,6 +10,7 @@
     font-size: 48px;
     letter-spacing: 4.8px;
     white-space: nowrap;
+    display: flex;
 }
 
 .waitroom {

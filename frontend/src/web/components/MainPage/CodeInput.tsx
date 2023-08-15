@@ -1,4 +1,5 @@
 import { useState, useEffect,ChangeEvent } from 'react';
+import Swal from 'sweetalert2';
 import styles from './MainPageComponent.module.css';
 import {useSocketRooms} from '../../../common/socket'
 
@@ -17,7 +18,12 @@ const CodeInput :React.FC = () => {
             joinRoom(codeInput, token);
         }
         else{
-            alert("입장 코드를 입력해주세요!");
+            Swal.fire({
+                title: "입장 코드를 입력해주세요!",
+                confirmButtonColor: '#3479AD',
+                confirmButtonText: '확인',
+                width: '500px'
+            })
         }
     }
 

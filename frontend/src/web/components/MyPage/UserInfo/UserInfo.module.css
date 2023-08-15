@@ -18,7 +18,7 @@
 }
 
 .email {
-    font-size: 24px;
+    font-size: 18px;
     font-family: 'MyFont';
     letter-spacing: 2.4px;
     margin-top: 37px;
@@ -110,4 +110,8 @@
 
 .resign-message:hover {
     color: #DB7500;
+}
+
+.user-icon {
+    margin-top: -5px;
 }

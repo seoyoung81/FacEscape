@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage'; 
-
+import storageSession from 'redux-persist/lib/storage/session';
 export interface IsLogInTypeState {
   isLogIn: boolean;
 }
@@ -12,7 +11,7 @@ const initialState :IsLogInTypeState = {
 
 const persisConfig = {
   key: 'root',
-  storage,
+  storage: storageSession,
   whitelist: ['isLogIn'],
 }
 
