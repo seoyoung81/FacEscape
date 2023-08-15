@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberInfoForRecordDTO {
-	private Integer memberId;
+	private Integer id;
 	private String nickname;
 }
