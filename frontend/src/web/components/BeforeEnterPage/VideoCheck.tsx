@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import styles from './BeforeEnter.module.css';
-import Swal from 'sweetalert2';
+import snapShot from '../VideoEffect/snapShot';
 
 type VideoCheckProps = {
   videoIsActive: boolean,
   audioIsActive: boolean,
 }
+
 
 const VideoCheck = ({ videoIsActive, audioIsActive }: VideoCheckProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -14,6 +15,7 @@ const VideoCheck = ({ videoIsActive, audioIsActive }: VideoCheckProps) => {
   const [videoStream, setVideoStream] = useState<MediaStreamTrack|null>();
   const [audioStream, setAudioStream] = useState<MediaStreamTrack|null>();
 
+  // 화면
   const getVideoStream = async () => {
     try {
       if (videoRef.current) {
@@ -32,6 +34,7 @@ const VideoCheck = ({ videoIsActive, audioIsActive }: VideoCheckProps) => {
     }
   };
 
+  // 음성
   const getAudioStream = async () => {
     try {
       if (audioRef.current) {
@@ -74,44 +77,9 @@ const VideoCheck = ({ videoIsActive, audioIsActive }: VideoCheckProps) => {
 
   // 화면 캡쳐
   const [imageUrl, setImageUrl] = useState<string>("");
-  const handleDownload = () => {
-    if (!videoRef.current) return;
+  const handleDownload = snapShot(videoRef, setImageUrl);
+  snapShot(videoRef, setImageUrl);
 
-    const video = videoRef.current;
-    const x = 210; 
-    const y = 110; 
-    const width = 230; 
-    const height = 290; 
-
-    const canvas = document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
-    const ctx = canvas.getContext("2d");
-
-    if (ctx) {
-      ctx.drawImage(video, x, y, width, height, 0, 0, width, height);
-      canvas.toBlob((blob) => {
-        if (blob !== null) {
-          setImageUrl(URL.createObjectURL(blob));
-          Swal.fire({
-            title: '사진을 사용하시겠습니까?',
-            showCancelButton: true,
-            confirmButtonColor: '#3479AD',
-            cancelButtonColor: '#DB7500',
-            confirmButtonText: '확인',
-            cancelButtonText: '다시찍기',
-            html: `<img src="${imageUrl}" alt="" style="width: 100%; max-height: 250px; object-fit: contain;">`
-        }).then(result => {
-            if (result.isConfirmed) {
-              // 사진 url 넘기기
-              console.log(imageUrl); // 이미지 URL 출력
-            }
-          
-        })
-        }
-      });
-    }
-  };
   return (
     <div>
         <div className={styles['video-check']}>
@@ -120,7 +88,7 @@ const VideoCheck = ({ videoIsActive, audioIsActive }: VideoCheckProps) => {
             <div className={styles.overlay}>
                 <div className={styles.face} ></div>
                 <p className={styles.alert}>원 안에 얼굴을 맞춰주세요
-                  <button onClick={handleDownload}>다운로드</button>
+                  <button onClick={handleDownload} className={styles['capture-btn']}>사진찍기</button>
                 </p>
             </div>
         </div>
