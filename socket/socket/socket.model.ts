@@ -1,4 +1,5 @@
 import { Server } from "socket.io";
+
 import { ConnectEvent, JoinEvent, ExitEvent, MemberActionEvent, GameActionEvent, GameResponseEvent, MemberResponseEvent } from "../socket/utils/eventType";
 import { createRoomEventHandler, joinRoomEventHandler, exitEventHandler, memberChatEventHandler, memberNickNameEventHandler, gameStartEventhandler } from "./utils/roomSocketEventHandler"
 import { GameEventType } from "../game/utils/gameEventTypes"
@@ -53,6 +54,14 @@ const socketMapper = (httpServer: any) => {
           }
           io.to(data.roomId).emit(GameEventType.stageSelectSucess, data.stageName);
         })
+
+        socket.on(GameEventType.createPlayer, (data: any) => {
+      CreatePlayerHandler(socket, data);
+    });
+
+    socket.on(GameEventType.updatePlayer, (data: any) => {
+      UpdatePlayerHandler(socket, data);
+    });
       
         socket.on("getClearTime", (data: any) => {
           const room = roomManager.getRoom(data.roomId);
