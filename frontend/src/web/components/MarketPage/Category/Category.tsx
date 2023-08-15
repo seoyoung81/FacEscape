@@ -33,17 +33,6 @@ const Category: React.FC = () => {
                     </label>
                 <label className={styles["radio-button"]}>
                     <input 
-                        value="말풍선" 
-                        name="option" 
-                        type="radio" 
-                        checked={selectedOption === '말풍선'}
-                        onChange={handleOptionChange}
-                    />
-                    <div className={styles['radio-circle']}></div>
-                    <span className={styles['radio-label']}>말풍선</span>
-                </label>
-                <label className={styles["radio-button"]}>
-                    <input 
                         value="아이콘" 
                         name="option" 
                         type="radio" 
@@ -52,6 +41,17 @@ const Category: React.FC = () => {
                     />
                     <div className={styles['radio-circle']}></div>
                     <span className={styles['radio-label']}>아이콘</span>
+                </label>
+                <label className={styles["radio-button"]}>
+                    <input 
+                        value="말풍선" 
+                        name="option" 
+                        type="radio" 
+                        checked={selectedOption === '말풍선'}
+                        onChange={handleOptionChange}
+                    />
+                    <div className={styles['radio-circle']}></div>
+                    <span className={styles['radio-label']}>말풍선</span>
                 </label>
                 <label className={styles["radio-button"]}>
                     <input 

@@ -5,7 +5,7 @@ import { setMyItemType } from '../../../store/myItemCategorySlice';
 
 
 const MyItemCategory: React.FC = () => {
-    const [selectedValue, setSelectedValue] = useState<string>('말풍선');
+    const [selectedValue, setSelectedValue] = useState<string>('아이콘');
     const dispatch = useDispatch();
 
     const handleRadioChange = (event: any) => {
@@ -24,22 +24,22 @@ const MyItemCategory: React.FC = () => {
                         type="radio" 
                         id="value-1" 
                         name="value-radio" 
-                        value="말풍선" 
-                        checked={selectedValue === "말풍선"}
+                        value="아이콘" 
+                        checked={selectedValue === "아이콘"}
                         onChange={handleRadioChange} 
                     />
-                    <span>말풍선</span>
+                    <span>아이콘</span>
                 </label>
                 <label>
                     <input 
                         type="radio" 
                         id="value-2" 
                         name="value-radio" 
-                        value="아이콘" 
-                        checked={selectedValue === "아이콘"}
+                        value="말풍선" 
+                        checked={selectedValue === "말풍선"}
                         onChange={handleRadioChange} 
                     />
-                    <span>아이콘</span>
+                    <span>말풍선</span>
                 </label>
                 <label>
                     <input 

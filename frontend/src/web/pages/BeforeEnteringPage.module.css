@@ -23,3 +23,11 @@
     display: flex;
     gap: 63px;
 }
+
+.top-container {
+    display: flex;
+}
+
+.inventory {
+    margin-left: 380px;
+}
