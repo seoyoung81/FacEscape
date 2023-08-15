@@ -11,8 +11,9 @@ const MyMilage :React.FC = () => {
 
             try {
                 const response = await authInstance.get('/member');
-                    setMyMileage(response.data.mileage);
+                setMyMileage(response.data.mileage);
             } catch (error) {
+                setMyMileage(0);
                 console.log('mileage Error', error)
             }
         };

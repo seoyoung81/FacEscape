@@ -9,20 +9,10 @@ import { RootState } from '../../../store/store';
 
 const MyItemList: React.FC = () => {
     const [itemList, setItemList] = useState<any[]>([]);
-    const [checkedItemId, setCheckedItemId] = useState<{ [key: string]: string | null }>({});
+    const [clickedItemId, setClickedItemId] = useState<string | null>(null);
     const navigate = useNavigate();
     const myCategory = useSelector((state: RootState ) => state.setMyItemType.itemType);
     
-
-    // 카테고리별로 선택하기
-    const handleEquipItem = (itemId: string) => {
-        setCheckedItemId(prevState => ({
-            ...prevState,
-            [myCategory]: itemId === prevState[myCategory] ? null : itemId
-        }));
-    };
-
-
     // 상점으로 이동하기
     const goMarket = () => {
         navigate('/market');
@@ -39,6 +29,7 @@ const MyItemList: React.FC = () => {
                         }
                     }
                 ); 
+                
                 if (data && data.items.length >= 0) {
                     setItemList(data.items);
                 } 
@@ -49,20 +40,14 @@ const MyItemList: React.FC = () => {
         };
 
         fetchItemList();
-    }, [myCategory]);
+    }, [myCategory, clickedItemId]);
+
     
     return (
+        <div>
+
         <div className={styles['myitem-wrap']}>
-            <div>
-                {itemList.length === 0 ? (
-                    <div className={styles['go-market']}>
-                        <button onClick={goMarket}>아이템 구매하러 가기</button>
-                    </div>
-                    ) : (
-                        null
-                    )
-                }
-            </div>
+            
             {itemList ? (
                 itemList.map(item => (
                     <MyItem
@@ -70,23 +55,20 @@ const MyItemList: React.FC = () => {
                         itemId={item.itemId}
                         itemName={item.name}
                         itemImg={item.image}
-                        checked={checkedItemId[myCategory] === item.itemId}
-                        onEquip={handleEquipItem}
+                        myCategory={myCategory}
                     />
                 
                 ))
             ) : (
-                <div className={styles['loader']}>
-                <div className={styles['loader']}></div>
-                <div className={styles['loader']}></div>
-                <div className={styles['loader']}></div>
-                <div className={styles['loader']}></div> 
-                <div className={styles['loader']}></div> 
-                <div className={styles['loader']}></div>
-                <div className={styles['loader']}></div>
+              
+                <div className={styles['go-market']}>
+                    <button onClick={goMarket}>아이템 구매하러 가기</button>
                 </div>
+                    
+               
             )}
           
+        </div>
         </div>
     )
 };
