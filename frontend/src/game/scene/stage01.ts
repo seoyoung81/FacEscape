@@ -85,13 +85,37 @@ export default class Stage01 extends Phaser.Scene {
       frameHeight: 56,
     });
 
-    this.events.addListener(
-      STAGE_EVENT.SET_PLAYER_ID_SUCCESS,
-      (data: any) => (this.playerId = data.id)
-    );
+    this.events.addListener(STAGE_EVENT.SET_PLAYER_ID_SUCCESS, (data: any) => {
+      this.playerId = data.id;
+      console.log(this.playerId);
+    });
 
     this.game.events.emit(STAGE_EVENT.SET_PLAYER_ID, this.scene.key);
     console.log(`current playerId: ${this.playerId}`);
+
+    this.events.addListener(STAGE_EVENT.CREATE_PLAYER_SUCCESS, (playerData: any) => {
+      if (playerData.id !== this.playerId) {
+        if (!this.otherPlayers.has(playerData.id)) {
+          const newPlayer = new Player(this, playerData.x, playerData.y, "idle", ["platformLayer"]);
+          this.otherPlayers.set(playerData.id, newPlayer);
+
+          this.physics.add.collider(newPlayer, this.player);
+          this.physics.add.collider(newPlayer, this.platformLayer!);
+        } else {
+          // 이미 생성된 플레이어인 경우 위치 업데이트
+          const existingPlayer = this.otherPlayers.get(playerData.id);
+          existingPlayer?.setPosition(playerData.x, playerData.y);
+        }
+      }
+    });
+
+    this.events.addListener(STAGE_EVENT.UPDATE_PLAYER_SUCCESS, (playerData: any) => {
+      console.log(`UPDATE: ${playerData.id}`);
+      if (playerData.id !== this.playerId) {
+        this.otherPlayers.get(playerData.id)!.setX = playerData.x;
+        this.otherPlayers.get(playerData.id)!.setY = playerData.y;
+      }
+    });
   }
 
   create(): void {
@@ -117,23 +141,6 @@ export default class Stage01 extends Phaser.Scene {
     this.platformLayer = map.createLayer("platformLayer", ["terrain"]);
     // create player
     this.player = new Player(this, this.playerId * 5 + 330, 660, "idle");
-
-    this.events.addListener(STAGE_EVENT.CREATE_PLAYER_SUCCESS, (playerData: any) => {
-      if (this.playerId !== playerData.id) {
-        this.otherPlayers.set(
-          playerData.id,
-          new Player(this, playerData.id * 90 + 300, playerData.y, "idle", ["platformLayer"])
-        );
-        this.physics.add.collider(this.otherPlayers.get(playerData.id)!, this.player);
-        this.physics.add.collider(this.otherPlayers.get(playerData.id)!, this.platformLayer!);
-      }
-    });
-
-    this.events.addListener(STAGE_EVENT.UPDATE_PLAYER_SUCCESS, (playerData: any) => {
-      // console.log(`UPDATE: ${playerData.id}`);
-      this.otherPlayers.get(playerData.id)!.setX = playerData.x;
-      this.otherPlayers.get(playerData.id)!.setY = playerData.y;
-    });
 
     this.events.addListener(STAGE_EVENT.OPEN_DOOR, () => {
       this.door.play("doorOpenAnims");
@@ -210,7 +217,6 @@ export default class Stage01 extends Phaser.Scene {
     this.input.keyboard?.on("keydown-R", () => {
       this.scene.restart();
     });
-    console.log(`players count:${this.otherPlayers.size}`);
   }
 
   update(): void {
@@ -220,6 +226,9 @@ export default class Stage01 extends Phaser.Scene {
       x: this.player.x,
       y: this.player.y,
       sceneKey: this.scene.key,
+    });
+    this.otherPlayers.forEach(function (value, key) {
+      console.log(key);
     });
 
     if (!this.isKeyPicked) {

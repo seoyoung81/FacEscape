@@ -27,8 +27,8 @@ const GamePage = () => {
   useEffect(() => {
     if (game && useSocket.socket && useSocket.client) {
       // event 중복 등록 방지
-      game.events.removeAllListeners();
-      useSocket.socket.removeAllListeners();
+      // game.events.removeAllListeners();
+      // useSocket.socket.removeAllListeners();
 
       // 이미 event가 등록되어 있는지 확인 후 event 등록
       if (!game.events.listeners(STAGE_EVENT.SET_PLAYER_ID).length) {
@@ -45,7 +45,7 @@ const GamePage = () => {
         game.events.addListener(STAGE_EVENT.SELECT, (stageName: string) => {
           useSocket.emitGameEvent(STAGE_EVENT.SELECT, {
             roomId: useSocket.roomId,
-            id: openVidu.client?.id,
+            id: useSocket.client?.id,
             stageName: stageName,
           });
         });
@@ -78,7 +78,8 @@ const GamePage = () => {
 
       if (!game.events.listeners(STAGE_EVENT.UPDATE_PLAYER).length) {
         game.events.addListener(STAGE_EVENT.UPDATE_PLAYER, (playerData: any) => {
-          useSocket.emitGameEvent(STAGE_EVENT.UPDATE_PLAYER_SUCCESS, {
+          console.log("update player listener 등록");
+          useSocket.emitGameEvent(STAGE_EVENT.UPDATE_PLAYER, {
             roomId: useSocket.roomId,
             id: playerData.id,
             x: playerData.x,
