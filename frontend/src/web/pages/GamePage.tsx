@@ -6,6 +6,7 @@ import { STAGE_EVENT } from "../../game/event";
 
 import Phaser from "phaser";
 import Swal from "sweetalert2";
+import { defaultInstance } from "../services/api";
 
 const GamePage = () => {
   const [roomId] = useState<string>(
@@ -72,6 +73,57 @@ const GamePage = () => {
           game.events.emit(STAGE_EVENT.UPDATE_PLAYER_SUCCESS, playerData);
         }
       );
+
+      game.events.addListener("getClearTime", (playerID: number, stageNumber: number) => {
+        //if (useSocket.roomInfo?.hostID === playerID) {
+          useSocket.emitGameEvent("getClearTime", {
+            roomId: useSocket.roomId,
+            stageNumber: stageNumber
+          });
+        //}
+      });
+
+      useSocket.socket.on("returnClearTime", (startTime: number, stageNumber: number) => {
+        game.events.emit("stageClear", startTime, stageNumber);
+      });
+
+      game.events.addListener("stageClear", async (startTime: number, stageNumber: number) => {
+          const now = new Date();
+          const year = now.getFullYear();
+          const month = String(now.getMonth() + 1).padStart(2, '0');
+          const day = String(now.getDate()).padStart(2, '0');
+          const hours = String(now.getHours()).padStart(2, '0');
+          const minutes = String(now.getMinutes()).padStart(2, '0');
+          const seconds = String(now.getSeconds()).padStart(2, '0');
+      
+          const clearDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        console.log(startTime);
+        console.log(now.getTime());
+        console.log(now.getTime() - startTime);
+          const clearTime = Math.floor((now.getTime() - startTime) / 1000);
+          console.log(clearTime);
+          
+          await defaultInstance.post(
+            '/game-record',
+            {
+              members: useSocket.roomInfo?.members,
+              clearDate: clearDate,
+              clearTime: clearTime,
+              stage: stageNumber
+            }
+          )
+          useSocket.emitGameEvent("stageClear", {
+            roomId: useSocket.roomId,
+            stageNumber: stageNumber
+          });
+        }
+      );
+
+      useSocket.socket.on("stageClearSuccess", (stageNumber: number) => {
+        console.log(stageNumber);
+        const selectScene = game.scene.scenes[stageNumber];
+        selectScene.events.emit("stageClearSuccess");
+      });
     }
   }, [game, useSocket.socket, useSocket.client]);
 
