@@ -49,7 +49,7 @@ export default class Stage03 extends Phaser.Scene {
   prevPlayerY: number = 0;
 
   mapWidth: number = 300;
-  mapHeight: number = 47;
+  mapHeight: number = 48;
   tileWidth: number = 16;
   tileHeight: number = 16;
 
