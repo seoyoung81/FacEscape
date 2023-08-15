@@ -36,8 +36,7 @@ export default class Stage01 extends Phaser.Scene {
   }
   player!: Player;
   playerId!: number;
-  // otherPlayersData!: Map<string, PlayerData>;
-  otherPlayers: { [id: number]: Player } = {};
+  otherPlayers: Map<number, Player> = new Map<number, Player>();
   cannon!: Cannon;
   cannonBalls!: Phaser.Physics.Arcade.Group;
   shoot!: Phaser.Time.TimerEvent;
@@ -86,33 +85,13 @@ export default class Stage01 extends Phaser.Scene {
       frameHeight: 56,
     });
 
-    this.events.emit(STAGE_EVENT.SET_PLAYER_ID);
-
     this.events.addListener(
       STAGE_EVENT.SET_PLAYER_ID_SUCCESS,
-      (id: number) => (this.playerId = id)
+      (data: any) => (this.playerId = data.id)
     );
 
-    this.events.addListener(
-      STAGE_EVENT.CREATE_PLAYER_SUCCESS,
-      (playerData: any) => {
-        this.otherPlayers[playerData.id] = new Player(
-          this,
-          playerData.x,
-          playerData.y,
-          "idle",
-          null
-        );
-      }
-    );
-
-    this.events.addListener(
-      STAGE_EVENT.UPDATE_PLAYER_SUCCESS,
-      (playerData: any) => {
-        this.otherPlayers[playerData.id].setX = playerData.x;
-        this.otherPlayers[playerData.id].setY = playerData.y;
-      }
-    );
+    this.game.events.emit(STAGE_EVENT.SET_PLAYER_ID, this.scene.key);
+    console.log(`current playerId: ${this.playerId}`);
   }
 
   create(): void {
@@ -137,12 +116,36 @@ export default class Stage01 extends Phaser.Scene {
     // create layer
     this.platformLayer = map.createLayer("platformLayer", ["terrain"]);
     // create player
-    this.player = new Player(this, 370, 660, "idle");
+    this.player = new Player(this, this.playerId * 5 + 330, 660, "idle");
 
-    this.events.emit(STAGE_EVENT.CREATE_PLAYER, {
+    this.events.addListener(STAGE_EVENT.CREATE_PLAYER_SUCCESS, (playerData: any) => {
+      if (this.playerId !== playerData.id) {
+        this.otherPlayers.set(
+          playerData.id,
+          new Player(this, playerData.id * 90 + 300, playerData.y, "idle", ["platformLayer"])
+        );
+        this.physics.add.collider(this.otherPlayers.get(playerData.id)!, this.player);
+        this.physics.add.collider(this.otherPlayers.get(playerData.id)!, this.platformLayer!);
+      }
+    });
+
+    this.events.addListener(STAGE_EVENT.UPDATE_PLAYER_SUCCESS, (playerData: any) => {
+      // console.log(`UPDATE: ${playerData.id}`);
+      this.otherPlayers.get(playerData.id)!.setX = playerData.x;
+      this.otherPlayers.get(playerData.id)!.setY = playerData.y;
+    });
+
+    this.events.addListener(STAGE_EVENT.OPEN_DOOR, () => {
+      this.door.play("doorOpenAnims");
+      this.shoot.destroy();
+      this.isKeyPicked = true;
+    });
+
+    this.game.events.emit(STAGE_EVENT.CREATE_PLAYER, {
       id: this.playerId,
       x: this.player.x,
       y: this.player.y,
+      sceneKey: this.scene.key,
     });
 
     // create cannon
@@ -153,22 +156,14 @@ export default class Stage01 extends Phaser.Scene {
     // create cannonBall
     this.cannonBalls = this.physics.add.group();
     // create key
-    this.key = new Key(this, 50, 660, "key", [this.platformLayer]).setScale(
-      0.09
-    );
+    this.key = new Key(this, 50, 660, "key", [this.platformLayer]).setScale(0.09);
     // create door
-    this.door = new Door(this, 700, 660, "doorIdle", [
-      this.platformLayer,
-    ]).setDepth(-1);
+    this.door = new Door(this, 700, 660, "doorIdle", [this.platformLayer]).setDepth(-1);
 
     this.shoot = this.time.addEvent({
       delay: 3000,
       callback: () => {
-        const cannonBall = this.physics.add.sprite(
-          this.cannon.x,
-          this.cannon.y,
-          "cannonBall"
-        );
+        const cannonBall = this.physics.add.sprite(this.cannon.x, this.cannon.y, "cannonBall");
         this.cannonBalls.add(cannonBall);
         cannonBall.body.allowGravity = false;
         cannonBall.setVelocityX(-1200);
@@ -181,10 +176,6 @@ export default class Stage01 extends Phaser.Scene {
       loop: true,
     });
 
-    this.physics.add.collider(this.key, this.player, () => {
-      this.isKeyPicked = true;
-    });
-
     // key, player collider
     this.events.on("postupdate", () => {
       if (this.isKeyPicked) {
@@ -193,31 +184,22 @@ export default class Stage01 extends Phaser.Scene {
       }
     });
 
-    this.events.once(
-      "doorOpenEvent",
-      () => {
-        if (this.isKeyPicked) {
-          this.door.play("doorOpenAnims");
-          this.shoot.destroy();
-        }
-      },
-      this
-    );
-
     // colliders
     this.physics.add.collider(this.player, this.platformLayer!);
     this.physics.add.collider(this.player, this.cannon);
     this.physics.add.collider(this.cannon, this.platformLayer!);
     this.physics.add.collider(this.walls, this.platformLayer!);
     this.physics.add.collider(this.walls, this.walls);
-    this.physics.add.collider(
-      this.cannonBalls,
-      this.walls,
-      (cannonBall, wall) => {
-        cannonBall.destroy();
-        wall.destroy();
-      }
-    );
+    this.physics.add.collider(this.cannonBalls, this.walls, (cannonBall, wall) => {
+      cannonBall.destroy();
+      wall.destroy();
+    });
+
+    this.physics.add.collider(this.player, this.key, () => {
+      this.isKeyPicked = true;
+      this.game.events.emit(STAGE_EVENT.PICKED_KEY, this.scene.key);
+      this.cannon.setTexture("cannon");
+    });
 
     this.physics.add.overlap(this.door, this.player, () => {
       if (this.isKeyPicked) {
@@ -228,14 +210,16 @@ export default class Stage01 extends Phaser.Scene {
     this.input.keyboard?.on("keydown-R", () => {
       this.scene.restart();
     });
+    console.log(`players count:${this.otherPlayers.size}`);
   }
 
   update(): void {
     this.player.update();
-    this.events.emit(STAGE_EVENT.UPDATE_PLAYER, {
+    this.game.events.emit(STAGE_EVENT.UPDATE_PLAYER, {
       id: this.playerId,
       x: this.player.x,
       y: this.player.y,
+      sceneKey: this.scene.key,
     });
 
     if (!this.isKeyPicked) {
@@ -249,11 +233,6 @@ export default class Stage01 extends Phaser.Scene {
         this.cannonBalls.killAndHide(cannonBall);
       }
     });
-
-    if (this.isKeyPicked) {
-      this.events.emit("doorOpenEvent");
-      this.cannon.setTexture("cannon");
-    }
   }
 
   addWall() {
