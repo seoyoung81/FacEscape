@@ -9,16 +9,14 @@ import Swal from "sweetalert2";
 import { defaultInstance } from "../services/api";
 
 const GamePage = () => {
-  const [roomId] = useState<string>(
-    new URLSearchParams(window.location.search).get("rid") || ""
-  );
+  const [roomId] = useState<string>(new URLSearchParams(window.location.search).get("rid") || "");
   const [useSocket] = useSocketRooms();
   const [openVidu] = useOpenVidu();
   const [connectionFlag, setConntectionFlag] = useState<boolean>(false);
   const [game, setGame] = useState<Phaser.Game>();
-  
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const token = sessionStorage.getItem("accessToken")||"";
+  const token = sessionStorage.getItem("accessToken") || "";
 
   useEffect(() => {
     if (canvasRef.current && useSocket.socket) {
@@ -29,44 +27,90 @@ const GamePage = () => {
 
   useEffect(() => {
     if (game && useSocket.socket && useSocket.client) {
-      game.events.removeListener(STAGE_EVENT.SELECT);
-      useSocket.socket.removeListener(STAGE_EVENT.SELECT_SUCCESS);
+      // event 중복 등록 방지
+      game.events.removeAllListeners();
+      useSocket.socket.removeAllListeners();
 
-      game.events.addListener(STAGE_EVENT.SET_PLAYER_ID, () => {
-        game.events.emit(
-          STAGE_EVENT.SET_PLAYER_ID_SUCCESS,
-          openVidu.client?.id
-        );
-      });
-
-      game.events.addListener(STAGE_EVENT.SELECT, (stageName: string) => {
-        useSocket.emitGameEvent(STAGE_EVENT.SELECT, {
-          roomId: useSocket.roomId,
-          id: openVidu.client?.id,
-          stageName: stageName,
+      // 이미 event가 등록되어 있는지 확인 후 event 등록
+      if (!game.events.listeners(STAGE_EVENT.SET_PLAYER_ID).length) {
+        game.events.addListener(STAGE_EVENT.SET_PLAYER_ID, (sceneKey: string) => {
+          console.log(`set player id: ${useSocket.client?.id}`);
+          const selectedScene = game.scene.getScene(sceneKey);
+          selectedScene.events.emit(STAGE_EVENT.SET_PLAYER_ID_SUCCESS, {
+            id: useSocket.client?.id,
+          });
         });
-      });
+      }
 
-      useSocket.socket.on(STAGE_EVENT.SELECT_SUCCESS, (data: any) => {
+      if (!game.events.listeners(STAGE_EVENT.SELECT).length) {
+        game.events.addListener(STAGE_EVENT.SELECT, (stageName: string) => {
+          useSocket.emitGameEvent(STAGE_EVENT.SELECT, {
+            roomId: useSocket.roomId,
+            id: useSocket.client?.id,
+            stageName: stageName,
+          });
+        });
+      }
+
+      useSocket.socket.on(STAGE_EVENT.SELECT_SUCCESS, (sceneKey: any) => {
         const selectScene = game.scene.scenes[0];
-        selectScene.events.emit(STAGE_EVENT.SELECT_SUCCESS, data);
+        selectScene.events.emit(STAGE_EVENT.SELECT_SUCCESS, sceneKey);
       });
 
-      game.events.addListener(STAGE_EVENT.CREATE_PLAYER, (playerData: any) => {
-        useSocket.emitGameEvent(STAGE_EVENT.CREATE_PLAYER, { playerData });
+      if (!game.events.listeners(STAGE_EVENT.CREATE_PLAYER).length) {
+        game.events.addListener(STAGE_EVENT.CREATE_PLAYER, (playerData: any) => {
+          console.log(`creating player: ${playerData.id}`);
+          useSocket.emitGameEvent(STAGE_EVENT.CREATE_PLAYER, {
+            roomId: useSocket.roomId,
+            id: playerData.id,
+            x: playerData.x,
+            y: playerData.y,
+            sceneKey: playerData.sceneKey,
+          });
+        });
+      }
+
+      useSocket.socket.on(STAGE_EVENT.CREATE_PLAYER_SUCCESS, (playerData: any) => {
+        console.log(`player create success:${playerData.id}`);
+        game.scene
+          .getScene(playerData.sceneKey)
+          .events.emit(STAGE_EVENT.CREATE_PLAYER_SUCCESS, playerData);
       });
 
-      useSocket.socket.on(
-        STAGE_EVENT.CREATE_PLAYER_SUCCESS,
-        (playerData: any) => {
-          game.events.emit(STAGE_EVENT.CREATE_PLAYER_SUCCESS, playerData);
-        }
-      );
+      if (!game.events.listeners(STAGE_EVENT.UPDATE_PLAYER).length) {
+        game.events.addListener(STAGE_EVENT.UPDATE_PLAYER, (playerData: any) => {
+          console.log("update player listener 등록");
+          useSocket.emitGameEvent(STAGE_EVENT.UPDATE_PLAYER, {
+            roomId: useSocket.roomId,
+            id: playerData.id,
+            x: playerData.x,
+            y: playerData.y,
+            sceneKey: playerData.sceneKey,
+          });
+        });
+      }
 
-      game.events.addListener(STAGE_EVENT.UPDATE_PLAYER, (playerData: any) => {
-        useSocket.emitGameEvent(STAGE_EVENT.UPDATE_PLAYER, playerData);
+      useSocket.socket.on(STAGE_EVENT.UPDATE_PLAYER_SUCCESS, (playerData: any) => {
+        game.scene
+          .getScene(playerData.sceneKey)
+          .events.emit(STAGE_EVENT.UPDATE_PLAYER_SUCCESS, playerData);
       });
 
+      if (!game.events.listeners(STAGE_EVENT.PICKED_KEY).length) {
+        game.events.addListener(STAGE_EVENT.PICKED_KEY, (sceneKey: string) => {
+          console.log(`key picked in gamepage`);
+          useSocket.emitGameEvent(STAGE_EVENT.OPEN_DOOR, {
+            roomId: useSocket.roomId,
+            id: openVidu.client?.id,
+            sceneKey: sceneKey,
+          });
+          console.log(`emitted key pick up event`);
+        });
+      }
+
+      useSocket.socket.on(STAGE_EVENT.OPEN_DOOR, (data: any) => {
+        console.log(`open door event`);
+        game.scene.getScene(data.sceneKey).events.emit(STAGE_EVENT.OPEN_DOOR);
       useSocket.socket.on(
         STAGE_EVENT.UPDATE_PLAYER_SUCCESS,
         (playerData: any) => {
@@ -134,11 +178,11 @@ const GamePage = () => {
       });
     }
   }, []);
-  
-  useEffect(()=>{
-      if(connectionFlag) {
-          useSocket.joinRoom(roomId, token);
-      }
+
+  useEffect(() => {
+    if (connectionFlag) {
+      useSocket.joinRoom(roomId, token);
+    }
   }, [connectionFlag]);
 
   useEffect(() => {
@@ -189,12 +233,7 @@ const GamePage = () => {
         background: "black",
       }}
     >
-      <canvas
-        ref={canvasRef}
-        style={{ display: "flex" }}
-        width="100%"
-        height="100%"
-      />
+      <canvas ref={canvasRef} style={{ display: "flex" }} width="100%" height="100%" />
     </div>
   );
 };
