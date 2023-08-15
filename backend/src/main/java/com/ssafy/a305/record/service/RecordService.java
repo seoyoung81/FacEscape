@@ -48,7 +48,7 @@ public class RecordService {
 		List<MemberInfoForRecordDTO> participants = dto.getMembers();
 		List<Integer> participantsId = participants
 			.stream()
-			.map(MemberInfoForRecordDTO::getMemberId)
+			.map(MemberInfoForRecordDTO::getId)
 			.collect(Collectors.toList());
 		List<Member> existMembers = memberRepository.findByIdIn(participantsId);
 		Map<Integer, Member> memberMap = getExistMembersIdMapByParticipantsId(existMembers);
@@ -74,7 +74,7 @@ public class RecordService {
 		List<MemberInfoForRecordDTO> participants, GameRecord gameRecord) {
 		List<GameParticipant> gameParticipants = new ArrayList<>();
 		for (MemberInfoForRecordDTO participant : participants) {
-			Member member = memberMap.get(participant.getMemberId());
+			Member member = memberMap.get(participant.getId());
 			gameParticipants.add(GameParticipant.builder()
 				.member(member)
 				.gameRecord(gameRecord)
