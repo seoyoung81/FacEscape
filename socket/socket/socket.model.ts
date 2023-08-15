@@ -2,6 +2,7 @@ import { Server } from "socket.io";
 import { ConnectEvent, JoinEvent, ExitEvent, MemberActionEvent, GameActionEvent, GameResponseEvent, MemberResponseEvent } from "../socket/utils/eventType";
 import { createRoomEventHandler, joinRoomEventHandler, exitEventHandler, memberChatEventHandler, memberNickNameEventHandler, gameStartEventhandler } from "./utils/roomSocketEventHandler"
 import { GameEventType } from "../game/utils/gameEventTypes"
+import { roomManager } from "../room/roomManager";
 
 const socketMapper = (httpServer: any) => {
     const io = new Server(httpServer, {
@@ -45,8 +46,22 @@ const socketMapper = (httpServer: any) => {
           });
         });
 
-        socket.on(GameEventType.stageSelect, (data: any)=>{
+        socket.on(GameEventType.stageSelect, (data: any) => {
+          const room = roomManager.getRoom(data.roomId);
+          if (room) {
+            room.setStartStageTime();
+          }
           io.to(data.roomId).emit(GameEventType.stageSelectSucess, data.stageName);
+        })
+      
+        socket.on("getClearTime", (data: any) => {
+          const room = roomManager.getRoom(data.roomId);
+        
+          socket.emit("returnClearTime", room?.stageStartTime, data.stageNumber);
+        })
+      
+        socket.on("stageClear", (data: any) => {
+          io.to(data.roomId).emit("stageClearSuccess", data.stageNumber);
         })
     });
 
