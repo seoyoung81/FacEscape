@@ -11,6 +11,7 @@ export class Room {
     private _hostId: number|undefined;
     private _members: Map<number, Member>; // 방에 입장한 유저, member pk가 키다.
     private _inGameMember: Map<number, Member>; // 게임 시작 시점에 있던 유저, 시작 이후 해당 유저들만 재입장이 가능하다.
+    private _stageStartTime: number|undefined;
 
     constructor(roomId: string) {
         this._roomId = roomId;
@@ -40,6 +41,10 @@ export class Room {
         return this._inGameMember;
     }
 
+    get stageStartTime(): number|undefined{
+        return this._stageStartTime;
+    }
+
     set state(state: RoomState) {
         this._state = state;
     }
@@ -51,6 +56,7 @@ export class Room {
     set hostId(id: number) {
         this._hostId = id;
     }
+
 
     setInGameMember(map: Map<number,Member>){
         for (const [key, value] of map) {
@@ -92,5 +98,9 @@ export class Room {
                 return; 
             }
         })
+    }
+
+    setStartStageTime() {
+        this._stageStartTime = new Date().getTime();
     }
 }
