@@ -18,8 +18,7 @@ export enum WebRTCStreamEvent {
 
 export type RoomMember = {
     id: number,
-    nickname: string,
-    uuid: string
+    nickname: string
 };
 
 export type WebRTCRemoteMember = {
