@@ -30,9 +30,10 @@ export default class Stage02 extends Phaser.Scene {
   }
 
   player!: Player;
+  playerId!: number;
   platformLayer!: Phaser.Tilemaps.TilemapLayer | any;
   // timeGauge!: TimeGauge;
-  
+
   cannons: Cannon[] = [];
   cannonBalls!: Phaser.Physics.Arcade.Group;
 
@@ -45,10 +46,9 @@ export default class Stage02 extends Phaser.Scene {
   tileWidth: number = 16;
   tileHeight: number = 16;
 
-  stageNumber:number = 2;
+  stageNumber: number = 2;
 
   preload(): void {
-
     this.load.tilemapTiledJSON("stage02", stage02);
     this.load.image("bg", background);
     this.load.image("terrain", terrain);
@@ -86,7 +86,7 @@ export default class Stage02 extends Phaser.Scene {
 
     this.events.addListener("stageClearSuccess", () => {
       this.scene.start("StageSelect");
-    })
+    });
   }
 
   create(): void {
@@ -128,42 +128,25 @@ export default class Stage02 extends Phaser.Scene {
     //   this.game.canvas.height / 6,
     //   "timeGauge"
     // );
-    
+
     // create key
-    this.key = new Key(this, 1200, 270, "key", [this.platformLayer]).setScale(
-      0.09
-    );
+    this.key = new Key(this, 1200, 270, "key", [this.platformLayer]).setScale(0.09);
     // create door
-    this.door = new Door(this, 1300, 270, "doorIdle", [
-      this.platformLayer,
-    ]).setDepth(-1);
+    this.door = new Door(this, 1300, 270, "doorIdle", [this.platformLayer]).setDepth(-1);
 
-
-    const cannon1 = new Cannon(this, 120, 2020, "cannon", [
-      this.platformLayer, 
-      this.player
-    ]);
+    const cannon1 = new Cannon(this, 120, 2020, "cannon", [this.platformLayer, this.player]);
     cannon1.flipX = true;
     this.cannons.push(cannon1);
-  
-    const cannon2 = new Cannon(this, 170, 1300, "cannon", [
-      this.platformLayer, 
-      this.player
-    ]);
+
+    const cannon2 = new Cannon(this, 170, 1300, "cannon", [this.platformLayer, this.player]);
     cannon2.flipX = true;
     this.cannons.push(cannon2);
 
-    const cannon3 = new Cannon(this, 90, 550, "cannon", [
-      this.platformLayer, 
-      this.player
-    ]);
+    const cannon3 = new Cannon(this, 90, 550, "cannon", [this.platformLayer, this.player]);
     cannon3.flipX = true;
     this.cannons.push(cannon3);
 
-    const cannon4 = new Cannon(this, 90, 750, "cannon", [
-      this.platformLayer, 
-      this.player
-    ]);
+    const cannon4 = new Cannon(this, 90, 750, "cannon", [this.platformLayer, this.player]);
     cannon4.flipX = true;
     this.cannons.push(cannon4);
 
@@ -187,7 +170,7 @@ export default class Stage02 extends Phaser.Scene {
         loop: true,
       });
     });
-    
+
     this.physics.add.collider(this.player, this.platformLayer!);
 
     this.physics.add.collider(this.key, this.player, () => {
@@ -220,8 +203,6 @@ export default class Stage02 extends Phaser.Scene {
     this.input.keyboard?.on("keydown-R", () => {
       this.scene.start("StageSelect");
     });
-    
-
   }
 
   stageClear(): void {
@@ -229,7 +210,7 @@ export default class Stage02 extends Phaser.Scene {
   }
 
   knockBack(player: Player) {
-    player.setPosition(player.x, player.y - 20)
+    player.setPosition(player.x, player.y - 20);
     setTimeout(() => {
       player.setPlayerState(1);
       const pushBackVelocityX = 300;
@@ -243,7 +224,6 @@ export default class Stage02 extends Phaser.Scene {
     this.player.update();
     this.cameras.main.scrollX = this.player.x - this.cameras.main.width / 2;
     this.cameras.main.scrollY = this.player.y - this.cameras.main.height / 2;
-    
 
     if (this.isKeyPicked) {
       this.events.emit("doorOpenEvent");

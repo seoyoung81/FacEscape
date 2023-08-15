@@ -51,7 +51,7 @@ export default class Stage01 extends Phaser.Scene {
   tileWidth: number = 16;
   tileHeight: number = 16;
 
-  stageNumber:number = 1;
+  stageNumber: number = 1;
 
   preload(): void {
     this.load.tilemapTiledJSON("stage01", stage01);
@@ -117,11 +117,11 @@ export default class Stage01 extends Phaser.Scene {
         this.otherPlayers.get(playerData.id)!.setX = playerData.x;
         this.otherPlayers.get(playerData.id)!.setY = playerData.y;
       }
-    );
+    });
 
     this.events.addListener("stageClearSuccess", () => {
       this.scene.start("StageSelect");
-    })
+    });
   }
 
   create(): void {

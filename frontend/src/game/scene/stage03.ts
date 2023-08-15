@@ -34,13 +34,14 @@ export default class Stage03 extends Phaser.Scene {
     });
   }
   player!: Player;
+  playerId!: number;
   cannon!: Cannon;
   cannonBalls!: Phaser.Physics.Arcade.Group;
 
   platformLayer!: Phaser.Tilemaps.TilemapLayer | any;
   trafficLight!: TrafficLight;
   trampolineJumpSound!: Phaser.Sound.BaseSound;
-  
+
   key!: Phaser.Physics.Arcade.Sprite;
   isKeyPicked!: boolean;
   door!: Door;
@@ -54,7 +55,7 @@ export default class Stage03 extends Phaser.Scene {
   tileHeight: number = 16;
 
   stageNumber: number = 3;
-  
+
   preload(): void {
     this.load.tilemapTiledJSON("stage03", stage03);
     this.load.image("bg", background);
@@ -99,7 +100,7 @@ export default class Stage03 extends Phaser.Scene {
 
     this.events.addListener("stageClearSuccess", () => {
       this.scene.start("StageSelect");
-    })
+    });
   }
 
   create(): void {
@@ -144,13 +145,9 @@ export default class Stage03 extends Phaser.Scene {
     ).setScrollFactor(0);
 
     // create key
-    this.key = new Key(this, 4500, 490, "key", [this.platformLayer]).setScale(
-      0.09
-    );
+    this.key = new Key(this, 4500, 490, "key", [this.platformLayer]).setScale(0.09);
     // create door
-    this.door = new Door(this, 4700, 470, "doorIdle", [
-      this.platformLayer,
-    ]).setDepth(-1);
+    this.door = new Door(this, 4700, 470, "doorIdle", [this.platformLayer]).setDepth(-1);
 
     // 트램펄린 배치
     const trampolinePositions = [
@@ -259,29 +256,16 @@ export default class Stage03 extends Phaser.Scene {
       (spikeTrap.body as Phaser.Physics.Arcade.Body).setAllowGravity(false);
       (spikeTrap.body as Phaser.Physics.Arcade.Body).setImmovable(true);
       this.physics.add.collider(spikeTrap, this.platformLayer);
-      this.physics.add.collider(
-        this.player,
-        spikeTrap,
-        this.gameOver,
-        undefined,
-        this
-      );
+      this.physics.add.collider(this.player, spikeTrap, this.gameOver, undefined, this);
     });
 
-    this.cannon = new Cannon(this, 4500, 420, "cannon", [
-      this.platformLayer,
-      this.player,
-    ]);
+    this.cannon = new Cannon(this, 4500, 420, "cannon", [this.platformLayer, this.player]);
 
     this.cannonBalls = this.physics.add.group();
     this.time.addEvent({
       delay: 2100,
       callback: () => {
-        const cannonBall = this.physics.add.sprite(
-          this.cannon.x,
-          this.cannon.y,
-          "cannonBall"
-        );
+        const cannonBall = this.physics.add.sprite(this.cannon.x, this.cannon.y, "cannonBall");
         this.cannonBalls.add(cannonBall);
         cannonBall.body.allowGravity = false;
         cannonBall.setVelocityX(-500);
@@ -324,8 +308,6 @@ export default class Stage03 extends Phaser.Scene {
     this.input.keyboard?.on("keydown-R", () => {
       this.scene.start("StageSelect");
     });
-
-
   }
 
   stageClear(): void {
@@ -333,7 +315,7 @@ export default class Stage03 extends Phaser.Scene {
   }
 
   knockBack(player: Player) {
-    player.setPosition(player.x, player.y - 20)
+    player.setPosition(player.x, player.y - 20);
     setTimeout(() => {
       player.setPlayerState(1);
       const pushBackVelocityX = -300;
@@ -353,11 +335,8 @@ export default class Stage03 extends Phaser.Scene {
     this.trafficLight.update();
 
     if (this.trafficLight.getTrafficLightState() === "red") {
-      if (
-        this.player.x !== this.prevPlayerX ||
-        this.player.y !== this.prevPlayerY
-      ) {
-        this.gameOver()
+      if (this.player.x !== this.prevPlayerX || this.player.y !== this.prevPlayerY) {
+        this.gameOver();
         console.log("game over");
       }
     }
