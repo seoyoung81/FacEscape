@@ -2,6 +2,7 @@ import styles from './BeforeEnteringPage.module.css';
 import VideoCheck from '../components/BeforeEnterPage/VideoCheck';
 import InputNickname from '../components/BeforeEnterPage/InputNickname';
 import ControlIcon from '../components/Common/ControlIcon';
+import Inventory from '../components/WaitingRoomPage/Inventory';
 import { useState, useEffect } from 'react';
 
 const BeforeEnteringPage: React.FC = () => {
@@ -35,7 +36,12 @@ const BeforeEnteringPage: React.FC = () => {
     return (
         <div className={styles['enter-container']}>
             <div>
-                <div className={styles.phrases}>입장 전 테스트</div>
+                <div className={styles['top-container']}>
+                    <div className={styles.phrases}>입장 전 테스트</div>
+                    <div className={styles['inventory']}>
+                        <Inventory />
+                    </div>
+                </div>
                 <div className={styles['control-container']}>
                     <VideoCheck videoIsActive={ videoControl } audioIsActive={ audioControl }/>
 
