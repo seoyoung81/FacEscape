@@ -34,7 +34,7 @@ const UserInfo: React.FC = () =>{
             <UserNickName  nickName={nickName} />
             <UserEmail email={email} />
             <UserMilage mileage={mileage} />
-            <EditInfo nickName={nickName} />
+            <EditInfo nickName={nickName} setNickName={setNickName} />
         </div>
     )
 };

@@ -6,6 +6,7 @@ import { STAGE_EVENT } from "../../game/event";
 
 import Phaser from "phaser";
 import Swal from "sweetalert2";
+import { defaultInstance } from "../services/api";
 
 const GamePage = () => {
   const [roomId] = useState<string>(new URLSearchParams(window.location.search).get("rid") || "");
@@ -27,8 +28,8 @@ const GamePage = () => {
   useEffect(() => {
     if (game && useSocket.socket && useSocket.client) {
       // event 중복 등록 방지
-      // game.events.removeAllListeners();
-      // useSocket.socket.removeAllListeners();
+      game.events.removeAllListeners();
+      useSocket.socket.removeAllListeners();
 
       // 이미 event가 등록되어 있는지 확인 후 event 등록
       if (!game.events.listeners(STAGE_EVENT.SET_PLAYER_ID).length) {
@@ -110,6 +111,57 @@ const GamePage = () => {
       useSocket.socket.on(STAGE_EVENT.OPEN_DOOR, (data: any) => {
         console.log(`open door event`);
         game.scene.getScene(data.sceneKey).events.emit(STAGE_EVENT.OPEN_DOOR);
+      useSocket.socket.on(
+        STAGE_EVENT.UPDATE_PLAYER_SUCCESS,
+        (playerData: any) => {
+          game.events.emit(STAGE_EVENT.UPDATE_PLAYER_SUCCESS, playerData);
+        }
+      );
+
+      game.events.addListener("getClearTime", (playerId: number, stageNumber: number) => {
+        if (useSocket.roomInfo?.hostId === playerId) {
+          useSocket.emitGameEvent("getClearTime", {
+            roomId: useSocket.roomId,
+            stageNumber: stageNumber
+          });
+        }
+      });
+
+      useSocket.socket.on("returnClearTime", (startTime: number, stageNumber: number) => {
+        game.events.emit("stageClear", startTime, stageNumber);
+      });
+
+      game.events.addListener("stageClear", async (startTime: number, stageNumber: number) => {
+          const now = new Date();
+          const year = now.getFullYear();
+          const month = String(now.getMonth() + 1).padStart(2, '0');
+          const day = String(now.getDate()).padStart(2, '0');
+          const hours = String(now.getHours()).padStart(2, '0');
+          const minutes = String(now.getMinutes()).padStart(2, '0');
+          const seconds = String(now.getSeconds()).padStart(2, '0');
+      
+          const clearDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+          const clearTime = Math.floor((now.getTime() - startTime) / 1000);
+          
+          await defaultInstance.post(
+            '/game-record',
+            {
+              members: useSocket.roomInfo?.members,
+              clearDate: clearDate,
+              clearTime: clearTime,
+              stage: stageNumber
+            }
+          )
+          useSocket.emitGameEvent("stageClear", {
+            roomId: useSocket.roomId,
+            stageNumber: stageNumber
+          });
+        }
+      );
+
+      useSocket.socket.on("stageClearSuccess", (stageNumber: number) => {
+        const selectScene = game.scene.scenes[stageNumber];
+        selectScene.events.emit("stageClearSuccess");
       });
     }
   }, [game, useSocket.socket, useSocket.client]);

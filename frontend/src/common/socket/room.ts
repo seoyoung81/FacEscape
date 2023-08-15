@@ -28,15 +28,15 @@ export function useSocketRooms() {
 
             const updatedRoomInfo = new RoomInfo(
                 roomData["roomId"]
-               ,roomData["hostGameUUID"]
-               ,roomData["myGameUUID"]
+               ,roomData["hostId"]
+               ,roomData["myId"]
                ,responseConverter.convertToMembers());
 
             setRoomInfo(() => {
                 return updatedRoomInfo;
             });
 
-            const currentClientInfo = updatedRoomInfo.members.filter(member=>member.uuid === updatedRoomInfo.myUUID)[0];
+            const currentClientInfo = updatedRoomInfo.members.filter(member=>member.id === updatedRoomInfo.myId)[0];
             setClient(()=>currentClientInfo);
         });
 
@@ -50,8 +50,8 @@ export function useSocketRooms() {
 
                 const updatedRoomInfo = new RoomInfo(
                     prevRoomInfo.roomId,
-                    prevRoomInfo.hostUUID,
-                    prevRoomInfo.myUUID,
+                    prevRoomInfo.hostId,
+                    prevRoomInfo.myId,
                     responseConverter.convertToMembers()
                 );
                 return updatedRoomInfo;
@@ -91,7 +91,7 @@ export function useSocketRooms() {
     }
 
     const getHostNickName = () => {
-        const host = roomInfo?.members.filter(member=>member.uuid === roomInfo.hostUUID)[0];
+        const host = roomInfo?.members.filter(member=>member.id === roomInfo.hostId)[0];
         return host?.nickname || "";
     }
 

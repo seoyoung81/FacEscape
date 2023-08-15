@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import styles from './BeforeEnter.module.css';
+import snapShot from '../VideoEffect/snapShot';
 
 type VideoCheckProps = {
   videoIsActive: boolean,
   audioIsActive: boolean,
 }
+
 
 const VideoCheck = ({ videoIsActive, audioIsActive }: VideoCheckProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -13,6 +15,7 @@ const VideoCheck = ({ videoIsActive, audioIsActive }: VideoCheckProps) => {
   const [videoStream, setVideoStream] = useState<MediaStreamTrack|null>();
   const [audioStream, setAudioStream] = useState<MediaStreamTrack|null>();
 
+  // 화면
   const getVideoStream = async () => {
     try {
       if (videoRef.current) {
@@ -31,6 +34,7 @@ const VideoCheck = ({ videoIsActive, audioIsActive }: VideoCheckProps) => {
     }
   };
 
+  // 음성
   const getAudioStream = async () => {
     try {
       if (audioRef.current) {
@@ -71,14 +75,21 @@ const VideoCheck = ({ videoIsActive, audioIsActive }: VideoCheckProps) => {
     }
   }, [audioIsActive]);
 
+  // 화면 캡쳐
+  const [imageUrl, setImageUrl] = useState<string>("");
+  const handleDownload = snapShot(videoRef, setImageUrl);
+  snapShot(videoRef, setImageUrl);
+
   return (
     <div>
         <div className={styles['video-check']}>
             <video ref={videoRef} className={styles.video} autoPlay muted playsInline />
             <audio ref={audioRef} autoPlay muted playsInline />
             <div className={styles.overlay}>
-                <div className={styles.face}></div>
-                <p className={styles.alert}>원 안에 얼굴에 맞춰주세요</p>
+                <div className={styles.face} ></div>
+                <p className={styles.alert}>원 안에 얼굴을 맞춰주세요
+                  <button onClick={handleDownload} className={styles['capture-btn']}>사진찍기</button>
+                </p>
             </div>
         </div>
     </div>

@@ -49,10 +49,12 @@ export default class Stage03 extends Phaser.Scene {
   prevPlayerY: number = 0;
 
   mapWidth: number = 300;
-  mapHeight: number = 47;
+  mapHeight: number = 48;
   tileWidth: number = 16;
   tileHeight: number = 16;
 
+  stageNumber: number = 3;
+  
   preload(): void {
     this.load.tilemapTiledJSON("stage03", stage03);
     this.load.image("bg", background);
@@ -94,6 +96,10 @@ export default class Stage03 extends Phaser.Scene {
       frameWidth: 46,
       frameHeight: 56,
     });
+
+    this.events.addListener("stageClearSuccess", () => {
+      this.scene.start("StageSelect");
+    })
   }
 
   create(): void {
@@ -295,7 +301,7 @@ export default class Stage03 extends Phaser.Scene {
     // key, player collider
     this.events.on("postupdate", () => {
       if (this.isKeyPicked) {
-        this.key.body!.enable = false;
+        //this.key.body!.enable = false;
         Phaser.Display.Align.To.TopCenter(this.key, this.player, 0, -130);
       }
     });
@@ -310,10 +316,9 @@ export default class Stage03 extends Phaser.Scene {
       this
     );
 
-    this.physics.add.overlap(this.door, this.player, () => {
-      if (this.isKeyPicked) {
-        this.scene.start("StageSelect");
-      }
+    this.physics.add.overlap(this.door, this.key, () => {
+      this.key.body!.enable = false;
+      this.stageClear();
     });
 
     this.input.keyboard?.on("keydown-R", () => {
@@ -321,6 +326,10 @@ export default class Stage03 extends Phaser.Scene {
     });
 
 
+  }
+
+  stageClear(): void {
+    this.game.events.emit("getClearTime", this.playerId, this.stageNumber);
   }
 
   knockBack(player: Player) {

@@ -6,8 +6,11 @@ export const getToken = async (sessionId: string, memberId: number) => {
 };
 
 const createSession = async (sessionId: string, memberId: number) => {
-  const response = await axios.post(
-    "http://localhost:3050" + "/api/sessions",
+    const response = await axios.post("http://localhost:3050" + '/api/sessions', 
+    { 
+        customSessionId: sessionId,
+        memberId: memberId
+    }, 
     {
       customSessionId: sessionId,
       memberId: memberId,
@@ -20,12 +23,8 @@ const createSession = async (sessionId: string, memberId: number) => {
 };
 
 const createToken = async (sessionId: string) => {
-  const response = await axios.post(
-    "http://localhost:3050" + "/api/sessions/" + sessionId + "/connections",
-    {},
-    {
-      headers: { "Content-Type": "application/json" },
-    }
-  );
-  return response.data; // The token
-};
+    const response = await axios.post("http://localhost:3050" + '/api/sessions/' + sessionId + '/connections', {}, {
+         headers: { 'Content-Type': 'application/json', },
+    });
+    return response.data; // The token
+}

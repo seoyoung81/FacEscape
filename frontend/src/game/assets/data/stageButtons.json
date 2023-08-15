@@ -25,18 +25,10 @@
       "texture": "stageBtn"
     },
     {
-      "id": "4",
+      "id": "-1",
       "sceneName": "Stage04",
       "y": 200,
       "x": 800,
-      "hasInteract": true,
-      "texture": "stageBtn"
-    },
-    {
-      "id": "-1",
-      "sceneName": "none",
-      "y": 200,
-      "x": 1000,
       "hasInteract": false,
       "texture": "lockBtn"
     },
@@ -44,7 +36,7 @@
       "id": "-1",
       "sceneName": "none",
       "y": 200,
-      "x": 1200,
+      "x": 1000,
       "hasInteract": false,
       "texture": "lockBtn"
     },
@@ -91,14 +83,6 @@
     {
       "id": "-1",
       "sceneName": "none",
-      "y": 400,
-      "x": 1200,
-      "hasInteract": false,
-      "texture": "lockBtn"
-    },
-    {
-      "id": "-1",
-      "sceneName": "none",
       "y": 600,
       "x": 200,
       "hasInteract": false,
@@ -133,14 +117,6 @@
       "sceneName": "none",
       "y": 600,
       "x": 1000,
-      "hasInteract": false,
-      "texture": "lockBtn"
-    },
-    {
-      "id": "-1",
-      "sceneName": "none",
-      "y": 600,
-      "x": 1200,
       "hasInteract": false,
       "texture": "lockBtn"
     }
