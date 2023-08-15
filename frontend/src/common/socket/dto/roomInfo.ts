@@ -2,14 +2,14 @@ import { RoomMember } from "./roomMember";
 
 export class RoomInfo {
     roomId  :string;
-    hostUUID:string;
-    myUUID  :string;
+    hostId:number;
+    myId  :number;
     members : RoomMember[];
 
-    constructor(roomId:string, hostUUID:string, myUUID:string, members:RoomMember[]){
+    constructor(roomId:string, hostId:number, myId:number, members:RoomMember[]){
         this.roomId   = roomId;
-        this.hostUUID = hostUUID;
-        this.myUUID   = myUUID;
+        this.hostId = hostId;
+        this.myId   = myId;
         this.members  = members;
     }
 };
