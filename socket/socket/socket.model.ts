@@ -66,11 +66,11 @@ const socketMapper = (httpServer: any) => {
     });
 
     socket.on(GameEventType.createPlayer, (data: any) => {
-      CreatePlayerHandler(io, data);
+      CreatePlayerHandler(socket, data);
     });
 
     socket.on(GameEventType.updatePlayer, (data: any) => {
-      UpdatePlayerHandler(io, data);
+      UpdatePlayerHandler(socket, data);
     });
   });
 
