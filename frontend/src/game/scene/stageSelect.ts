@@ -48,8 +48,7 @@ export class StageSelect extends Phaser.Scene {
   }
 
   addStageButtons(): void {
-    const stages: StageSelectButton[] =
-      this.cache.json.get("stageButtons").stages;
+    const stages: StageSelectButton[] = this.cache.json.get("stageButtons").stages;
     stages.forEach((stage) => {
       if (stage.hasInteract) {
         this.add.existing(this.makeInteractButton(stage));
@@ -75,14 +74,7 @@ export class StageSelect extends Phaser.Scene {
   }
 
   makeLockButtonBackGround(stage: any): ButtonBackGround {
-    const button = new ButtonBackGround(
-      this,
-      stage.x,
-      stage.y,
-      stage.texture,
-      0xffffff,
-      false
-    );
+    const button = new ButtonBackGround(this, stage.x, stage.y, stage.texture, 0xffffff, false);
     return button;
   }
 }
