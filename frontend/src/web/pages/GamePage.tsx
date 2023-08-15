@@ -74,13 +74,13 @@ const GamePage = () => {
         }
       );
 
-      game.events.addListener("getClearTime", (playerID: number, stageNumber: number) => {
-        //if (useSocket.roomInfo?.hostId === playerID) {
+      game.events.addListener("getClearTime", (playerId: number, stageNumber: number) => {
+        if (useSocket.roomInfo?.hostId === playerId) {
           useSocket.emitGameEvent("getClearTime", {
             roomId: useSocket.roomId,
             stageNumber: stageNumber
           });
-        //}
+        }
       });
 
       useSocket.socket.on("returnClearTime", (startTime: number, stageNumber: number) => {
@@ -116,7 +116,6 @@ const GamePage = () => {
       );
 
       useSocket.socket.on("stageClearSuccess", (stageNumber: number) => {
-        console.log(stageNumber);
         const selectScene = game.scene.scenes[stageNumber];
         selectScene.events.emit("stageClearSuccess");
       });
