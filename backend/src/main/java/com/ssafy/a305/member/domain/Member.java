@@ -51,6 +51,9 @@ public class Member {
 	@Column(name = "recent_login")
 	private Timestamp recentLogin;
 
+	@Column(name = "game_image")
+	private String gameImageUrl;
+
 	public void updateNickname(String nickname) {
 		this.nickname = nickname;
 	}
@@ -61,6 +64,10 @@ public class Member {
 
 	public void updateMileage(Integer mileage) {
 		this.mileage = mileage;
+	}
+
+	public void updateGameImageUrl(String url) {
+		this.gameImageUrl = url;
 	}
 
 	public Timestamp updateRecentLogin() {
