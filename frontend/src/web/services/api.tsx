@@ -10,7 +10,7 @@ interface AxiosOptions {
 const axiosApi = (url: string, options?: AxiosOptions) => {
   const instance = axios.create({ 
     baseURL: url,
-    headers: { 'Access-Control-Allow-Origin' : 'http://localhost:3000' },
+    headers: { 'Access-Control-Allow-Origin' : '*' },
       ...options 
     })
   return instance;
@@ -21,7 +21,7 @@ const axiosAuthApi = (url: string, options?: AxiosOptions) => {
   const instance = axios.create({
     baseURL: url,
     headers: { 
-      'Access-Control-Allow-Origin' : 'http://localhost:3000'
+      'Access-Control-Allow-Origin' : '*'
     },
     ...options
   })
