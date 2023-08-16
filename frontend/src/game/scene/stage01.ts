@@ -92,7 +92,6 @@ export default class Stage01 extends Phaser.Scene {
 
     this.events.addListener(STAGE_EVENT.SET_PLAYER_ID_SUCCESS, (data: any) => {
       this.playerId = data.id;
-      console.log(this.playerId);
     });
 
     this.game.events.emit(STAGE_EVENT.SET_PLAYER_ID, this.scene.key);
@@ -125,7 +124,6 @@ export default class Stage01 extends Phaser.Scene {
     this.events.addListener(
       STAGE_EVENT.UPDATE_PLAYER_SUCCESS,
       (playerData: any) => {
-        // console.log(`UPDATE: ${playerData.id}`);
         if (playerData.id !== this.playerId) {
           this.otherPlayers.get(playerData.id)!.setX(playerData.x);
           this.otherPlayers.get(playerData.id)!.setY(playerData.y);
@@ -265,7 +263,6 @@ export default class Stage01 extends Phaser.Scene {
 
   stageClear(): void {
     this.game.events.emit("getClearTime", this.playerId, this.stageNumber);
-    this.game.events.emit(STAGE_EVENT.CLEAR);
   }
 
   update(): void {
@@ -285,8 +282,6 @@ export default class Stage01 extends Phaser.Scene {
         this.door.play("doorOpenAnims");
         this.doorOpened = true;
       }
-      console.log(this.doorOpened);
-      // console.log(this.keyPickerId);
       if (this.playerId === this.keyPickerId) {
         this.key.x = this.player.x;
         this.key.y = this.player.y - 60;
