@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.a305.member.dto.GameImageUrlDTO;
 import com.ssafy.a305.member.dto.MemberInfoResDTO;
 import com.ssafy.a305.member.dto.MemberInfoUpdateReqDTO;
 import com.ssafy.a305.member.dto.SignUpReqDTO;
@@ -55,5 +56,16 @@ public class MemberController {
 	public ResponseEntity<Void> deleteMember(Authentication authentication) {
 		memberService.deleteMember(Integer.parseInt(authentication.getName()));
 		return ResponseEntity.ok().build();
+	}
+
+	@PostMapping("/member/image")
+	public ResponseEntity<Void> saveGameImageUrl(@RequestBody GameImageUrlDTO dto, Authentication authentication) {
+		memberService.saveGameImageUrl(Integer.parseInt(authentication.getName()), dto.getImageUrl());
+		return ResponseEntity.ok().build();
+	}
+
+	@GetMapping("/member/image")
+	public ResponseEntity<GameImageUrlDTO> saveGameImageUrl(@RequestParam Integer memberId) {
+		return ResponseEntity.ok(memberService.getGameImageUrl(memberId));
 	}
 }
