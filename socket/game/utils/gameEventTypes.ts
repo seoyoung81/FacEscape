@@ -9,6 +9,9 @@ export enum GameEventType {
   updatePlayer = "updatePlayer",
   updatePlayerSuccess = "updatePlayerSuccess",
   destroyPlayer = "destroyPlayer",
+  pickedKey = "pickedKey",
+  pickedKeySuccess = "pickedKeySuccess",
+
   // collidePlayerTileMap = "collidePlayerTileMap",
   // collidePlayerPlayer = "collidePlayerPlayer",
   // collidePlayerWall = "collidePlayerWall",
