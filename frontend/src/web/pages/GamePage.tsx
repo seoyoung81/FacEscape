@@ -49,14 +49,18 @@ const GamePage = () => {
 
       if (!game.events.listeners(STAGE_EVENT.SELECT).length) {
         game.events.addListener(STAGE_EVENT.SELECT, (stageName: string) => {
-          useSocket.emitGameEvent(STAGE_EVENT.SELECT, {
-            roomId: useSocket.roomId,
-            id: useSocket.client?.id,
-            stageName: stageName,
-          });
+          if (useSocket.roomInfo?.hostId === useSocket.client?.id) {
+            useSocket.emitGameEvent(STAGE_EVENT.SELECT, {
+              roomId: useSocket.roomId,
+              id: useSocket.client?.id,
+              stageName: stageName,
+            });
+          } else {
+            console.log("방장이 스테이지를 선택할 수 있습니다.")
+          }
         });
       }
-
+      
       useSocket.socket.on(STAGE_EVENT.SELECT_SUCCESS, (sceneKey: any) => {
         const selectScene = game.scene.scenes[0];
         selectScene.events.emit(STAGE_EVENT.SELECT_SUCCESS, sceneKey);
@@ -176,12 +180,42 @@ const GamePage = () => {
         }
       );
 
-      useSocket.socket!.on(
-        STAGE_EVENT.UPDATE_PLAYER_SUCCESS,
-        (playerData: any) => {
-          game.events.emit(STAGE_EVENT.UPDATE_PLAYER_SUCCESS, playerData);
-        }
-      );
+      useSocket.socket.on("returnClearTime", (startTime: number, stageNumber: number) => {
+        game.events.emit("stageClear", startTime, stageNumber);
+      });
+
+      game.events.addListener("stageClear", async (startTime: number, stageNumber: number) => {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, "0");
+        const day = String(now.getDate()).padStart(2, "0");
+        const hours = String(now.getHours()).padStart(2, "0");
+        const minutes = String(now.getMinutes()).padStart(2, "0");
+        const seconds = String(now.getSeconds()).padStart(2, "0");
+
+        const clearDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        const clearTime = Math.floor((now.getTime() - startTime) / 1000);
+
+        await defaultInstance.post("/game-record", {
+          members: useSocket.roomInfo?.members,
+          clearDate: clearDate,
+          clearTime: clearTime,
+          stage: stageNumber,
+        });
+        useSocket.emitGameEvent("stageClear", {
+          roomId: useSocket.roomId,
+          stageNumber: stageNumber,
+        });
+      });
+
+      useSocket.socket.on("stageClearSuccess", (stageNumber: number) => {
+        const selectScene = game.scene.scenes[stageNumber];
+        selectScene.events.emit("stageClearSuccess");
+      });
+
+      useSocket.socket!.on(STAGE_EVENT.UPDATE_PLAYER_SUCCESS, (playerData: any) => {
+        game.events.emit(STAGE_EVENT.UPDATE_PLAYER_SUCCESS, playerData);
+      });
     }
   }, [game, useSocket.socket, useSocket.client]);
 
