@@ -5,6 +5,9 @@ import persistReducer from './authSlice';
 import nickNameReducer from './nickNameSlice';
 import userNickNameReducer from './userInfoSlice';
 import myItemCategoryReducer from './myItemCategorySlice';
+import iconRenderReducer from './iconRenderSlice';
+import mileageRenderReducer from './mileageRender';
+import todaySignUpUserReducer from './signUpUser';
 import stageReducer from './stageSlice';
 
 const store = configureStore({
@@ -23,6 +26,10 @@ const store = configureStore({
         setMyItemType: myItemCategoryReducer,
       // 랭킹 스테이지
         setStage: stageReducer,
+      // 아이콘 상태 업데이트
+        iconRender: iconRenderReducer,
+      // 마일리지 상태 업데이트
+        mileageRender: mileageRenderReducer,
     },
     middleware: getDefaultMiddleware => getDefaultMiddleware({ serializableCheck: false}),
     devTools: true,

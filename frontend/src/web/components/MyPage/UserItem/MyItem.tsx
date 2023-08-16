@@ -3,6 +3,8 @@ import MyItemName from './MyItemName';
 import { BsCheck } from 'react-icons/bs';
 import { authInstance } from '../../../services/api';
 import { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { toggleIconRender } from '../../../store/iconRenderSlice';
 
 import styles from './UserItem.module.css';
 import Swal from 'sweetalert2';
@@ -12,12 +14,15 @@ interface MyItemProps {
     itemName: string;
     itemImg: string;
     myCategory: string;
+    itemRender: boolean;
+    setItemRender: (value: boolean) => void;
 }
 
-const MyItem: React.FC<MyItemProps> = ({ itemId, itemName, itemImg, myCategory }) => {
+const MyItem: React.FC<MyItemProps> = ({ itemId, itemName, itemImg, myCategory, itemRender, setItemRender }) => {
     const [usedYN, setUsedYN] = useState<boolean>();
     const [render, newRender] = useState<boolean>(false);
-   
+    const dispatch = useDispatch();
+
     const onEquipItemClick = async () => {
         // 아이템 장착
         try {
@@ -27,6 +32,8 @@ const MyItem: React.FC<MyItemProps> = ({ itemId, itemName, itemImg, myCategory }
             
             // 아이템 장착되면 아이템 컴포넌트 api 다시 호출
               newRender(!render);
+              setItemRender(!itemRender);
+              dispatch(toggleIconRender());
               
           } catch (error) {
               console.log('아이템 장착 실패', error);
@@ -53,7 +60,7 @@ const MyItem: React.FC<MyItemProps> = ({ itemId, itemName, itemImg, myCategory }
             }
         };
         fetchData();
-    }, [myCategory, render])
+    }, [myCategory, render, itemRender])
     
     return (
         <div className={styles['myitem-container']} >

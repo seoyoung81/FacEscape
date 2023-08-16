@@ -12,6 +12,7 @@ const MyItemList: React.FC = () => {
     const [clickedItemId, setClickedItemId] = useState<string | null>(null);
     const navigate = useNavigate();
     const myCategory = useSelector((state: RootState ) => state.setMyItemType.itemType);
+    const [itemRender, setItemRender] = useState<boolean>(false);
     
     // 상점으로 이동하기
     const goMarket = () => {
@@ -40,7 +41,7 @@ const MyItemList: React.FC = () => {
         };
 
         fetchItemList();
-    }, [myCategory, clickedItemId]);
+    }, [myCategory, clickedItemId, itemRender]);
 
     
     return (
@@ -56,6 +57,8 @@ const MyItemList: React.FC = () => {
                         itemName={item.name}
                         itemImg={item.image}
                         myCategory={myCategory}
+                        itemRender={itemRender}
+                        setItemRender={setItemRender}
                     />
                 
                 ))
