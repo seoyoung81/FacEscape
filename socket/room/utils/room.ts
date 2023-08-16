@@ -6,19 +6,21 @@ export type RoomState = "PLAY" | "WAITING";
 
 export class Room {
     private _roomId: string;
-    private _stage: number;
+    private _stage: string;
     private _state: RoomState;
     private _hostId: number|undefined;
     private _members: Map<number, Member>; // 방에 입장한 유저, member pk가 키다.
     private _inGameMember: Map<number, Member>; // 게임 시작 시점에 있던 유저, 시작 이후 해당 유저들만 재입장이 가능하다.
     private _stageStartTime: number|undefined;
+    private _gameObject: any[];
 
     constructor(roomId: string) {
         this._roomId = roomId;
-        this._stage = -1;
+        this._stage = "-1";
         this._state = "WAITING";
         this._members = new Map();
         this._inGameMember = new Map();
+        this._gameObject = [];
     }
 
     get roomId(): string {
@@ -45,18 +47,25 @@ export class Room {
         return this._stageStartTime;
     }
 
+    get stage(): string {
+        return this._stage;
+    }
+
+    get gameObject(): any[] {
+        return this._gameObject;
+    }
+
     set state(state: RoomState) {
         this._state = state;
     }
 
-    set stage(stage: number) {
+    set stage(stage: string) {
         this._stage = stage;
     }
 
     set hostId(id: number) {
         this._hostId = id;
     }
-
 
     setInGameMember(map: Map<number,Member>){
         for (const [key, value] of map) {
@@ -102,5 +111,13 @@ export class Room {
 
     setStartStageTime() {
         this._stageStartTime = new Date().getTime();
+    }
+
+    addGameObject(obj: any) {
+        this._gameObject.push(obj);
+    }
+
+    getGameObjectSize() {
+        return this._gameObject.length;
     }
 }
