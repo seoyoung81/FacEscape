@@ -37,6 +37,7 @@ export default class Stage01 extends Phaser.Scene {
   player!: Player;
   playerId!: number;
   otherPlayers: Map<number, Player> = new Map<number, Player>();
+  playerGroup!: Phaser.Physics.Arcade.Group;
   cannon!: Cannon;
   cannonBalls!: Phaser.Physics.Arcade.Group;
   shoot!: Phaser.Time.TimerEvent;
