@@ -2,11 +2,20 @@
 
 import { Socket, Server } from "socket.io";
 import { GameEventType } from "./utils/gameEventTypes";
+import { roomManager } from "../room/roomManager";
+import { CannonBallGenerator } from "./object/cannon";
+import { Room } from "../room/utils/room";
 
-export const CreatePlayerHandler = async (socket: Socket, data: any) => {
-  socket.broadcast
-    .to(data.roomId)
-    .emit(GameEventType.createPlayerSuccess, data);
+export const CreatePlayerHandler = async (socket: Socket, data: any, cannonEventHandler: (roomId: string, response: string)=>void) => {
+  socket.broadcast.to(data.roomId).emit(GameEventType.createPlayerSuccess, data);
+
+  const room = roomManager.getRoom(data.roomId);
+  if(room?.getGameObjectSize() === 0) {
+    const cannon = new CannonBallGenerator(room as Room, (roomId: string, response: string)=>{
+      cannonEventHandler(roomId, response);
+    });
+    room.addGameObject(cannon);
+  }
 };
 
 export const UpdatePlayerHandler = async (socket: Socket, data: any) => {
@@ -16,6 +25,15 @@ export const UpdatePlayerHandler = async (socket: Socket, data: any) => {
 };
 
 export const KeyPickHandler = async (socket: Socket, data: any) => {
+  const room = roomManager.getRoom(data.roomId);
+  const gameObj = room?.gameObject;
+
+  if(room && gameObj && gameObj.length !== 0) {
+    gameObj.forEach(gameObj=>{
+      gameObj.stopShoot();
+    });
+  }
+
   socket.broadcast.to(data.roomId).emit(GameEventType.pickedKeySuccess, data);
 };
 
