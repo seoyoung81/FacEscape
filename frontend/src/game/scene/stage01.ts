@@ -102,21 +102,15 @@ export default class Stage01 extends Phaser.Scene {
       STAGE_EVENT.CREATE_PLAYER_SUCCESS,
       (playerData: any) => {
         if (playerData.id !== this.playerId) {
-          if (!this.otherPlayers.has(playerData.id)) {
-            const newPlayer = new Player(
-              this,
-              playerData.x,
-              playerData.y,
-              "idle",
-              ["platformLayer"]
-            );
-            this.otherPlayers.set(playerData.id, newPlayer);
-            this.otherPlayersGroup.add(newPlayer);
-          } else {
-            // 이미 생성된 플레이어인 경우 위치 업데이트
-            const existingPlayer = this.otherPlayers.get(playerData.id);
-            existingPlayer?.setPosition(playerData.x, playerData.y);
-          }
+          const newPlayer = new Player(
+            this,
+            playerData.x,
+            playerData.y,
+            "idle",
+            ["platformLayer"]
+          );
+          this.otherPlayers.set(playerData.id, newPlayer);
+          this.otherPlayersGroup.add(newPlayer);
         }
       }
     );
@@ -252,6 +246,7 @@ export default class Stage01 extends Phaser.Scene {
 
     this.physics.add.overlap(this.door, this.player, () => {
       if (this.playerId === this.keyPickerId) {
+        console.log("overlapping door");
         this.stageClear();
       }
     });

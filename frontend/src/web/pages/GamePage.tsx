@@ -145,14 +145,6 @@ const GamePage = () => {
           }
         }
       );
-
-      useSocket.socket!.on(
-        "returnClearTime",
-        (startTime: number, stageNumber: number) => {
-          game.events.emit("stageClear", startTime, stageNumber);
-        }
-      );
-
       game.events.addListener(
         "stageClear",
         async (startTime: number, stageNumber: number) => {
@@ -177,6 +169,13 @@ const GamePage = () => {
             roomId: useSocket.roomId,
             stageNumber: stageNumber,
           });
+        }
+      );
+
+      useSocket.socket!.on(
+        "returnClearTime",
+        (startTime: number, stageNumber: number) => {
+          game.events.emit("stageClear", startTime, stageNumber);
         }
       );
 
