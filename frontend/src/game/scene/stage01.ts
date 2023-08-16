@@ -95,29 +95,41 @@ export default class Stage01 extends Phaser.Scene {
     this.game.events.emit(STAGE_EVENT.SET_PLAYER_ID, this.scene.key);
     console.log(`current playerId: ${this.playerId}`);
 
-    this.events.addListener(STAGE_EVENT.CREATE_PLAYER_SUCCESS, (playerData: any) => {
-      if (playerData.id !== this.playerId) {
-        if (!this.otherPlayers.has(playerData.id)) {
-          const newPlayer = new Player(this, playerData.x, playerData.y, "idle", ["platformLayer"]);
-          this.otherPlayers.set(playerData.id, newPlayer);
+    this.events.addListener(
+      STAGE_EVENT.CREATE_PLAYER_SUCCESS,
+      (playerData: any) => {
+        if (playerData.id !== this.playerId) {
+          if (!this.otherPlayers.has(playerData.id)) {
+            const newPlayer = new Player(
+              this,
+              playerData.x,
+              playerData.y,
+              "idle",
+              ["platformLayer"]
+            );
+            this.otherPlayers.set(playerData.id, newPlayer);
 
-          this.physics.add.collider(newPlayer, this.player);
-          this.physics.add.collider(newPlayer, this.platformLayer!);
-        } else {
-          // 이미 생성된 플레이어인 경우 위치 업데이트
-          const existingPlayer = this.otherPlayers.get(playerData.id);
-          existingPlayer?.setPosition(playerData.x, playerData.y);
+            this.physics.add.collider(newPlayer, this.player);
+            this.physics.add.collider(newPlayer, this.platformLayer!);
+          } else {
+            // 이미 생성된 플레이어인 경우 위치 업데이트
+            const existingPlayer = this.otherPlayers.get(playerData.id);
+            existingPlayer?.setPosition(playerData.x, playerData.y);
+          }
         }
       }
-    });
+    );
 
-    this.events.addListener(STAGE_EVENT.UPDATE_PLAYER_SUCCESS, (playerData: any) => {
-      console.log(`UPDATE: ${playerData.id}`);
-      if (playerData.id !== this.playerId) {
-        this.otherPlayers.get(playerData.id)!.setX = playerData.x;
-        this.otherPlayers.get(playerData.id)!.setY = playerData.y;
+    this.events.addListener(
+      STAGE_EVENT.UPDATE_PLAYER_SUCCESS,
+      (playerData: any) => {
+        console.log(`UPDATE: ${playerData.id}`);
+        if (playerData.id !== this.playerId) {
+          this.otherPlayers.get(playerData.id)!.setX(playerData.x);
+          this.otherPlayers.get(playerData.id)!.setY(playerData.y);
+        }
       }
-    });
+    );
 
     this.events.addListener("stageClearSuccess", () => {
       this.scene.start("StageSelect");
@@ -169,14 +181,22 @@ export default class Stage01 extends Phaser.Scene {
     // create cannonBall
     this.cannonBalls = this.physics.add.group();
     // create key
-    this.key = new Key(this, 50, 660, "key", [this.platformLayer]).setScale(0.09);
+    this.key = new Key(this, 50, 660, "key", [this.platformLayer]).setScale(
+      0.09
+    );
     // create door
-    this.door = new Door(this, 700, 660, "doorIdle", [this.platformLayer]).setDepth(-1);
+    this.door = new Door(this, 700, 660, "doorIdle", [
+      this.platformLayer,
+    ]).setDepth(-1);
 
     this.shoot = this.time.addEvent({
       delay: 3000,
       callback: () => {
-        const cannonBall = this.physics.add.sprite(this.cannon.x, this.cannon.y, "cannonBall");
+        const cannonBall = this.physics.add.sprite(
+          this.cannon.x,
+          this.cannon.y,
+          "cannonBall"
+        );
         this.cannonBalls.add(cannonBall);
         cannonBall.body.allowGravity = false;
         cannonBall.setVelocityX(-1200);
@@ -203,10 +223,14 @@ export default class Stage01 extends Phaser.Scene {
     this.physics.add.collider(this.cannon, this.platformLayer!);
     this.physics.add.collider(this.walls, this.platformLayer!);
     this.physics.add.collider(this.walls, this.walls);
-    this.physics.add.collider(this.cannonBalls, this.walls, (cannonBall, wall) => {
-      cannonBall.destroy();
-      wall.destroy();
-    });
+    this.physics.add.collider(
+      this.cannonBalls,
+      this.walls,
+      (cannonBall, wall) => {
+        cannonBall.destroy();
+        wall.destroy();
+      }
+    );
 
     this.physics.add.collider(this.player, this.key, () => {
       this.isKeyPicked = true;
