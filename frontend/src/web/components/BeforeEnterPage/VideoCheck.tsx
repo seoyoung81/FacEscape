@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import styles from './BeforeEnter.module.css';
-import snapShot from '../VideoEffect/snapShot';
+import SnapShot from '../VideoEffect/snapShot';
 
 type VideoCheckProps = {
   videoIsActive: boolean,
@@ -77,13 +77,25 @@ const VideoCheck = ({ videoIsActive, audioIsActive }: VideoCheckProps) => {
 
   // 화면 캡쳐
   const [imageUrl, setImageUrl] = useState<string>("");
-  const handleDownload = snapShot(videoRef, setImageUrl);
-  snapShot(videoRef, setImageUrl);
+  const { handleDownload, videoEffectId } = SnapShot(videoRef, setImageUrl);
+  SnapShot(videoRef, setImageUrl);
 
   return (
     <div>
         <div className={styles['video-check']}>
-            <video ref={videoRef} className={styles.video} autoPlay muted playsInline />
+            <video 
+              ref={videoRef} 
+              className={`${styles.video} ${
+                videoEffectId === 8 ? styles['grayscale'] : ''
+              } ${
+                videoEffectId === 9 ? styles['flip-horizontal'] : ''
+              } ${
+                videoEffectId === 10 ? styles['flip-vertical'] : ''
+              } `} 
+              autoPlay 
+              muted 
+              playsInline 
+            />
             <audio ref={audioRef} autoPlay muted playsInline />
             <div className={styles.overlay}>
                 <div className={styles.face} ></div>

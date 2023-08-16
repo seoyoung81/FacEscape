@@ -1,12 +1,31 @@
 import flipHorizontal from "./flipHorizontal";
 import flipVertical from "./flipVertical";
 import convertToGrayscale from "./convertToGray";
-import { useState } from 'react';
+import React from "react";
+import { useEffect, useState } from 'react';
 import { authInstance } from "../../services/api";
 import Swal from "sweetalert2";
 
-const snapShot = (videoRef: React.RefObject<HTMLVideoElement>, setImageUrl: React.Dispatch<React.SetStateAction<string>>) => {
-      // 화면 캡쳐  
+const SnapShot = (videoRef: React.RefObject<HTMLVideoElement>, setImageUrl: React.Dispatch<React.SetStateAction<string>>) => {
+  const [videoEffectId, setVideoEffectId] = useState<number>(0);
+
+  useEffect(() => {
+    const fetchData = async () => {
+        try {
+            const { data } = await authInstance.get('/member/item/equipped')
+            const videoEffect = data.items.find((item: any) => item.itemType === "화면효과");
+            if (videoEffect) {
+              setVideoEffectId(videoEffect.itemId);
+            }
+        } 
+        catch (error) {
+            console.log(error);
+        }
+    };
+    fetchData();
+}, []);
+
+    // 화면 캡쳐  
   const handleDownload = ():void => {
     if (!videoRef.current) return;
 
@@ -22,27 +41,33 @@ const snapShot = (videoRef: React.RefObject<HTMLVideoElement>, setImageUrl: Reac
     const ctx = canvas.getContext("2d");
 
     if (ctx) {
-      // 좌우 반전
-      // ctx.save();
-      // flipHorizontal(ctx, width, height, true);
-      // ctx.drawImage(video, x, y, width, height, 0, 0, width, height);
-      // flipHorizontal(ctx, width, height, false);
-      // ctx.restore();
-
-      // 흑백 효과
-      // ctx.drawImage(video, x, y, width, height, 0, 0, width, height);
-      // convertToGrayscale(ctx, width, height)
-
-      // 상하 반전
-    //   ctx.save();
-    //   flipVertical(ctx, width, height, true);
-    //   ctx.drawImage(video, x, y, width, height, 0, 0, width, height);
-    //   flipVertical(ctx, width, height, false);
-    //   ctx.restore();
       ctx.beginPath();
       ctx.ellipse(width / 2, height / 2, width / 2, height / 2, 0, 0, 2 * Math.PI);
       ctx.clip();
       ctx.drawImage(video, x, y, width, height, 0, 0, width, height);
+
+      // 흑백 효과
+      if (videoEffectId === 8){
+        convertToGrayscale(ctx, width, height);
+      }
+
+      // 좌우 반전
+      else if (videoEffectId === 9){
+        ctx.save();
+        flipHorizontal(ctx, width, height, true);
+        ctx.drawImage(video, x, y, width, height, 0, 0, width, height);
+        flipHorizontal(ctx, width, height, false);
+      }
+
+      // 상하 반전
+      else if (videoEffectId === 10){
+          ctx.save();
+          flipVertical(ctx, width, height, true);
+          ctx.drawImage(video, x, y, width, height, 0, 0, width, height);
+          flipVertical(ctx, width, height, false);
+          ctx.restore();
+      }
+
       ctx.restore();
 
       canvas.toBlob((blob) => {
@@ -63,7 +88,6 @@ const snapShot = (videoRef: React.RefObject<HTMLVideoElement>, setImageUrl: Reac
         }).then(async(result) => {
             if (result.isConfirmed) {
               // 사진 url 넘기기
-              console.log(url); // 이미지 URL 출력
               try {
                 await authInstance.post('/member/image', {
                   imageUrl: url
@@ -78,11 +102,10 @@ const snapShot = (videoRef: React.RefObject<HTMLVideoElement>, setImageUrl: Reac
         })
         }
         img.src = url;
-        console.log(url);
       }});
     }
   };
-  return handleDownload
+  return { handleDownload, videoEffectId };
 }
 
-export default snapShot;
+export default SnapShot;
