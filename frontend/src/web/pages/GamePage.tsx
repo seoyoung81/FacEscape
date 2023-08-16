@@ -61,6 +61,12 @@ const GamePage = () => {
         });
       }
 
+      useSocket.socket.on("cannonShoot", (data)=>{
+        game.scene
+          .getScene(data.sceneKey)
+          .events.emit("cannonShoot");
+      });
+
       useSocket.socket.on(STAGE_EVENT.SELECT_SUCCESS, (sceneKey: any) => {
         const selectScene = game.scene.scenes[0];
         selectScene.events.emit(STAGE_EVENT.SELECT_SUCCESS, sceneKey);
