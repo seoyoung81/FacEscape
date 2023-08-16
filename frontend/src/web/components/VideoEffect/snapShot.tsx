@@ -5,9 +5,12 @@ import React from "react";
 import { useEffect, useState } from 'react';
 import { authInstance } from "../../services/api";
 import Swal from "sweetalert2";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
 
 const SnapShot = (videoRef: React.RefObject<HTMLVideoElement>, setImageUrl: React.Dispatch<React.SetStateAction<string>>) => {
   const [videoEffectId, setVideoEffectId] = useState<number>(0);
+  const render = useSelector((state: RootState) => state.iconRender);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,7 +26,7 @@ const SnapShot = (videoRef: React.RefObject<HTMLVideoElement>, setImageUrl: Reac
         }
     };
     fetchData();
-}, []);
+}, [render]);
 
     // 화면 캡쳐  
   const handleDownload = ():void => {
