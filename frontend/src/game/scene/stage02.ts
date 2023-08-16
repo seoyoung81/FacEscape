@@ -235,7 +235,7 @@ export default class Stage02 extends Phaser.Scene {
           this.cannonBalls.add(cannonBall);
           cannonBall.body.allowGravity = false;
           cannonBall.setVelocityX(300);
-          this.physics.add.collider(this.player, cannonBall, () => {
+          this.physics.add.overlap(this.player, cannonBall, () => {
             this.knockBack(this.player);
             cannonBall.destroy();
           });
@@ -284,7 +284,6 @@ export default class Stage02 extends Phaser.Scene {
   }
 
   knockBack(player: Player) {
-    player.setPosition(player.x, player.y - 20);
     setTimeout(() => {
       player.setPlayerState(1);
       const pushBackVelocityX = 300;
