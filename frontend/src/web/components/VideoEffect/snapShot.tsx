@@ -38,9 +38,11 @@ const snapShot = (videoRef: React.RefObject<HTMLVideoElement>, setImageUrl: Reac
     //   ctx.drawImage(video, x, y, width, height, 0, 0, width, height);
     //   flipVertical(ctx, width, height, false);
     //   ctx.restore();
-
+      ctx.beginPath();
+      ctx.ellipse(width / 2, height / 2, width / 2, height / 2, 0, 0, 2 * Math.PI);
+      ctx.clip();
       ctx.drawImage(video, x, y, width, height, 0, 0, width, height);
-
+      ctx.restore();
 
       canvas.toBlob((blob) => {
         if (blob !== null) {
