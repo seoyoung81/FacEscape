@@ -9,7 +9,9 @@ import Swal from "sweetalert2";
 import { defaultInstance } from "../services/api";
 
 const GamePage = () => {
-  const [roomId] = useState<string>(new URLSearchParams(window.location.search).get("rid") || "");
+  const [roomId] = useState<string>(
+    new URLSearchParams(window.location.search).get("rid") || ""
+  );
   const [useSocket] = useSocketRooms();
   const [openVidu] = useOpenVidu();
   const [connectionFlag, setConntectionFlag] = useState<boolean>(false);
@@ -33,13 +35,16 @@ const GamePage = () => {
 
       // 이미 event가 등록되어 있는지 확인 후 event 등록
       if (!game.events.listeners(STAGE_EVENT.SET_PLAYER_ID).length) {
-        game.events.addListener(STAGE_EVENT.SET_PLAYER_ID, (sceneKey: string) => {
-          console.log(`set player id: ${useSocket.client?.id}`);
-          const selectedScene = game.scene.getScene(sceneKey);
-          selectedScene.events.emit(STAGE_EVENT.SET_PLAYER_ID_SUCCESS, {
-            id: useSocket.client?.id,
-          });
-        });
+        game.events.addListener(
+          STAGE_EVENT.SET_PLAYER_ID,
+          (sceneKey: string) => {
+            console.log(`set player id: ${useSocket.client?.id}`);
+            const selectedScene = game.scene.getScene(sceneKey);
+            selectedScene.events.emit(STAGE_EVENT.SET_PLAYER_ID_SUCCESS, {
+              id: useSocket.client?.id,
+            });
+          }
+        );
       }
 
       if (!game.events.listeners(STAGE_EVENT.SELECT).length) {
@@ -62,72 +67,118 @@ const GamePage = () => {
       });
 
       if (!game.events.listeners(STAGE_EVENT.CREATE_PLAYER).length) {
-        game.events.addListener(STAGE_EVENT.CREATE_PLAYER, (playerData: any) => {
-          console.log(`creating player: ${playerData.id}`);
-          useSocket.emitGameEvent(STAGE_EVENT.CREATE_PLAYER, {
-            roomId: useSocket.roomId,
-            id: playerData.id,
-            x: playerData.x,
-            y: playerData.y,
-            sceneKey: playerData.sceneKey,
-          });
-        });
+        game.events.addListener(
+          STAGE_EVENT.CREATE_PLAYER,
+          (playerData: any) => {
+            console.log(`creating player: ${playerData.id}`);
+            useSocket.emitGameEvent(STAGE_EVENT.CREATE_PLAYER, {
+              roomId: useSocket.roomId,
+              id: playerData.id,
+              x: playerData.x,
+              y: playerData.y,
+              sceneKey: playerData.sceneKey,
+            });
+          }
+        );
       }
 
-      useSocket.socket.on(STAGE_EVENT.CREATE_PLAYER_SUCCESS, (playerData: any) => {
-        console.log(`player create success:${playerData.id}`);
-        game.scene
-          .getScene(playerData.sceneKey)
-          .events.emit(STAGE_EVENT.CREATE_PLAYER_SUCCESS, playerData);
-      });
+      useSocket.socket.on(
+        STAGE_EVENT.CREATE_PLAYER_SUCCESS,
+        (playerData: any) => {
+          console.log(`player create success:${playerData.id}`);
+          game.scene
+            .getScene(playerData.sceneKey)
+            .events.emit(STAGE_EVENT.CREATE_PLAYER_SUCCESS, playerData);
+        }
+      );
 
       if (!game.events.listeners(STAGE_EVENT.UPDATE_PLAYER).length) {
-        game.events.addListener(STAGE_EVENT.UPDATE_PLAYER, (playerData: any) => {
-          console.log("update player listener 등록");
-          useSocket.emitGameEvent(STAGE_EVENT.UPDATE_PLAYER, {
-            roomId: useSocket.roomId,
-            id: playerData.id,
-            x: playerData.x,
-            y: playerData.y,
-            sceneKey: playerData.sceneKey,
-          });
-        });
+        game.events.addListener(
+          STAGE_EVENT.UPDATE_PLAYER,
+          (playerData: any) => {
+            // console.log("update player listener 등록");
+            useSocket.emitGameEvent(STAGE_EVENT.UPDATE_PLAYER, {
+              roomId: useSocket.roomId,
+              id: playerData.id,
+              x: playerData.x,
+              y: playerData.y,
+              sceneKey: playerData.sceneKey,
+            });
+          }
+        );
       }
 
-      useSocket.socket.on(STAGE_EVENT.UPDATE_PLAYER_SUCCESS, (playerData: any) => {
-        game.scene
-          .getScene(playerData.sceneKey)
-          .events.emit(STAGE_EVENT.UPDATE_PLAYER_SUCCESS, playerData);
-      });
+      useSocket.socket.on(
+        STAGE_EVENT.UPDATE_PLAYER_SUCCESS,
+        (playerData: any) => {
+          game.scene
+            .getScene(playerData.sceneKey)
+            .events.emit(STAGE_EVENT.UPDATE_PLAYER_SUCCESS, playerData);
+        }
+      );
 
       if (!game.events.listeners(STAGE_EVENT.PICKED_KEY).length) {
-        game.events.addListener(STAGE_EVENT.PICKED_KEY, (sceneKey: string) => {
-          console.log(`key picked in gamepage`);
-          useSocket.emitGameEvent(STAGE_EVENT.OPEN_DOOR, {
+        game.events.addListener(STAGE_EVENT.PICKED_KEY, (data: any) => {
+          useSocket.emitGameEvent(STAGE_EVENT.PICKED_KEY, {
             roomId: useSocket.roomId,
-            id: openVidu.client?.id,
-            sceneKey: sceneKey,
+            sceneKey: data.sceneKey,
+            id: data.id,
           });
-          console.log(`emitted key pick up event`);
+          console.log(`emitted key picker :${data.id}`);
         });
       }
 
-      useSocket.socket.on(STAGE_EVENT.OPEN_DOOR, (data: any) => {
-        console.log(`open door event`);
-        game.scene.getScene(data.sceneKey).events.emit(STAGE_EVENT.OPEN_DOOR);
-        useSocket.socket!.on(STAGE_EVENT.UPDATE_PLAYER_SUCCESS, (playerData: any) => {
-          game.events.emit(STAGE_EVENT.UPDATE_PLAYER_SUCCESS, playerData);
-        });
+      useSocket.socket.on(STAGE_EVENT.PICKED_KEY_SUCCESS, (data: any) => {
+        game.scene
+          .getScene(data.sceneKey)
+          .events.emit(STAGE_EVENT.PICKED_KEY_SUCCESS, data);
       });
 
-      game.events.addListener("getClearTime", (playerId: number, stageNumber: number) => {
-        if (useSocket.roomInfo?.hostId === playerId) {
-          useSocket.emitGameEvent("getClearTime", {
+      game.events.addListener(
+        "getClearTime",
+        (playerId: number, stageNumber: number) => {
+          if (useSocket.roomInfo?.hostId === playerId) {
+            useSocket.emitGameEvent("getClearTime", {
+              roomId: useSocket.roomId,
+              stageNumber: stageNumber,
+            });
+          }
+        }
+      );
+
+      useSocket.socket!.on(
+        "returnClearTime",
+        (startTime: number, stageNumber: number) => {
+          game.events.emit("stageClear", startTime, stageNumber);
+        }
+      );
+
+      game.events.addListener(
+        "stageClear",
+        async (startTime: number, stageNumber: number) => {
+          const now = new Date();
+          const year = now.getFullYear();
+          const month = String(now.getMonth() + 1).padStart(2, "0");
+          const day = String(now.getDate()).padStart(2, "0");
+          const hours = String(now.getHours()).padStart(2, "0");
+          const minutes = String(now.getMinutes()).padStart(2, "0");
+          const seconds = String(now.getSeconds()).padStart(2, "0");
+
+          const clearDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+          const clearTime = Math.floor((now.getTime() - startTime) / 1000);
+
+          await defaultInstance.post("/game-record", {
+            members: useSocket.roomInfo?.members,
+            clearDate: clearDate,
+            clearTime: clearTime,
+            stage: stageNumber,
+          });
+          useSocket.emitGameEvent("stageClear", {
             roomId: useSocket.roomId,
             stageNumber: stageNumber,
           });
         }
-      });
+      );
 
       useSocket.socket.on("returnClearTime", (startTime: number, stageNumber: number) => {
         game.events.emit("stageClear", startTime, stageNumber);
@@ -235,7 +286,12 @@ const GamePage = () => {
         background: "black",
       }}
     >
-      <canvas ref={canvasRef} style={{ display: "flex" }} width="100%" height="100%" />
+      <canvas
+        ref={canvasRef}
+        style={{ display: "flex" }}
+        width="100%"
+        height="100%"
+      />
     </div>
   );
 };
