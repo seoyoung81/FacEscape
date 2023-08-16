@@ -59,16 +59,16 @@ const snapShot = (videoRef: React.RefObject<HTMLVideoElement>, setImageUrl: Reac
             cancelButtonColor: '#DB7500',
             confirmButtonText: '확인',
             cancelButtonText: '다시찍기',
-            html: `<img src="${url}" alt="" style="width: 100%; max-height: 250px; object-fit: contain;"><a href="${url}" download="snapshot.png">이미지 저장하기</a>`
+            html: `<img src="${url}" alt="" style="width: 100%; max-height: 250px; object-fit: contain;">`
         }).then(async(result) => {
             if (result.isConfirmed) {
               // 사진 url 넘기기
               console.log(url); // 이미지 URL 출력
               try {
-                const response = await authInstance.post('/image', {
+                await authInstance.post('/member/image', {
                   imageUrl: url
                 })
-                console.log('이미지 전송 성공', response);
+                
               } catch (error) {
                 console.log('이미지 전송 실패', error);
               }
