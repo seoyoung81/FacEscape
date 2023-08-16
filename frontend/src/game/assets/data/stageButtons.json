@@ -35,14 +35,6 @@
     {
       "id": "-1",
       "sceneName": "none",
-      "y": 200,
-      "x": 1000,
-      "hasInteract": false,
-      "texture": "lockBtn"
-    },
-    {
-      "id": "-1",
-      "sceneName": "none",
       "y": 400,
       "x": 200,
       "hasInteract": false,
@@ -75,14 +67,6 @@
     {
       "id": "-1",
       "sceneName": "none",
-      "y": 400,
-      "x": 1000,
-      "hasInteract": false,
-      "texture": "lockBtn"
-    },
-    {
-      "id": "-1",
-      "sceneName": "none",
       "y": 600,
       "x": 200,
       "hasInteract": false,
@@ -109,14 +93,6 @@
       "sceneName": "none",
       "y": 600,
       "x": 800,
-      "hasInteract": false,
-      "texture": "lockBtn"
-    },
-    {
-      "id": "-1",
-      "sceneName": "none",
-      "y": 600,
-      "x": 1000,
       "hasInteract": false,
       "texture": "lockBtn"
     }
