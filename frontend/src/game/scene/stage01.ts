@@ -38,7 +38,6 @@ export default class Stage01 extends Phaser.Scene {
   otherPlayersGroup!: Phaser.Physics.Arcade.Group;
   cannon!: Cannon;
   cannonBalls!: Phaser.Physics.Arcade.Group;
-  shoot!: Phaser.Time.TimerEvent;
   platformLayer!: Phaser.Tilemaps.TilemapLayer | null;
   walls!: Phaser.Physics.Arcade.Group;
   key!: Phaser.Physics.Arcade.Sprite;
@@ -92,10 +91,11 @@ export default class Stage01 extends Phaser.Scene {
 
     this.events.addListener(STAGE_EVENT.SET_PLAYER_ID_SUCCESS, (data: any) => {
       this.playerId = data.id;
+     // console.log(this.playerId);
     });
 
     this.game.events.emit(STAGE_EVENT.SET_PLAYER_ID, this.scene.key);
-    console.log(`current playerId: ${this.playerId}`);
+   // console.log(`current playerId: ${this.playerId}`);
 
     this.otherPlayersGroup = this.physics.add.group();
     this.events.addListener(STAGE_EVENT.CREATE_PLAYER_SUCCESS, (playerData: any) => {
@@ -120,6 +120,20 @@ export default class Stage01 extends Phaser.Scene {
     this.events.addListener("stageClearSuccess", () => {
       this.scene.start("StageSelect");
     });
+
+    this.events.addListener("cannonShoot", (data: any)=>{
+        const cannonBall = this.physics.add.sprite(this.cannon.x, this.cannon.y, "cannonBall");
+        this.cannonBalls.add(cannonBall);
+        cannonBall.body.allowGravity = false;
+        cannonBall.setVelocityX(-1200);
+        this.physics.add.overlap(this.player, cannonBall, () => {
+          cannonBall.destroy();
+        });
+
+        this.physics.add.overlap(this.otherPlayersGroup, cannonBall, () => {
+          cannonBall.destroy();
+        });
+    })
   }
 
   create(): void {
@@ -154,7 +168,6 @@ export default class Stage01 extends Phaser.Scene {
     });
 
     this.events.addListener(STAGE_EVENT.PICKED_KEY_SUCCESS, (data: any) => {
-      this.shoot.destroy();
       this.keyPickerId = data.id;
       this.isKeyPicked = true;
     });
@@ -167,29 +180,13 @@ export default class Stage01 extends Phaser.Scene {
     // create cannonBall
     this.cannonBalls = this.physics.add.group();
     // create key
-    this.key = new Key(this, 50, 660, "key", [this.platformLayer]).setScale(0.09);
-
-    // create door
-    this.door = new Door(this, 700, 660, "doorIdle", [this.platformLayer]).setDepth(-1);
-
-    this.shoot = this.time.addEvent({
-      delay: 3000,
-      callback: () => {
-        const cannonBall = this.physics.add.sprite(this.cannon.x, this.cannon.y, "cannonBall");
-        this.cannonBalls.add(cannonBall);
-        cannonBall.body.allowGravity = false;
-        cannonBall.setVelocityX(-1200);
-        this.physics.add.overlap(this.player, cannonBall, () => {
-          cannonBall.destroy();
-        });
-
-        this.physics.add.overlap(this.otherPlayersGroup, cannonBall, () => {
-          cannonBall.destroy();
-        });
-      },
-      callbackScope: this,
-      loop: true,
-    });
+    this.key = new Key(this, 50, 660, "key", [this.platformLayer]).setScale(
+      0.09
+    );
+    // create doorc
+    this.door = new Door(this, 700, 660, "doorIdle", [
+      this.platformLayer,
+    ]).setDepth(-1);
 
     // colliders
     this.physics.add.collider(this.player, this.platformLayer!);
@@ -206,7 +203,6 @@ export default class Stage01 extends Phaser.Scene {
     this.physics.add.collider(this.otherPlayersGroup, this.platformLayer!);
 
     this.physics.add.collider(this.player, this.key, () => {
-      this.shoot.destroy();
       this.isKeyPicked = true;
       this.keyPickerId = this.playerId;
       this.game.events.emit(STAGE_EVENT.PICKED_KEY, {
@@ -241,6 +237,10 @@ export default class Stage01 extends Phaser.Scene {
       x: this.player.x,
       y: this.player.y,
       sceneKey: this.scene.key,
+    });
+    
+    this.otherPlayers.forEach(function (value, key) {
+      //console.log(key);
     });
 
     if (!this.isKeyPicked) {
