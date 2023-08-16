@@ -1,6 +1,7 @@
 import { useForm, Controller } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { setUserNickName } from '../../store/userInfoSlice';
+import { todaySignUpUser } from '../../store/signUpUser';
 
 // api
 import { defaultInstance } from '../../services/api';
@@ -45,7 +46,8 @@ const SignUpForm: React.FC<closeModalProps> = ({ closeModal }) => {
                             {...dataWithoutConfirmPassword, nickname}
                         )
                         // 회원 정보 저장
-                        dispatch(setUserNickName(nickname));     
+                        dispatch(setUserNickName(nickname));  
+                        dispatch(todaySignUpUser(1));
                         // 회원가입 성공 alert
                         Swal.fire({
                             title: '회원가입 성공!',

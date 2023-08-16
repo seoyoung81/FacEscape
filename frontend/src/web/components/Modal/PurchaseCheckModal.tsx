@@ -1,5 +1,7 @@
 import styles from './Modal.module.css';
 import { authInstance } from '../../services/api';
+import { useDispatch } from 'react-redux';
+import { toggleMileageRender } from '../../store/mileageRender';
 import Swal from 'sweetalert2';
 
 interface purchaseProps {
@@ -11,6 +13,7 @@ interface purchaseProps {
 }
 
 const PurchaseCheckModal: React.FC<purchaseProps> = ({ itemPrice, itemId, itemImg, itemName, setOpenPurchaseModal }) => {
+    const dispatch = useDispatch();
     const closeModal = (event: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => {
         event?.stopPropagation();
         setOpenPurchaseModal(false);
@@ -28,8 +31,10 @@ const PurchaseCheckModal: React.FC<purchaseProps> = ({ itemPrice, itemId, itemIm
                 title: `${itemName} 구매 성공!`,
                 confirmButtonColor: '#3479AD',
                 confirmButtonText: '확인',
+              }).then(() => {
+                dispatch(toggleMileageRender());
               });
-            console.log('구매 동작 성공', response);
+            // console.log('구매 동작 성공', response);
         }
         catch(error: any) {
             if (error.response.data && error.response.data.errors[0].field === 'mileage') {

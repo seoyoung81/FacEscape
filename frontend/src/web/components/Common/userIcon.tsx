@@ -1,8 +1,11 @@
 import { authInstance } from "../../services/api";
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
 
 const Icon = () => {
     const [img, setImg] = useState<string>("");
+    const iconRedner = useSelector((state: RootState) => state.iconRender);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -17,7 +20,7 @@ const Icon = () => {
             }
         };
         fetchData();
-}, []);
+}, [iconRedner]);
     return (
         <div>
             <img src={`${img}`} alt="" style={{width: '40px', marginRight: '10px', marginBottom: '10px' }} />

@@ -38,7 +38,7 @@ const LogInLoading: React.FC = () => {
 
 
     return (
-        <div>
+        <div className={styles['loading-container']} >
             <p className={styles['loading-text']}>로딩중</p> 
             <div className={styles["loader-wrapper"]}>
                 <div className={styles["packman"]}></div>

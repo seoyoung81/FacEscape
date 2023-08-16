@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
 import { authInstance } from '../../../services/api';
+import { UseSelector, useSelector } from 'react-redux/es/hooks/useSelector';
+import { RootState } from '../../../store/store';
 import styles from './MyMilage.module.css';
 
 
 const MyMilage :React.FC = () => {
     const [myMileage, setMyMileage] = useState<number | null>(null);
+    const mileageRender = useSelector((state: RootState) => state.mileageRender);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -19,7 +22,7 @@ const MyMilage :React.FC = () => {
         };
 
         fetchData();
-    }, [myMileage]);
+    }, [myMileage, mileageRender]);
 
     return (
         <div>
