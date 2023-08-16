@@ -112,8 +112,8 @@ export default class Stage01 extends Phaser.Scene {
 
     this.events.addListener(STAGE_EVENT.UPDATE_PLAYER_SUCCESS, (playerData: any) => {
       if (playerData.id !== this.playerId) {
-        this.otherPlayers.get(playerData.id)!.setX(playerData.x);
-        this.otherPlayers.get(playerData.id)!.setY(playerData.y);
+        this.otherPlayers.get(playerData.id)!.x = playerData.x;
+        this.otherPlayers.get(playerData.id)!.y = playerData.y;
       }
     });
 

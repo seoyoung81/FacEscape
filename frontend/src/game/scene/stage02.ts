@@ -123,8 +123,8 @@ export default class Stage02 extends Phaser.Scene {
 
     this.events.addListener(STAGE_EVENT.UPDATE_PLAYER_SUCCESS, (playerData: any) => {
       if (playerData.id !== this.playerId) {
-        this.otherPlayers.get(playerData.id)!.setX(playerData.x);
-        this.otherPlayers.get(playerData.id)!.setY(playerData.y);
+        this.otherPlayers.get(playerData.id)!.x = playerData.x;
+        this.otherPlayers.get(playerData.id)!.y = playerData.y;
       }
     });
 
@@ -180,15 +180,13 @@ export default class Stage02 extends Phaser.Scene {
     //   "timeGauge"
     // );
 
-    // create key
-    this.key = new Key(this, 1200, 270, "key", [this.platformLayer]).setScale(0.09);
-
     this.events.addListener(STAGE_EVENT.PICKED_KEY_SUCCESS, (data: any) => {
       // this.shoot.destroy();
       this.keyPickerId = data.id;
       this.isKeyPicked = true;
     });
-
+    // create key
+    this.key = new Key(this, 1200, 270, "key", [this.platformLayer]).setScale(0.09);
     // create door
     this.door = new Door(this, 1300, 270, "doorIdle", [this.platformLayer]).setDepth(-1);
 
@@ -236,8 +234,14 @@ export default class Stage02 extends Phaser.Scene {
     this.physics.add.collider(this.player, this.platformLayer!);
     this.physics.add.collider(this.otherPlayersGroup, this.player);
     this.physics.add.collider(this.otherPlayersGroup, this.platformLayer!);
-    this.physics.add.collider(this.key, this.player, () => {
+    this.physics.add.collider(this.player, this.key, () => {
+      // this.shoot.destroy();
       this.isKeyPicked = true;
+      this.keyPickerId = this.playerId;
+      this.game.events.emit(STAGE_EVENT.PICKED_KEY, {
+        sceneKey: this.scene.key,
+        id: this.playerId,
+      });
     });
 
     this.physics.add.overlap(this.door, this.player, () => {
