@@ -49,6 +49,8 @@ export default class Stage01 extends Phaser.Scene {
   door!: Door;
   doorOpened: boolean = false;
 
+  gameClear: boolean = false;
+
   mapWidth: number = 95;
   mapHeight: number = 48;
   tileWidth: number = 16;
@@ -111,6 +113,8 @@ export default class Stage01 extends Phaser.Scene {
           );
           this.otherPlayers.set(playerData.id, newPlayer);
           this.otherPlayersGroup.add(newPlayer);
+        } else {
+          // const existingPlayer = this.otherPlayer
         }
       }
     );
@@ -126,6 +130,8 @@ export default class Stage01 extends Phaser.Scene {
     );
 
     this.events.addListener("stageClearSuccess", () => {
+      // this.otherPlayers.clear();
+      // this.otherPlayersGroup.clear(true, true);
       this.scene.start("StageSelect");
     });
   }
@@ -257,7 +263,10 @@ export default class Stage01 extends Phaser.Scene {
   }
 
   stageClear(): void {
-    this.game.events.emit("getClearTime", this.playerId, this.stageNumber);
+    if (!this.gameClear) {
+      this.gameClear = true;
+      this.game.events.emit("getClearTime", this.playerId, this.stageNumber);
+    }
   }
 
   update(): void {
