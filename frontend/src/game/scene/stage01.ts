@@ -92,10 +92,14 @@ export default class Stage01 extends Phaser.Scene {
 
     this.events.addListener(STAGE_EVENT.SET_PLAYER_ID_SUCCESS, (data: any) => {
       this.playerId = data.id;
+<<<<<<< HEAD
+=======
+     // console.log(this.playerId);
+>>>>>>> 58f970e (feat: cannon event)
     });
 
     this.game.events.emit(STAGE_EVENT.SET_PLAYER_ID, this.scene.key);
-    console.log(`current playerId: ${this.playerId}`);
+   // console.log(`current playerId: ${this.playerId}`);
 
     this.otherPlayersGroup = this.physics.add.group();
     this.events.addListener(STAGE_EVENT.CREATE_PLAYER_SUCCESS, (playerData: any) => {
@@ -120,6 +124,10 @@ export default class Stage01 extends Phaser.Scene {
     this.events.addListener("stageClearSuccess", () => {
       this.scene.start("StageSelect");
     });
+
+    this.events.addListener("SHOOT", (data: any)=>{
+      console.log(data);
+    })
   }
 
   create(): void {
@@ -167,10 +175,20 @@ export default class Stage01 extends Phaser.Scene {
     // create cannonBall
     this.cannonBalls = this.physics.add.group();
     // create key
+<<<<<<< HEAD
     this.key = new Key(this, 50, 660, "key", [this.platformLayer]).setScale(0.09);
 
     // create door
     this.door = new Door(this, 700, 660, "doorIdle", [this.platformLayer]).setDepth(-1);
+=======
+    this.key = new Key(this, 50, 660, "key", [this.platformLayer]).setScale(
+      0.09
+    );
+    // create doorc
+    this.door = new Door(this, 700, 660, "doorIdle", [
+      this.platformLayer,
+    ]).setDepth(-1);
+>>>>>>> 58f970e (feat: cannon event)
 
     this.shoot = this.time.addEvent({
       delay: 3000,
@@ -241,6 +259,10 @@ export default class Stage01 extends Phaser.Scene {
       x: this.player.x,
       y: this.player.y,
       sceneKey: this.scene.key,
+    });
+    
+    this.otherPlayers.forEach(function (value, key) {
+      //console.log(key);
     });
 
     if (!this.isKeyPicked) {
