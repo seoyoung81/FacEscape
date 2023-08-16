@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.a305.member.domain.LoginType;
 import com.ssafy.a305.member.domain.Member;
+import com.ssafy.a305.member.dto.GameImageUrlDTO;
 import com.ssafy.a305.member.dto.MemberInfoResDTO;
 import com.ssafy.a305.member.dto.MemberInfoUpdateReqDTO;
 import com.ssafy.a305.member.dto.SignUpReqDTO;
@@ -82,4 +83,15 @@ public class MemberService {
 		memberRepository.delete(member);
 	}
 
+	@Transactional
+	public void saveGameImageUrl(Integer id, String url) {
+		Member member = memberRepository.findById(id).orElseThrow(NoSuchElementException::new);
+		member.updateGameImageUrl(url);
+	}
+
+	@Transactional(readOnly = true)
+	public GameImageUrlDTO getGameImageUrl(Integer id) {
+		Member member = memberRepository.findById(id).orElseThrow(NoSuchElementException::new);
+		return new GameImageUrlDTO(member.getGameImageUrl());
+	}
 }
