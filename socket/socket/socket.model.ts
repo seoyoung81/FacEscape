@@ -74,14 +74,18 @@ const socketMapper = (httpServer: any) => {
 
     socket.on(GameEventType.stageSelect, (data: any) => {
       const room = roomManager.getRoom(data.roomId);
+      console.log(data);
       if (room) {
+        room.stage = data.stageName;
         room.setStartStageTime();
       }
       io.to(data.roomId).emit(GameEventType.stageSelectSucess, data.stageName);
     });
 
     socket.on(GameEventType.createPlayer, (data: any) => {
-      CreatePlayerHandler(socket, data);
+      CreatePlayerHandler(socket, data, (roomId: string, response: any)=>{
+        io.to(roomId).emit("cannonShoot", response);
+      });
     });
 
     socket.on(GameEventType.updatePlayer, (data: any) => {
