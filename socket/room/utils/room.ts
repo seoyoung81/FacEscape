@@ -51,6 +51,10 @@ export class Room {
         return this._stage;
     }
 
+    get gameObject(): any[] {
+        return this._gameObject;
+    }
+
     set state(state: RoomState) {
         this._state = state;
     }

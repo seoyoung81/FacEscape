@@ -6,12 +6,6 @@ import { roomManager } from "../room/roomManager";
 import { CannonBallGenerator } from "./object/cannon";
 import { Room } from "../room/utils/room";
 
-<<<<<<< Updated upstream
-export const CreatePlayerHandler = async (socket: Socket, data: any) => {
-  socket.broadcast
-    .to(data.roomId)
-    .emit(GameEventType.createPlayerSuccess, data);
-=======
 export const CreatePlayerHandler = async (socket: Socket, data: any, cannonEventHandler: (roomId: string, response: string)=>void) => {
   socket.broadcast.to(data.roomId).emit(GameEventType.createPlayerSuccess, data);
 
@@ -22,7 +16,6 @@ export const CreatePlayerHandler = async (socket: Socket, data: any, cannonEvent
     });
     room.addGameObject(cannon);
   }
->>>>>>> Stashed changes
 };
 
 export const UpdatePlayerHandler = async (socket: Socket, data: any) => {
@@ -32,6 +25,15 @@ export const UpdatePlayerHandler = async (socket: Socket, data: any) => {
 };
 
 export const KeyPickHandler = async (socket: Socket, data: any) => {
+  const room = roomManager.getRoom(data.roomId);
+  const gameObj = room?.gameObject;
+
+  if(room && gameObj && gameObj.length !== 0) {
+    gameObj.forEach(gameObj=>{
+      gameObj.stopShoot();
+    });
+  }
+
   socket.broadcast.to(data.roomId).emit(GameEventType.pickedKeySuccess, data);
 };
 
