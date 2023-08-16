@@ -51,7 +51,7 @@ public class Member {
 	@Column(name = "recent_login")
 	private Timestamp recentLogin;
 
-	@Column(name = "game_image")
+	@Column(name = "game_image", length = 2048)
 	private String gameImageUrl;
 
 	public void updateNickname(String nickname) {
