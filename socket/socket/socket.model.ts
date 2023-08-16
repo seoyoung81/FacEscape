@@ -19,7 +19,12 @@ import {
 } from "./utils/roomSocketEventHandler";
 import { GameEventType } from "../game/utils/gameEventTypes";
 import { roomManager } from "../room/roomManager";
-import { CreatePlayerHandler, UpdatePlayerHandler } from "../game/gameEventHandler";
+import {
+  CreatePlayerHandler,
+  UpdatePlayerHandler,
+  KeyPickHandler,
+  DisconnectPlayerHandler,
+} from "../game/gameEventHandler";
 
 const socketMapper = (httpServer: any) => {
   const io = new Server(httpServer, {
@@ -58,9 +63,13 @@ const socketMapper = (httpServer: any) => {
     });
 
     socket.on(GameActionEvent.start, (data: any) => {
-      gameStartEventhandler(socket, parseInt(data.id), (roomId: string, response: string) => {
-        return io.to(roomId).emit(GameResponseEvent.startSuccess, response);
-      });
+      gameStartEventhandler(
+        socket,
+        parseInt(data.id),
+        (roomId: string, response: string) => {
+          return io.to(roomId).emit(GameResponseEvent.startSuccess, response);
+        }
+      );
     });
 
     socket.on(GameEventType.stageSelect, (data: any) => {
@@ -77,6 +86,10 @@ const socketMapper = (httpServer: any) => {
 
     socket.on(GameEventType.updatePlayer, (data: any) => {
       UpdatePlayerHandler(socket, data);
+    });
+
+    socket.on(GameEventType.pickedKey, (data: any) => {
+      KeyPickHandler(socket, data);
     });
 
     socket.on("getClearTime", (data: any) => {
