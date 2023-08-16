@@ -10,7 +10,7 @@ interface AxiosOptions {
 const axiosApi = (url: string, options?: AxiosOptions) => {
   const instance = axios.create({ 
     baseURL: url,
-    headers: { 'Access-Control-Allow-Origin' : 'http://localhost:3000' },
+    headers: { 'Access-Control-Allow-Origin' : '*' },
       ...options 
     })
   return instance;
@@ -21,7 +21,7 @@ const axiosAuthApi = (url: string, options?: AxiosOptions) => {
   const instance = axios.create({
     baseURL: url,
     headers: { 
-      'Access-Control-Allow-Origin' : 'http://localhost:3000'
+      'Access-Control-Allow-Origin' : '*'
     },
     ...options
   })
@@ -31,7 +31,7 @@ const axiosAuthApi = (url: string, options?: AxiosOptions) => {
 export const defaultInstance = axiosApi(BASE_URL);
 export const authInstance = axiosAuthApi(BASE_URL);
 export const expressAxios = axios.create({
-  baseURL: "http://localhost:3050"
+  baseURL: "https://i9a305.p.ssafy.io"
 });
 
 authInstance.interceptors.request.use((config)=>{
