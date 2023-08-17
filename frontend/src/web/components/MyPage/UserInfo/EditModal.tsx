@@ -67,7 +67,6 @@ const EditModal: React.FC<UserProps> = ({ nickName, onEditModal, setNickName  })
 
          
         } catch (error: any) {
-            console.log('회원 정보 수정 실패', error);
         }
     };
     const beforeEditNickName = nickName ?? '';

@@ -19,7 +19,6 @@ const UserResignation: React.FC = () => {
             navigate('/');
 
         } catch (error: any) {
-            console.log('회원탈퇴 실패', error);
             Swal.fire({
                 title: '회원탈퇴 실패.',
     

@@ -43,7 +43,6 @@ const InputNickname = ({roomId}: InputNickNameProps) => {
             setMemberId(data.id);
             setGameNickname(data.nickname);
         } catch(error) {
-            console.log(error);
         }
     };
     

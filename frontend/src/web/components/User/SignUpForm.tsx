@@ -67,15 +67,12 @@ const SignUpForm: React.FC<closeModalProps> = ({ closeModal }) => {
                             if (error.response.data.errors[0]?.errorMessage === '이미 회원가입된 회원입니다.') {
                                 Swal.fire('이미 가입한 회원입니다', '', 'error')
                             }
-                        } else (
-                            console.log('회원 가입 실패', error)
-                        )
+                        }
                     }
             } else (
                 Swal.fire('이미 가입한 회원입니다', '', 'error')
             )
             } catch (error: any) {
-                console.log('이메일 중복체크 실패', error);
             }
     }
 

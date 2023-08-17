@@ -14,7 +14,6 @@ const MyPage: React.FC = () => {
             setGameNickname(data.nickname);
 
         } catch(error) {
-            console.log(error);
         }
     };
     

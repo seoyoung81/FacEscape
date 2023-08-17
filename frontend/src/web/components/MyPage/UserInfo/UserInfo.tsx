@@ -23,7 +23,6 @@ const UserInfo: React.FC = () =>{
             setEmail(response.data.email);
             setMileage(response.data.mileage);
         } catch (error) {
-            console.log(error);
         }
         };
     fetchData();

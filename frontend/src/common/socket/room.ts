@@ -15,7 +15,7 @@ export function useSocketRooms() {
     const [roomInfo, setRoomInfo] = useState<RoomInfo>();
 
     const connect = () => {
-        const newSocket = io("http://localhost:3050", {
+        const newSocket = io("https://i9a305.p.ssafy.io", {
             transports: ["websocket", "polling"],
             query: {token: sessionStorage.getItem("accessToken") || ""}
         });

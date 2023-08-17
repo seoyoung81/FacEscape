@@ -31,7 +31,6 @@ const CodeInput :React.FC = () => {
             })
         }
         else{
-            console.log(token);
             joinRoom(codeInput, token);
         }
     }

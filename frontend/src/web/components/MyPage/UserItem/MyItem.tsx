@@ -36,7 +36,6 @@ const MyItem: React.FC<MyItemProps> = ({ itemId, itemName, itemImg, myCategory, 
               dispatch(toggleIconRender());
               
           } catch (error) {
-              console.log('아이템 장착 실패', error);
           }
     
         };
@@ -56,7 +55,6 @@ const MyItem: React.FC<MyItemProps> = ({ itemId, itemName, itemImg, myCategory, 
                     setUsedYN(selectedItem.usedYN);
                 }
             } catch (error) {
-                console.log(error);
             }
         };
         fetchData();

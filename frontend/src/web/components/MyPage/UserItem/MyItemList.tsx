@@ -36,7 +36,6 @@ const MyItemList: React.FC = () => {
                 } 
             }  
             catch (error) {
-                console.log('내가 구매한 아이템 불러오기 실패', error);
             }
         };
 

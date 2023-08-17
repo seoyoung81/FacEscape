@@ -17,7 +17,6 @@ const MyMilage :React.FC = () => {
                 setMyMileage(response.data.mileage);
             } catch (error) {
                 setMyMileage(0);
-                console.log('mileage Error', error)
             }
         };
 

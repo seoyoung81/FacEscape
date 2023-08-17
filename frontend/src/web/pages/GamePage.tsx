@@ -34,7 +34,6 @@ const GamePage = () => {
       // 이미 event가 등록되어 있는지 확인 후 event 등록
       if (!game.events.listeners(STAGE_EVENT.SET_PLAYER_ID).length) {
         game.events.addListener(STAGE_EVENT.SET_PLAYER_ID, (sceneKey: string) => {
-          // console.log(`set player id: ${useSocket.client?.id}`);
           const selectedScene = game.scene.getScene(sceneKey);
           selectedScene.events.emit(
             STAGE_EVENT.SET_PLAYER_ID_SUCCESS,
@@ -76,7 +75,6 @@ const GamePage = () => {
 
       if (!game.events.listeners(STAGE_EVENT.CREATE_PLAYER).length) {
         game.events.addListener(STAGE_EVENT.CREATE_PLAYER, (playerData: any) => {
-          console.log(`creating player: ${playerData.id}`);
           useSocket.emitGameEvent(STAGE_EVENT.CREATE_PLAYER, {
             roomId: useSocket.roomId,
             id: playerData.id,
@@ -88,7 +86,6 @@ const GamePage = () => {
       }
 
       useSocket.socket.on(STAGE_EVENT.CREATE_PLAYER_SUCCESS, (playerData: any) => {
-        console.log(`player create success:${playerData.id}`);
         game.scene
           .getScene(playerData.sceneKey)
           .events.emit(STAGE_EVENT.CREATE_PLAYER_SUCCESS, playerData);
@@ -96,7 +93,6 @@ const GamePage = () => {
 
       if (!game.events.listeners(STAGE_EVENT.UPDATE_PLAYER).length) {
         game.events.addListener(STAGE_EVENT.UPDATE_PLAYER, (playerData: any) => {
-          // console.log("update player listener 등록");
           useSocket.emitGameEvent(STAGE_EVENT.UPDATE_PLAYER, {
             roomId: useSocket.roomId,
             id: playerData.id,
@@ -120,7 +116,6 @@ const GamePage = () => {
             sceneKey: data.sceneKey,
             id: data.id,
           });
-          console.log(`emitted key picker :${data.id}`);
         });
       }
 

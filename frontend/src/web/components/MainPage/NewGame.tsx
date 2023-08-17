@@ -17,7 +17,6 @@ const NewGame :React.FC = () => {
             });
         }
         else{
-            console.log(token);
             createRoom(token);
         }
     }

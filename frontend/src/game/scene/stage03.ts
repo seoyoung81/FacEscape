@@ -111,8 +111,6 @@ export default class Stage03 extends Phaser.Scene {
     });
 
     this.game.events.emit(STAGE_EVENT.SET_PLAYER_ID, this.scene.key);
-    // console.log(`current playerId: ${this.playerId}`);
-
     this.events.addListener(STAGE_EVENT.CREATE_PLAYER_SUCCESS, (playerData: any) => {
       if (playerData.id !== this.playerId) {
         if (!this.otherPlayers.has(playerData.id)) {

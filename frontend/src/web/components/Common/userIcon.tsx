@@ -16,7 +16,7 @@ const Icon = () => {
                 }
             } 
             catch (error) {
-                console.log(error);
+
             }
         };
         fetchData();

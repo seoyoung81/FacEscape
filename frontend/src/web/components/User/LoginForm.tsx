@@ -38,7 +38,6 @@ const LogInForm: React.FC<closeModalProps> = ({ closeModal }) => {
         window.location.reload();
         return data;
     } catch (error: any) {
-        console.log('로그인 실패', error);
         // 로그인 실패 alert
         Swal.fire({
             title: '존재하지 않는 정보입니다.',

@@ -97,7 +97,6 @@ export function useOpenVidu () {
             await (session as Session).publish(publisher);
             setPublisher(()=>publisher);
         } catch(e) {
-            console.log(e);
             Swal.fire({
                 title: "만료된 방입니다.",
                 confirmButtonColor: '#3479AD',

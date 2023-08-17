@@ -125,11 +125,8 @@ export default class Stage01 extends Phaser.Scene {
 
     this.events.addListener("stageClearSuccess", () => {
       this.otherPlayers.clear();
-      console.log(this.otherPlayers.size);
-
       this.otherPlayersGroup.clear(false, true);
       this.otherPlayersGroup = this.physics.add.group();
-      console.log(this.otherPlayersGroup.getLength());
       this.scene.start("StageSelect");
     });
 
