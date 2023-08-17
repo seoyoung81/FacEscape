@@ -12,6 +12,7 @@ const SnapShot = (videoRef: React.RefObject<HTMLVideoElement>, setImageUrl: Reac
   const [videoEffectId, setVideoEffectId] = useState<number>(0);
   const render = useSelector((state: RootState) => state.iconRender);
 
+
   useEffect(() => {
     const fetchData = async () => {
         try {
@@ -72,39 +73,33 @@ const SnapShot = (videoRef: React.RefObject<HTMLVideoElement>, setImageUrl: Reac
       }
 
       ctx.restore();
-
+      
       canvas.toBlob((blob) => {
         if (blob !== null) {
-            const url = URL.createObjectURL(blob);
-            const img = new Image();
-        
-            img.onload = () => {
-            setImageUrl(url);
-          Swal.fire({
-            title: '사진을 사용하시겠습니까?',
-            showCancelButton: true,
-            confirmButtonColor: '#3479AD',
-            cancelButtonColor: '#DB7500',
-            confirmButtonText: '확인',
-            cancelButtonText: '다시찍기',
-            html: `<img src="${url}" alt="" style="width: 100%; max-height: 250px; object-fit: contain;">`
-        }).then(async(result) => {
-            if (result.isConfirmed) {
-              // 사진 url 넘기기
-              try {
-                await authInstance.post('/member/image', {
-                  imageUrl: url
-                })
-                
-              } catch (error) {
-                console.log('이미지 전송 실패', error);
-              }
-              
+            const dataURL = canvas.toDataURL("image/png", 0.5);
+            if (dataURL) {
+              setImageUrl(`url(${dataURL})`);
+              Swal.fire({
+                title: '사진을 사용하시겠습니까?',
+                showCancelButton: true,
+                confirmButtonColor: '#3479AD',
+                cancelButtonColor: '#DB7500',
+                confirmButtonText: '확인',
+                cancelButtonText: '다시찍기',
+                html: `<img src=${dataURL} alt="" style="width: 100%; max-height: 250px; object-fit: contain;">`
+              }).then(async(result) => {
+                if (result.isConfirmed) {
+                  console.log('url', dataURL);              
             }
+
+            }
+     
+
+     
           
-        })
+        )
         }
-        img.src = url;
+      
       }});
     }
   };

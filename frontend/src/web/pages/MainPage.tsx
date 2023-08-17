@@ -4,6 +4,7 @@ import CodeInput from "../components/MainPage/CodeInput";
 import NewGame from "../components/MainPage/NewGame";
 // components
 import GameName from "../components/MainPage/GameName";
+import { useState } from "react";
 
 const MainPage = () => {
     return (
@@ -14,6 +15,7 @@ const MainPage = () => {
                 <CodeInput />
                 <NewGame />
             </div>
+           
         </div>
     )
 }
