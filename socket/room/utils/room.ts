@@ -120,4 +120,11 @@ export class Room {
     getGameObjectSize() {
         return this._gameObject.length;
     }
+
+    clearGameObject() {
+        this._gameObject.forEach(gameObj=>{
+          gameObj.stopShoot();
+        })
+        this._gameObject = [];
+    }
 }

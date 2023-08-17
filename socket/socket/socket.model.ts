@@ -74,8 +74,10 @@ const socketMapper = (httpServer: any) => {
 
     socket.on(GameEventType.stageSelect, (data: any) => {
       const room = roomManager.getRoom(data.roomId);
+      console.log(data.roomId);
       console.log(data);
       if (room) {
+        room.clearGameObject();
         room.stage = data.stageName;
         room.setStartStageTime();
       }
