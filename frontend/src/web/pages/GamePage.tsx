@@ -40,9 +40,13 @@ const GamePage = () => {
           (sceneKey: string) => {
             console.log(`set player id: ${useSocket.client?.id}`);
             const selectedScene = game.scene.getScene(sceneKey);
-            selectedScene.events.emit(STAGE_EVENT.SET_PLAYER_ID_SUCCESS, {
-              id: useSocket.client?.id,
-            });
+            selectedScene.events.emit(
+              STAGE_EVENT.SET_PLAYER_ID_SUCCESS,
+              {
+                id: useSocket.client?.id,
+              },
+              openVidu.remoteMembers
+            );
           }
         );
       }
@@ -61,10 +65,8 @@ const GamePage = () => {
         });
       }
 
-      useSocket.socket.on("cannonShoot", (data)=>{
-        game.scene
-          .getScene(data.sceneKey)
-          .events.emit("cannonShoot");
+      useSocket.socket.on("cannonShoot", (data) => {
+        game.scene.getScene(data.sceneKey).events.emit("cannonShoot");
       });
 
       useSocket.socket.on(STAGE_EVENT.SELECT_SUCCESS, (sceneKey: any) => {
@@ -148,7 +150,6 @@ const GamePage = () => {
             stageNumber: stageNumber,
           });
         }
-        
       );
       game.events.addListener(
         "stageClear",

@@ -20,11 +20,12 @@ interface StageSelectButton {
 }
 
 export class StageSelect extends Phaser.Scene {
-  private testElement!: Phaser.GameObjects.DOMElement;
   constructor() {
     super({
       key: "StageSelect",
     });
+
+    // this.startData:any = {};
   }
   preload(): void {
     this.load.image("background", background);
@@ -34,6 +35,8 @@ export class StageSelect extends Phaser.Scene {
     this.load.json("stageButtons", stageButtons);
 
     this.events.addListener(STAGE_EVENT.SELECT_SUCCESS, (stage: string) => {
+      this.game.scene.getScene(stage).scene.restart();
+
       this.scene.start(stage);
     });
   }

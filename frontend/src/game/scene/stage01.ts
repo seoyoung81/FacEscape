@@ -31,10 +31,15 @@ export default class Stage01 extends Phaser.Scene {
     super({
       key: "Stage01",
     });
+
+    // this.otherPlayersGroup = this.physics.add.group();
+    // this.otherPlayers = new Map<number, Player>();
   }
+
   player!: Player;
   playerId!: number;
   otherPlayers: Map<number, Player> = new Map<number, Player>();
+  startPoints!: Map<number, [number, number]>;
   otherPlayersGroup!: Phaser.Physics.Arcade.Group;
   cannon!: Cannon;
   cannonBalls!: Phaser.Physics.Arcade.Group;
@@ -58,6 +63,10 @@ export default class Stage01 extends Phaser.Scene {
   domElement!: Phaser.GameObjects.DOMElement;
 
   preload(): void {
+    this.isKeyPicked = false;
+    this.keyPickerId = -1;
+    this.doorOpened = false;
+    this.gameClear = false;
     this.load.tilemapTiledJSON("stage01", stage01);
     this.load.image("terrain", terrain);
     this.load.image("bg", background);
@@ -90,20 +99,24 @@ export default class Stage01 extends Phaser.Scene {
       frameWidth: 46,
       frameHeight: 56,
     });
+    this.otherPlayersGroup = this.physics.add.group();
 
-    this.events.addListener(STAGE_EVENT.SET_PLAYER_ID_SUCCESS, (data: any) => {
-      this.playerId = data.id;
-      // console.log(this.playerId);
-    });
+    this.events.addListener(
+      STAGE_EVENT.SET_PLAYER_ID_SUCCESS,
+      (data: any, remoteMembers: any) => {
+        this.playerId = data.id;
+      }
+    );
 
     this.game.events.emit(STAGE_EVENT.SET_PLAYER_ID, this.scene.key);
     // console.log(`current playerId: ${this.playerId}`);
-
-    this.otherPlayersGroup = this.physics.add.group();
     this.events.addListener(
       STAGE_EVENT.CREATE_PLAYER_SUCCESS,
       (playerData: any) => {
-        if (playerData.id !== this.playerId) {
+        if (
+          playerData.id !== this.playerId &&
+          this.otherPlayers.get(playerData.id) !== undefined
+        ) {
           const newPlayer = new Player(
             this,
             playerData.x,
@@ -112,7 +125,7 @@ export default class Stage01 extends Phaser.Scene {
             ["platformLayer"]
           );
           this.otherPlayers.set(playerData.id, newPlayer);
-          this.otherPlayersGroup.add(newPlayer);
+          this.otherPlayersGroup!.add(newPlayer);
         } else {
           // 이미 생성된 플레이어인 경우 위치 업데이트
           const existingPlayer = this.otherPlayers.get(playerData.id);
@@ -132,6 +145,12 @@ export default class Stage01 extends Phaser.Scene {
     );
 
     this.events.addListener("stageClearSuccess", () => {
+      this.otherPlayers.clear();
+      console.log(this.otherPlayers.size);
+
+      this.otherPlayersGroup.clear(false, true);
+      this.otherPlayersGroup = this.physics.add.group();
+      console.log(this.otherPlayersGroup.getLength());
       this.scene.start("StageSelect");
     });
 
@@ -148,19 +167,15 @@ export default class Stage01 extends Phaser.Scene {
         cannonBall.destroy();
       });
 
-      this.physics.add.overlap(this.otherPlayersGroup, cannonBall, () => {
+      this.physics.add.overlap(this.otherPlayersGroup!, cannonBall, () => {
         cannonBall.destroy();
       });
     });
   }
 
   create(): void {
-    this.isKeyPicked = false;
-    this.doorOpened = false;
-    this.gameClear = false;
-
-    // this.otherPlayersGroup.clear(true, true);
-    // this.otherPlayers.clear();
+    this.otherPlayersGroup!.clear(true, true);
+    this.otherPlayers.clear();
 
     // add background
     const bg = this.add.image(0, 0, "bg").setOrigin(0).setScale(1);
@@ -226,8 +241,8 @@ export default class Stage01 extends Phaser.Scene {
       }
     );
 
-    this.physics.add.collider(this.otherPlayersGroup, this.player);
-    this.physics.add.collider(this.otherPlayersGroup, this.platformLayer!);
+    this.physics.add.collider(this.otherPlayersGroup!, this.player);
+    this.physics.add.collider(this.otherPlayersGroup!, this.platformLayer!);
 
     this.physics.add.collider(this.player, this.key, () => {
       this.isKeyPicked = true;
