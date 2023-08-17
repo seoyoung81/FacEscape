@@ -101,7 +101,7 @@ export default class Stage02 extends Phaser.Scene {
     });
 
     this.game.events.emit(STAGE_EVENT.SET_PLAYER_ID, this.scene.key);
-    console.log(`current playerId: ${this.playerId}`);
+    // console.log(`current playerId: ${this.playerId}`);
 
     this.otherPlayersGroup = this.physics.add.group();
     this.events.addListener(STAGE_EVENT.CREATE_PLAYER_SUCCESS, (playerData: any) => {
@@ -257,9 +257,9 @@ export default class Stage02 extends Phaser.Scene {
       }
     });
 
-    this.input.keyboard?.on("keydown-R", () => {
-      this.scene.start("StageSelect");
-    });
+    // this.input.keyboard?.on("keydown-R", () => {
+    //   this.scene.start("StageSelect");
+    // });
   }
 
   stageClear(): void {

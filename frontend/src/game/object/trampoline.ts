@@ -25,8 +25,6 @@ export class Trampoline extends Phaser.Physics.Arcade.Sprite {
   }
 
   update(): void {
-    console.log("Trampoline update method called");
-
   }
 
 

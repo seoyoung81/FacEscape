@@ -286,9 +286,9 @@ export default class Stage01 extends Phaser.Scene {
       "Hello, Phaser DOM Element!"
     );
 
-    this.input.keyboard?.on("keydown-R", () => {
-      this.scene.start("StageSelect");
-    });
+    // this.input.keyboard?.on("keydown-R", () => {
+    //   this.scene.start("StageSelect");
+    // });
   }
 
   stageClear(): void {
