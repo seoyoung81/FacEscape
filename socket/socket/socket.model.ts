@@ -27,20 +27,19 @@ import {
 } from "../game/gameEventHandler";
 
 
-const init_xPos_stage1 = 350;
-const init_yPos_stage1 = 660;
- 
-const init_xPos_stage2 = 400;
-const init_yPos_stage2 = 2500;
-
-const init_xPos_stage3 = 50;
-const init_yPos_stage3 = 660;
-
-type UserStartPos = { id: number; startX: number; startY: number };
-let userStartPos: UserStartPos[] = [];
-
-
 const socketMapper = (httpServer: any) => {
+  const init_xPos_stage1 = 350;
+  const init_yPos_stage1 = 660;
+ 
+  const init_xPos_stage2 = 400;
+  const init_yPos_stage2 = 2500;
+
+  const init_xPos_stage3 = 50;
+  const init_yPos_stage3 = 660;
+
+  type UserStartPos = { id: number; startX: number; startY: number };
+  let userStartPos: UserStartPos[] = [];
+
   const io = new Server(httpServer, {
     cors: {
       origin: "*",
