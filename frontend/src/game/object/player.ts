@@ -102,7 +102,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   getPlayerState() {
-    console.log(this.playerState);
     return this.playerState;
   }
 
