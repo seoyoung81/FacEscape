@@ -112,9 +112,29 @@ export function useSocketRooms() {
         }
     }
 
+    const updateMemberInfos = (data: any) => {
+        const roomData = JSON.parse(data);
+        const responseConverter = new ClientMembersResponse(roomData["members"]);
+        setRoomInfo((prevRoomInfo) => {
+            if (!prevRoomInfo) {
+                return; 
+            }
+            console.log("someone enter: ")
+            console.log(responseConverter.convertToMembers());
+            console.log(roomData["hostId"]);
+            const updatedRoomInfo = new RoomInfo(
+                prevRoomInfo.roomId,
+                prevRoomInfo.hostId,
+                prevRoomInfo.myId,
+                responseConverter.convertToMembers()
+            );
+            return updatedRoomInfo;
+        });
+    }
+
     useEffect(() => {
         connect();
     }, []);
 
-    return [{createRoom, joinRoom, getHostNickName, emitGameEvent, roomInfo, roomId, socket, client, isKick}];
+    return [{createRoom, joinRoom, getHostNickName, emitGameEvent, updateMemberInfos, roomInfo, roomId, socket, client, isKick}];
 };
