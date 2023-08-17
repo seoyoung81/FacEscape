@@ -11,8 +11,7 @@ export class ClientMembersResponse {
     const convertedMembers = this.members.map(
       (member:any):RoomMember => ({
         id      : member.id,
-        nickname: member.nickname,
-        uuid    : member.uuid,
+        nickname: member.nickname
       })
     );
 

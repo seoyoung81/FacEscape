@@ -1,4 +1,5 @@
 import { useState, useEffect,ChangeEvent } from 'react';
+import Swal from 'sweetalert2';
 import styles from './MainPageComponent.module.css';
 import {useSocketRooms} from '../../../common/socket'
 
@@ -12,12 +13,26 @@ const CodeInput :React.FC = () => {
 
     const token = sessionStorage.getItem("accessToken") || "";
     const handleClick = () => {
-        if(codeInput){
-            console.log(token);
-            joinRoom(codeInput, token);
+
+        if(!codeInput){
+            Swal.fire({
+                title: "입장 코드를 입력해주세요 !!!",
+                confirmButtonColor: '#3479AD',
+                confirmButtonText: '확인',
+                width: '500px'
+            });
+        }
+        else if(!token){
+            Swal.fire({
+                title: "로그인 후 이용 가능합니다 !!!",
+                confirmButtonColor: '#3479AD',
+                confirmButtonText: '확인',
+                width: '500px'
+            })
         }
         else{
-            alert("입장 코드를 입력해주세요!");
+            console.log(token);
+            joinRoom(codeInput, token);
         }
     }
 

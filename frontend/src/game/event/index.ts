@@ -7,4 +7,9 @@ export enum STAGE_EVENT {
   UPDATE_PLAYER_SUCCESS = "updatePlayerSuccess",
   SET_PLAYER_ID = "setPlayerId",
   SET_PLAYER_ID_SUCCESS = "setPlayerIdSuccess",
+  PICKED_KEY = "pickedKey",
+  PICKED_KEY_SUCCESS = "pickedKeySuccess",
+  CLEAR = "stageClear",
+  CLEAR_SUCCESS = "stageClearSuccess",
+  OPEN_DOOR = "openDoor",
 }

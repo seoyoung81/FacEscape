@@ -20,6 +20,7 @@ interface StageSelectButton {
 }
 
 export class StageSelect extends Phaser.Scene {
+  private testElement!: Phaser.GameObjects.DOMElement;
   constructor() {
     super({
       key: "StageSelect",

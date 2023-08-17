@@ -6,7 +6,6 @@ import { defaultInstance } from '../../services/api';
 
 import { useDispatch } from 'react-redux';
 import { setIsLogIn } from '../../store/authSlice';
-import axios from 'axios';
 
 import styles from './User.module.css';
 import Swal from 'sweetalert2';

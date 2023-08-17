@@ -72,8 +72,14 @@
 }
 
 /* 로딩 */
+.loading-container {
+  padding-left: 670px;
+  padding-top: 250px;
+}
+
 .loader-wrapper {
     position: relative;
+    margin-left: 50px;
   }
   
   .loader-wrapper .packman::before {

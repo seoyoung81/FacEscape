@@ -122,12 +122,13 @@
     width: 800px;
     height: 550px;
     border-radius: 5px;
-    border: 1px solid;
+    background-color: white;
     
     /* 스크롤 */
     overflow: auto;
     max-height: 550px;
     margin-top: 8px;
+    
 }
 
 .main-item {

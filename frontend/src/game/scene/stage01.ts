@@ -25,8 +25,6 @@ import { STAGE_EVENT } from "../event";
 //====== wall setting ==============
 const WALL_START_X = 270;
 const WALL_START_Y = 670;
-// const WALL_GAP = 90;
-// const WALL_Y_OFFSET = 10;
 
 export default class Stage01 extends Phaser.Scene {
   constructor() {
@@ -36,21 +34,28 @@ export default class Stage01 extends Phaser.Scene {
   }
   player!: Player;
   playerId!: number;
-  // otherPlayersData!: Map<string, PlayerData>;
-  otherPlayers: { [id: number]: Player } = {};
+  otherPlayers: Map<number, Player> = new Map<number, Player>();
+  otherPlayersGroup!: Phaser.Physics.Arcade.Group;
   cannon!: Cannon;
   cannonBalls!: Phaser.Physics.Arcade.Group;
-  shoot!: Phaser.Time.TimerEvent;
   platformLayer!: Phaser.Tilemaps.TilemapLayer | null;
   walls!: Phaser.Physics.Arcade.Group;
   key!: Phaser.Physics.Arcade.Sprite;
   isKeyPicked!: boolean;
+  keyPickerId!: number;
   door!: Door;
+  doorOpened: boolean = false;
+
+  gameClear: boolean = false;
 
   mapWidth: number = 95;
   mapHeight: number = 48;
   tileWidth: number = 16;
   tileHeight: number = 16;
+
+  stageNumber: number = 1;
+
+  domElement!: Phaser.GameObjects.DOMElement;
 
   preload(): void {
     this.load.tilemapTiledJSON("stage01", stage01);
@@ -86,37 +91,76 @@ export default class Stage01 extends Phaser.Scene {
       frameHeight: 56,
     });
 
-    this.events.emit(STAGE_EVENT.SET_PLAYER_ID);
+    this.events.addListener(STAGE_EVENT.SET_PLAYER_ID_SUCCESS, (data: any) => {
+      this.playerId = data.id;
+      // console.log(this.playerId);
+    });
 
-    this.events.addListener(
-      STAGE_EVENT.SET_PLAYER_ID_SUCCESS,
-      (id: number) => (this.playerId = id)
-    );
+    this.game.events.emit(STAGE_EVENT.SET_PLAYER_ID, this.scene.key);
+    // console.log(`current playerId: ${this.playerId}`);
 
+    this.otherPlayersGroup = this.physics.add.group();
     this.events.addListener(
       STAGE_EVENT.CREATE_PLAYER_SUCCESS,
       (playerData: any) => {
-        this.otherPlayers[playerData.id] = new Player(
-          this,
-          playerData.x,
-          playerData.y,
-          "idle",
-          null
-        );
+        if (playerData.id !== this.playerId) {
+          const newPlayer = new Player(
+            this,
+            playerData.x,
+            playerData.y,
+            "idle",
+            ["platformLayer"]
+          );
+          this.otherPlayers.set(playerData.id, newPlayer);
+          this.otherPlayersGroup.add(newPlayer);
+        } else {
+          // 이미 생성된 플레이어인 경우 위치 업데이트
+          const existingPlayer = this.otherPlayers.get(playerData.id);
+          existingPlayer?.setPosition(playerData.x, playerData.y);
+        }
       }
     );
 
     this.events.addListener(
       STAGE_EVENT.UPDATE_PLAYER_SUCCESS,
       (playerData: any) => {
-        this.otherPlayers[playerData.id].setX = playerData.x;
-        this.otherPlayers[playerData.id].setY = playerData.y;
+        if (playerData.id !== this.playerId) {
+          this.otherPlayers.get(playerData.id)!.x = playerData.x;
+          this.otherPlayers.get(playerData.id)!.y = playerData.y;
+        }
       }
     );
+
+    this.events.addListener("stageClearSuccess", () => {
+      this.scene.start("StageSelect");
+    });
+
+    this.events.addListener("cannonShoot", (data: any) => {
+      const cannonBall = this.physics.add.sprite(
+        this.cannon.x,
+        this.cannon.y,
+        "cannonBall"
+      );
+      this.cannonBalls.add(cannonBall);
+      cannonBall.body.allowGravity = false;
+      cannonBall.setVelocityX(-1200);
+      this.physics.add.overlap(this.player, cannonBall, () => {
+        cannonBall.destroy();
+      });
+
+      this.physics.add.overlap(this.otherPlayersGroup, cannonBall, () => {
+        cannonBall.destroy();
+      });
+    });
   }
 
   create(): void {
     this.isKeyPicked = false;
+    this.doorOpened = false;
+    this.gameClear = false;
+
+    // this.otherPlayersGroup.clear(true, true);
+    // this.otherPlayers.clear();
 
     // add background
     const bg = this.add.image(0, 0, "bg").setOrigin(0).setScale(1);
@@ -137,12 +181,18 @@ export default class Stage01 extends Phaser.Scene {
     // create layer
     this.platformLayer = map.createLayer("platformLayer", ["terrain"]);
     // create player
-    this.player = new Player(this, 370, 660, "idle");
+    this.player = new Player(this, this.playerId * 50 + 350, 660, "idle");
 
-    this.events.emit(STAGE_EVENT.CREATE_PLAYER, {
+    this.game.events.emit(STAGE_EVENT.CREATE_PLAYER, {
       id: this.playerId,
       x: this.player.x,
       y: this.player.y,
+      sceneKey: this.scene.key,
+    });
+
+    this.events.addListener(STAGE_EVENT.PICKED_KEY_SUCCESS, (data: any) => {
+      this.keyPickerId = data.id;
+      this.isKeyPicked = true;
     });
 
     // create cannon
@@ -156,53 +206,10 @@ export default class Stage01 extends Phaser.Scene {
     this.key = new Key(this, 50, 660, "key", [this.platformLayer]).setScale(
       0.09
     );
-    // create door
+    // create doorc
     this.door = new Door(this, 700, 660, "doorIdle", [
       this.platformLayer,
     ]).setDepth(-1);
-
-    this.shoot = this.time.addEvent({
-      delay: 3000,
-      callback: () => {
-        const cannonBall = this.physics.add.sprite(
-          this.cannon.x,
-          this.cannon.y,
-          "cannonBall"
-        );
-        this.cannonBalls.add(cannonBall);
-        cannonBall.body.allowGravity = false;
-        cannonBall.setVelocityX(-1200);
-        this.physics.add.collider(this.player, cannonBall, () => {
-          this.player.setPosition(this.player.x + 5, this.player.y);
-          cannonBall.destroy();
-        });
-      },
-      callbackScope: this,
-      loop: true,
-    });
-
-    this.physics.add.collider(this.key, this.player, () => {
-      this.isKeyPicked = true;
-    });
-
-    // key, player collider
-    this.events.on("postupdate", () => {
-      if (this.isKeyPicked) {
-        this.key.body!.enable = false;
-        Phaser.Display.Align.To.TopCenter(this.key, this.player, 0, -130);
-      }
-    });
-
-    this.events.once(
-      "doorOpenEvent",
-      () => {
-        if (this.isKeyPicked) {
-          this.door.play("doorOpenAnims");
-          this.shoot.destroy();
-        }
-      },
-      this
-    );
 
     // colliders
     this.physics.add.collider(this.player, this.platformLayer!);
@@ -219,27 +226,112 @@ export default class Stage01 extends Phaser.Scene {
       }
     );
 
+
+    this.physics.add.collider(this.otherPlayersGroup, this.player, () => {
+    // this.physics.add.collider(this.otherPlayersGroup, this.player, (player, otherPlayer) => {
+      // const collidedPlayer = otherPlayer as Phaser.Physics.Arcade.Sprite;
+      // console.log("Collided with player at x:", collidedPlayer.x);
+      // console.log("this.player at x:", this.player.x);
+
+      // if (this.player.x > collidedPlayer.x && !collidedPlayer.body!.touching.down && !this.player.body!.touching.down) {
+      //   this.player.setPosition(this.player.x + 10, this.player.y)
+      // }
+      
+      // else if (this.player.x < collidedPlayer.x && !collidedPlayer.body!.touching.down && !this.player.body!.touching.down) {
+      //   this.player.setPosition(this.player.x - 10, this.player.y)
+      // }
+
+      if (this.player.body!.touching.down) {
+        setTimeout(() => {
+          this.player.setVelocityY(-150);
+        }, 30);
+      }
+    });
+    
+    
+
+
+    this.physics.add.collider(this.otherPlayersGroup, this.platformLayer!);
+
+    this.physics.add.collider(this.player, this.key, () => {
+      this.isKeyPicked = true;
+      this.keyPickerId = this.playerId;
+      this.game.events.emit(STAGE_EVENT.PICKED_KEY, {
+        sceneKey: this.scene.key,
+        id: this.playerId,
+      });
+    });
+
     this.physics.add.overlap(this.door, this.player, () => {
-      if (this.isKeyPicked) {
-        this.scene.start("StageSelect");
+      if (this.playerId === this.keyPickerId) {
+        console.log("overlapping door");
+        this.stageClear();
       }
     });
 
+    this.domElement = this.add.dom(
+      this.player.x,
+      this.player.y,
+      "video",
+      {
+        style: {
+          width: "200px",
+          height: "100px",
+          backgroundColor: "blue",
+          color: "white",
+          textAlign: "center",
+        },
+      },
+      "Hello, Phaser DOM Element!"
+    );
+
     this.input.keyboard?.on("keydown-R", () => {
-      this.scene.restart();
+      this.scene.start("StageSelect");
     });
+  }
+
+  stageClear(): void {
+    if (!this.gameClear) {
+      this.gameClear = true;
+      this.game.events.emit("getClearTime", this.playerId, this.stageNumber);
+    }
   }
 
   update(): void {
     this.player.update();
-    this.events.emit(STAGE_EVENT.UPDATE_PLAYER, {
+    this.domElement.x = this.player.x;
+    this.domElement.y = this.player.y;
+    this.game.events.emit(STAGE_EVENT.UPDATE_PLAYER, {
       id: this.playerId,
       x: this.player.x,
       y: this.player.y,
+      sceneKey: this.scene.key,
+    });
+
+    this.otherPlayers.forEach(function (value, key) {
+      //console.log(key);
     });
 
     if (!this.isKeyPicked) {
       this.cannon.update();
+    } else {
+      this.cannon.setTexture("cannon");
+      if (!this.doorOpened) {
+        this.door.play("doorOpenAnims");
+        this.doorOpened = true;
+      }
+      if (this.playerId === this.keyPickerId) {
+        // this.key.x = this.player.x;
+        // this.key.y = this.player.y - 60;
+        this.key.body!.enable = false;
+        Phaser.Display.Align.To.TopCenter(this.key, this.player, 0, -70);
+      } else {
+        const picker = this.otherPlayers.get(this.keyPickerId);
+        // this.key.x = picker!.x;
+        // this.key.y = picker!.y - 60;
+        this.key.body!.enable = false;
+        Phaser.Display.Align.To.TopCenter(this.key, picker!, 0, -70);
+      }
     }
 
     this.cannonBalls.getChildren().forEach((gameObj) => {
@@ -249,11 +341,6 @@ export default class Stage01 extends Phaser.Scene {
         this.cannonBalls.killAndHide(cannonBall);
       }
     });
-
-    if (this.isKeyPicked) {
-      this.events.emit("doorOpenEvent");
-      this.cannon.setTexture("cannon");
-    }
   }
 
   addWall() {
@@ -266,6 +353,7 @@ export default class Stage01 extends Phaser.Scene {
       wall.body.allowGravity = true;
 
       this.physics.add.collider(this.player, wall, () => {
+        this.player.setPosition(this.player.x + 5, this.player.y);
         wall.body.immovable = true;
         wall.body.moves = false;
       });
