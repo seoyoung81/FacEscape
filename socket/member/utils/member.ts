@@ -9,6 +9,9 @@ export class Member {
     private _room: Room | undefined;
     private _socket: Socket
 
+    private _startX=0;
+    private _startY=0;
+
     constructor(idOrMember: number | Member, socket?: Socket) {
         if (typeof idOrMember === 'number' && socket instanceof Socket) {
             this._id = idOrMember;
@@ -37,11 +40,29 @@ export class Member {
         return this._room;
     }
 
+
+    get startX(): number | undefined{
+        return this.startX;
+    }
+
+    get startY(): number | undefined{
+        return this.startY;
+    }
+
+    set startX(value: number) {
+        this._startX = value;
+    }
+      
+    set startY(value: number) {
+        this._startY = value;
+    }
+
+
     updateSocket(socket: Socket) {
         // 동일 Id로 동일한 방에 여러 개의 연결을 할 수 없도록, 기존 접속을 끊고 새로운 연결을 만든다.
         if(this._socket && this._room) {
             this._socket.leave(this._room.roomId);
-            this._socket.emit("kick", "다른 클라이언트에서 접속하여 접속이 종료됩니다.");
+             this._socket.emit("kick", "다른 클라이언트에서 접속하여 접속이 종료됩니다.");
             this._socket.disconnect();
         }
 

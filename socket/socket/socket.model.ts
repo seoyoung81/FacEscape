@@ -26,6 +26,20 @@ import {
   DisconnectPlayerHandler,
 } from "../game/gameEventHandler";
 
+
+const init_xPos_stage1 = 350;
+const init_yPos_stage1 = 660;
+ 
+const init_xPos_stage2 = 400;
+const init_yPos_stage2 = 2500;
+
+const init_xPos_stage3 = 50;
+const init_yPos_stage3 = 660;
+
+type UserStartPos = { id: number; startX: number; startY: number };
+let userStartPos: UserStartPos[] = [];
+
+
 const socketMapper = (httpServer: any) => {
   const io = new Server(httpServer, {
     cors: {
@@ -72,6 +86,7 @@ const socketMapper = (httpServer: any) => {
       );
     });
 
+    // 방장의 스테이지 선택 요청 시
     socket.on(GameEventType.stageSelect, (data: any) => {
       const room = roomManager.getRoom(data.roomId);
       console.log(data.roomId);
@@ -80,9 +95,38 @@ const socketMapper = (httpServer: any) => {
         room.clearGameObject();
         room.stage = data.stageName;
         room.setStartStageTime();
+
+        let startX:number;
+        let startY:number;
+
+        if(data.stageName==="Stage01"){
+          startX = init_xPos_stage1;
+          startY = init_yPos_stage1;
+        }
+        else if(data.stageName==="Stage02"){
+          startX = init_xPos_stage2;
+          startY = init_yPos_stage2;
+        }
+        else{
+          startX = init_xPos_stage3;
+          startY = init_yPos_stage3;
+        }
+
+
+        let i = 0;
+        room.members.forEach((member) => {
+          userStartPos.push({
+            id: member.id,
+            startX: startX + 50 * i,
+            startY: startY,
+          });
+        
+          i++; // 순회할 때마다 i 값 증가
+        });
       }
-      io.to(data.roomId).emit(GameEventType.stageSelectSucess, data.stageName);
+      io.to(data.roomId).emit(GameEventType.stageSelectSucess, data.stageName, userStartPos);
     });
+
 
     socket.on(GameEventType.createPlayer, (data: any) => {
       CreatePlayerHandler(socket, data, (roomId: string, response: any)=>{
