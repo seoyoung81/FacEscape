@@ -381,7 +381,7 @@ export default class Stage03 extends Phaser.Scene {
   stageClear(): void {
     if (!this.gameClear) {
       this.gameClear = true;
-      this.game.events.emit("getClearTime", this.playerId, this.stageNumber);
+      this.game.events.emit("getClearInfo", this.stageNumber);
     }
   }
 

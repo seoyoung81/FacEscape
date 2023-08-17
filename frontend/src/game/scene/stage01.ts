@@ -95,6 +95,7 @@ export default class Stage01 extends Phaser.Scene {
       frameWidth: 46,
       frameHeight: 56,
     });
+    this.otherPlayersGroup = this.physics.add.group();
 
     this.events.addListener(STAGE_EVENT.SET_PLAYER_ID_SUCCESS, (data: any) => {
       this.playerId = data.id;
@@ -256,7 +257,7 @@ export default class Stage01 extends Phaser.Scene {
   stageClear(): void {
     if (!this.gameClear) {
       this.gameClear = true;
-      this.game.events.emit("getClearTime", this.playerId, this.stageNumber);
+      this.game.events.emit("getClearInfo",this.stageNumber);
     }
   }
 
