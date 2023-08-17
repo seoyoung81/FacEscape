@@ -151,7 +151,8 @@ export default class Stage01 extends Phaser.Scene {
   create(userStartPos: any): void {
     // this.otherPlayersGroup!.clear(true, true);
     // this.otherPlayers.clear();
-
+    this.otherPlayersGroup = this.physics.add.group();
+    this.otherPlayers = new Map<number, Player>();
     // add background
     const bg = this.add.image(0, 0, "bg").setOrigin(0).setScale(1);
     bg.displayWidth = this.cameras.main.width;
