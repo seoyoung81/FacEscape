@@ -55,7 +55,6 @@ const GamePage = () => {
               id: useSocket.client?.id,
               stageName: stageName,
             });
-            useSocket.emitGameEvent("getMembersInfo",{roomId: useSocket.roomId});
           } else {
             Swal.fire({
               title: "방장이 스테이지를 선택 할 수 있습니다!",
@@ -77,7 +76,6 @@ const GamePage = () => {
         const selectScene = game.scene.scenes[0];
         selectScene.events.emit(STAGE_EVENT.SELECT_SUCCESS, sceneKey);
         
-        console.log(useSocket.roomInfo?.members);
       });
 
       if (!game.events.listeners(STAGE_EVENT.CREATE_PLAYER).length) {
