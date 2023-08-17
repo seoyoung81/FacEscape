@@ -98,7 +98,6 @@ export default class Stage02 extends Phaser.Scene {
 
     this.events.addListener(STAGE_EVENT.SET_PLAYER_ID_SUCCESS, (data: any) => {
       this.playerId = data.id;
-      console.log(this.playerId);
     });
 
     this.game.events.emit(STAGE_EVENT.SET_PLAYER_ID, this.scene.key);
@@ -254,7 +253,6 @@ export default class Stage02 extends Phaser.Scene {
 
     this.physics.add.overlap(this.door, this.player, () => {
       if (this.playerId === this.keyPickerId) {
-        console.log("overlapping door");
         this.stageClear();
       }
     });

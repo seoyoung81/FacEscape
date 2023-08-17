@@ -108,7 +108,6 @@ export default class Stage03 extends Phaser.Scene {
 
     this.events.addListener(STAGE_EVENT.SET_PLAYER_ID_SUCCESS, (data: any) => {
       this.playerId = data.id;
-      console.log(this.playerId);
     });
 
     this.game.events.emit(STAGE_EVENT.SET_PLAYER_ID, this.scene.key);
@@ -357,7 +356,6 @@ export default class Stage03 extends Phaser.Scene {
 
     this.physics.add.overlap(this.door, this.player, () => {
       if (this.playerId === this.keyPickerId) {
-        console.log("overlapping door");
         this.stageClear();
       }
     });
@@ -385,9 +383,7 @@ export default class Stage03 extends Phaser.Scene {
   }
 
   gameOver(): void {
-    this.player.setPosition(100, 672);
-
-    console.log("gameOver");
+    this.player.setPosition((this.playerId % 6) * 50 + 50, 672);
   }
 
   update(): void {
@@ -398,12 +394,10 @@ export default class Stage03 extends Phaser.Scene {
       y: this.player.y,
       sceneKey: this.scene.key,
     });
-    this.trafficLight.update();
 
     if (this.trafficLight.getTrafficLightState() === "red") {
       if (this.player.x !== this.prevPlayerX || this.player.y !== this.prevPlayerY) {
         this.gameOver();
-        console.log("game over");
       }
     }
 
