@@ -25,6 +25,7 @@ const NavBar = () => {
                 <Market />
             </div>
             <div className={styles['nav-bar-right']}>
+                 {isLogIn ? <NickName /> : null}
                 {isLogIn ? <MyPage /> : <SignUp />}
                 {isLogIn ? <LogOut /> : <LogIn />}
             </div>
