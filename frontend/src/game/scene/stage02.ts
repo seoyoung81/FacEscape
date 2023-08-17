@@ -110,9 +110,10 @@ export default class Stage02 extends Phaser.Scene {
         if (!this.otherPlayers.has(playerData.id)) {
           const newPlayer = new Player(this, playerData.x, playerData.y, "idle", ["platformLayer"]);
           this.otherPlayers.set(playerData.id, newPlayer);
+          this.otherPlayersGroup.add(newPlayer);
 
-          this.physics.add.collider(newPlayer, this.player);
-          this.physics.add.collider(newPlayer, this.platformLayer!);
+          // this.physics.add.collider(newPlayer, this.player);
+          // this.physics.add.collider(newPlayer, this.platformLayer!);
         } else {
           // 이미 생성된 플레이어인 경우 위치 업데이트
           const existingPlayer = this.otherPlayers.get(playerData.id);
@@ -232,8 +233,15 @@ export default class Stage02 extends Phaser.Scene {
     });
 
     this.physics.add.collider(this.player, this.platformLayer!);
-    this.physics.add.collider(this.otherPlayersGroup, this.player);
     this.physics.add.collider(this.otherPlayersGroup, this.platformLayer!);
+    this.physics.add.collider(this.otherPlayersGroup, this.player, () => {
+        if (this.player.body!.touching.down) {
+          setTimeout(() => {
+            this.player.setVelocityY(-150);
+          }, 30);
+        }
+      });    
+
     this.physics.add.collider(this.player, this.key, () => {
       // this.shoot.destroy();
       this.isKeyPicked = true;

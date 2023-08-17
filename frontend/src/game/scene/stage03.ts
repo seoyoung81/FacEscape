@@ -172,7 +172,7 @@ export default class Stage03 extends Phaser.Scene {
     this.platformLayer = map.createLayer("platformLayer", ["terrain"]);
 
     this.player = new Player(this, this.playerId * 50 + 50, 660, "idle", this.platformLayer);
-    
+
     this.game.events.emit(STAGE_EVENT.CREATE_PLAYER, {
       id: this.playerId,
       x: this.player.x,
@@ -327,7 +327,22 @@ export default class Stage03 extends Phaser.Scene {
       loop: true,
     });
 
-    this.physics.add.collider(this.otherPlayersGroup, this.player);
+    this.physics.add.collider(this.otherPlayersGroup, this.player, () => {
+        if (this.player.body!.touching.down) {
+          setTimeout(() => {
+            this.player.setVelocityY(-150);
+          }, 30);
+        }
+      });    
+    this.physics.add.collider(this.player, this.key, () => {
+      // this.shoot.destroy();
+      this.isKeyPicked = true;
+      this.keyPickerId = this.playerId;
+      this.game.events.emit(STAGE_EVENT.PICKED_KEY, {
+        sceneKey: this.scene.key,
+        id: this.playerId,
+      });
+    });
     this.physics.add.collider(this.otherPlayersGroup, this.platformLayer!);
 
     this.physics.add.collider(this.player, this.key, () => {

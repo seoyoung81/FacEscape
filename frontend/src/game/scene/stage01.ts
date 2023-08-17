@@ -308,6 +308,7 @@ export default class Stage01 extends Phaser.Scene {
       wall.body.allowGravity = true;
 
       this.physics.add.collider(this.player, wall, () => {
+        this.player.setPosition(this.player.x + 5, this.player.y);
         wall.body.immovable = true;
         wall.body.moves = false;
       });
