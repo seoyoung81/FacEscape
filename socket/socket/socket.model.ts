@@ -77,10 +77,6 @@ const socketMapper = (httpServer: any) => {
       console.log(data.roomId);
       console.log(data);
       if (room) {
-        const gameObjs = room.gameObject;
-        gameObjs.forEach(gameObj=>{
-          gameObj.stopShoot();
-        })
         room.clearGameObject();
         room.stage = data.stageName;
         room.setStartStageTime();
