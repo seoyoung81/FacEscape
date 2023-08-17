@@ -6,6 +6,7 @@ import SignUp from "./SignUp";
 import LogIn from "./LogIn"; 
 import LogOut from "./LogOut";
 import MyPage from "./MyPage";
+import NickName from "./NickName";
 
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
@@ -25,6 +26,7 @@ const NavBar = () => {
                 <Market />
             </div>
             <div className={styles['nav-bar-right']}>
+                 {isLogIn ? <NickName /> : null}
                 {isLogIn ? <MyPage /> : <SignUp />}
                 {isLogIn ? <LogOut /> : <LogIn />}
             </div>

@@ -72,8 +72,8 @@ export default class Stage03 extends Phaser.Scene {
     this.load.image("spikeTrap", spikeTrap);
 
     this.load.spritesheet("trafficLight", trafficLight, {
-      frameWidth: 128,
-      frameHeight: 128,
+      frameWidth: 256,
+      frameHeight: 256,
     });
 
     this.load.image("jump", frogJump);
@@ -108,13 +108,11 @@ export default class Stage03 extends Phaser.Scene {
 
     this.events.addListener(STAGE_EVENT.SET_PLAYER_ID_SUCCESS, (data: any) => {
       this.playerId = data.id;
-      console.log(this.playerId);
     });
 
     this.game.events.emit(STAGE_EVENT.SET_PLAYER_ID, this.scene.key);
-    console.log(`current playerId: ${this.playerId}`);
+    // console.log(`current playerId: ${this.playerId}`);
 
-    this.otherPlayersGroup = this.physics.add.group();
     this.events.addListener(STAGE_EVENT.CREATE_PLAYER_SUCCESS, (playerData: any) => {
       if (playerData.id !== this.playerId) {
         if (!this.otherPlayers.has(playerData.id)) {
@@ -141,7 +139,9 @@ export default class Stage03 extends Phaser.Scene {
     });
   }
 
-  create(): void {
+  create(userStartPos: any): void {
+    this.otherPlayersGroup = this.physics.add.group();
+    this.otherPlayers = new Map<number, Player>();
     this.isKeyPicked = false;
     const bg = this.add.image(0, 0, "bg").setOrigin(0).setScale(1);
     bg.displayWidth = this.mapWidth * this.tileWidth;
@@ -171,7 +171,19 @@ export default class Stage03 extends Phaser.Scene {
     map.setCollisionByExclusion([-1], true);
     this.platformLayer = map.createLayer("platformLayer", ["terrain"]);
 
-    this.player = new Player(this, this.playerId * 50 + 50, 660, "idle", this.platformLayer);
+    let startingPoint: any;
+    userStartPos.forEach((player: any) => {
+      if (this.playerId === player.id) {
+        startingPoint = player;
+      }
+    });
+    this.player = new Player(
+      this,
+      startingPoint.startX,
+      startingPoint.startY,
+      "idle",
+      this.platformLayer!
+    );
 
     this.game.events.emit(STAGE_EVENT.CREATE_PLAYER, {
       id: this.playerId,
@@ -328,12 +340,12 @@ export default class Stage03 extends Phaser.Scene {
     });
 
     this.physics.add.collider(this.otherPlayersGroup, this.player, () => {
-        if (this.player.body!.touching.down) {
-          setTimeout(() => {
-            this.player.setVelocityY(-150);
-          }, 30);
-        }
-      });    
+      if (this.player.body!.touching.down) {
+        setTimeout(() => {
+          this.player.setVelocityY(-150);
+        }, 30);
+      }
+    });
     this.physics.add.collider(this.player, this.key, () => {
       // this.shoot.destroy();
       this.isKeyPicked = true;
@@ -357,20 +369,19 @@ export default class Stage03 extends Phaser.Scene {
 
     this.physics.add.overlap(this.door, this.player, () => {
       if (this.playerId === this.keyPickerId) {
-        console.log("overlapping door");
         this.stageClear();
       }
     });
 
-    this.input.keyboard?.on("keydown-R", () => {
-      this.scene.start("StageSelect");
-    });
+    // this.input.keyboard?.on("keydown-R", () => {
+    //   this.scene.start("StageSelect");
+    // });
   }
 
   stageClear(): void {
     if (!this.gameClear) {
       this.gameClear = true;
-      this.game.events.emit("getClearTime", this.playerId, this.stageNumber);
+      this.game.events.emit("getClearInfo", this.stageNumber);
     }
   }
 
@@ -385,9 +396,7 @@ export default class Stage03 extends Phaser.Scene {
   }
 
   gameOver(): void {
-    this.player.setPosition(100, 672);
-
-    console.log("gameOver");
+    this.player.setPosition((this.playerId % 6) * 50 + 50, 672);
   }
 
   update(): void {
@@ -398,12 +407,10 @@ export default class Stage03 extends Phaser.Scene {
       y: this.player.y,
       sceneKey: this.scene.key,
     });
-    this.trafficLight.update();
 
     if (this.trafficLight.getTrafficLightState() === "red") {
       if (this.player.x !== this.prevPlayerX || this.player.y !== this.prevPlayerY) {
         this.gameOver();
-        console.log("game over");
       }
     }
 
