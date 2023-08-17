@@ -55,6 +55,7 @@ const GamePage = () => {
               id: useSocket.client?.id,
               stageName: stageName,
             });
+            useSocket.emitGameEvent("getMembersInfo",{roomId: useSocket.roomId});
           } else {
             Swal.fire({
               title: "방장이 스테이지를 선택 할 수 있습니다!",
@@ -65,6 +66,10 @@ const GamePage = () => {
           }
         });
       }
+
+      useSocket.socket.on("updateMembersInfo", (data)=>{
+        useSocket.updateMemberInfos(data);
+      });
 
       useSocket.socket.on("cannonShoot", (data)=>{
         game.scene
