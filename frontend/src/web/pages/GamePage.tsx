@@ -67,10 +67,6 @@ const GamePage = () => {
         });
       }
 
-      useSocket.socket.on("updateMembersInfo", (data)=>{
-        useSocket.updateMemberInfos(data);
-      });
-
       useSocket.socket.on("cannonShoot", (data)=>{
         game.scene
           .getScene(data.sceneKey)
@@ -154,7 +150,7 @@ const GamePage = () => {
 
       game.events.addListener(
         "getClearInfo",
-        (playerId: number, stageNumber: number) => {
+        (stageNumber: number) => {
           useSocket.emitGameEvent("getClearInfo", {
             roomId: useSocket.roomId,
             stageNumber: stageNumber,
