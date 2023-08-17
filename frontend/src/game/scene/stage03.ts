@@ -140,7 +140,7 @@ export default class Stage03 extends Phaser.Scene {
     });
   }
 
-  create(): void {
+  create(userStartPos: any): void {
     this.isKeyPicked = false;
     const bg = this.add.image(0, 0, "bg").setOrigin(0).setScale(1);
     bg.displayWidth = this.mapWidth * this.tileWidth;
@@ -170,7 +170,19 @@ export default class Stage03 extends Phaser.Scene {
     map.setCollisionByExclusion([-1], true);
     this.platformLayer = map.createLayer("platformLayer", ["terrain"]);
 
-    this.player = new Player(this, (this.playerId % 6) * 50 + 50, 660, "idle", this.platformLayer);
+    let startingPoint: any;
+    userStartPos.forEach((player: any) => {
+      if (this.playerId === player.id) {
+        startingPoint = player;
+      }
+    });
+    this.player = new Player(
+      this,
+      startingPoint.startX,
+      startingPoint.startY,
+      "idle",
+      this.platformLayer!
+    );
 
     this.game.events.emit(STAGE_EVENT.CREATE_PLAYER, {
       id: this.playerId,
@@ -327,12 +339,12 @@ export default class Stage03 extends Phaser.Scene {
     });
 
     this.physics.add.collider(this.otherPlayersGroup, this.player, () => {
-        if (this.player.body!.touching.down) {
-          setTimeout(() => {
-            this.player.setVelocityY(-150);
-          }, 30);
-        }
-      });    
+      if (this.player.body!.touching.down) {
+        setTimeout(() => {
+          this.player.setVelocityY(-150);
+        }, 30);
+      }
+    });
     this.physics.add.collider(this.player, this.key, () => {
       // this.shoot.destroy();
       this.isKeyPicked = true;

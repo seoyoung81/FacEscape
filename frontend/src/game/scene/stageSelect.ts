@@ -20,7 +20,7 @@ interface StageSelectButton {
 }
 
 export class StageSelect extends Phaser.Scene {
-  private testElement!: Phaser.GameObjects.DOMElement;
+  startPoints!: Map<number, [number, number]>;
   constructor() {
     super({
       key: "StageSelect",
@@ -33,11 +33,11 @@ export class StageSelect extends Phaser.Scene {
     this.load.svg("lockBtn", lockBtn);
     this.load.json("stageButtons", stageButtons);
 
-    this.events.addListener(STAGE_EVENT.SELECT_SUCCESS, (stage: string) => {
-      this.scene.start(stage);
+    this.events.addListener(STAGE_EVENT.SELECT_SUCCESS, (stage: string, userStartPos: any) => {
+      // this.game.scene.getScene(stage).scene.restart();
+      this.scene.start(stage, userStartPos);
     });
   }
-
   create(): void {
     const bg = this.add.image(0, 0, "background").setOrigin(0).setScale(1);
     bg.displayWidth = this.cameras.main.width;
@@ -49,8 +49,7 @@ export class StageSelect extends Phaser.Scene {
   }
 
   addStageButtons(): void {
-    const stages: StageSelectButton[] =
-      this.cache.json.get("stageButtons").stages;
+    const stages: StageSelectButton[] = this.cache.json.get("stageButtons").stages;
     stages.forEach((stage) => {
       if (stage.hasInteract) {
         this.add.existing(this.makeInteractButton(stage));
@@ -76,14 +75,7 @@ export class StageSelect extends Phaser.Scene {
   }
 
   makeLockButtonBackGround(stage: any): ButtonBackGround {
-    const button = new ButtonBackGround(
-      this,
-      stage.x,
-      stage.y,
-      stage.texture,
-      0xffffff,
-      false
-    );
+    const button = new ButtonBackGround(this, stage.x, stage.y, stage.texture, 0xffffff, false);
     return button;
   }
 }
