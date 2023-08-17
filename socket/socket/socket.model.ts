@@ -25,6 +25,7 @@ import {
   KeyPickHandler,
   DisconnectPlayerHandler,
 } from "../game/gameEventHandler";
+import { RoomInfoResponse } from "./utils/roomInfoResponse";
 
 
 const socketMapper = (httpServer: any) => {
@@ -150,6 +151,14 @@ const socketMapper = (httpServer: any) => {
     socket.on("stageClear", (data: any) => {
       io.to(data.roomId).emit("stageClearSuccess", data.stageNumber);
     });
+
+    socket.on("getMembersInfo", (data: any) => {
+      const room = roomManager.getRoom(data.roomId);
+      if(room){
+        const response = new RoomInfoResponse(room.members, room.hostId)
+        io.to(data.roomId).emit("updateMembersInfo", JSON.stringify(response));
+      }
+    })
   });
 
   return io;
