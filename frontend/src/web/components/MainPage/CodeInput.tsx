@@ -14,7 +14,6 @@ const CodeInput :React.FC = () => {
     const token = sessionStorage.getItem("accessToken") || "";
     const handleClick = () => {
         if(codeInput){
-            console.log(token);
             joinRoom(codeInput, token);
         }
         else{

@@ -34,7 +34,7 @@ const PurchaseCheckModal: React.FC<purchaseProps> = ({ itemPrice, itemId, itemIm
               }).then(() => {
                 dispatch(toggleMileageRender());
               });
-            // console.log('구매 동작 성공', response);
+         
         }
         catch(error: any) {
             if (error.response.data && error.response.data.errors[0].field === 'mileage') {
