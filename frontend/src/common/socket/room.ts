@@ -4,6 +4,7 @@ import { ClientSocketEvent, ServerSocketResposneEvent, ServerSocketEvent } from 
 import { RoomInfo } from './dto/roomInfo';
 import { ClientMembersResponse } from './dto/ClientMembersResponse';
 import { RoomMember } from './dto/roomMember';
+import Swal from 'sweetalert2';
 
 export function useSocketRooms() {
 
@@ -59,7 +60,12 @@ export function useSocketRooms() {
         });
 
         newSocket.on(ServerSocketResposneEvent.JOIN_FAIL, (errMsg) => {
-            console.log(errMsg);
+            Swal.fire({
+                title: errMsg,
+                confirmButtonColor: '#3479AD',
+                confirmButtonText: '확인',
+                width: '500px'
+            });
         });
 
         newSocket.on(ServerSocketResposneEvent.KICK, ()=>{
@@ -72,7 +78,12 @@ export function useSocketRooms() {
         });
 
         newSocket.on("startFail", (data)=>{
-            console.log(data);
+            Swal.fire({
+                title: data,
+                confirmButtonColor: '#3479AD',
+                confirmButtonText: '확인',
+                width: '500px'
+            });
         })
 
         setSocket(newSocket);
