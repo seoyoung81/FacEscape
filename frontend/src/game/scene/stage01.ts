@@ -55,6 +55,8 @@ export default class Stage01 extends Phaser.Scene {
 
   stageNumber: number = 1;
 
+  domElement!: Phaser.GameObjects.DOMElement;
+
   preload(): void {
     this.load.tilemapTiledJSON("stage01", stage01);
     this.load.image("terrain", terrain);
@@ -91,53 +93,74 @@ export default class Stage01 extends Phaser.Scene {
 
     this.events.addListener(STAGE_EVENT.SET_PLAYER_ID_SUCCESS, (data: any) => {
       this.playerId = data.id;
-     // console.log(this.playerId);
+      // console.log(this.playerId);
     });
 
     this.game.events.emit(STAGE_EVENT.SET_PLAYER_ID, this.scene.key);
-   // console.log(`current playerId: ${this.playerId}`);
+    // console.log(`current playerId: ${this.playerId}`);
 
     this.otherPlayersGroup = this.physics.add.group();
-    this.events.addListener(STAGE_EVENT.CREATE_PLAYER_SUCCESS, (playerData: any) => {
-      if (playerData.id !== this.playerId) {
-        const newPlayer = new Player(this, playerData.x, playerData.y, "idle", ["platformLayer"]);
-        this.otherPlayers.set(playerData.id, newPlayer);
-        this.otherPlayersGroup.add(newPlayer);
-      } else {
-        // 이미 생성된 플레이어인 경우 위치 업데이트
-        const existingPlayer = this.otherPlayers.get(playerData.id);
-        existingPlayer?.setPosition(playerData.x, playerData.y);
+    this.events.addListener(
+      STAGE_EVENT.CREATE_PLAYER_SUCCESS,
+      (playerData: any) => {
+        if (playerData.id !== this.playerId) {
+          const newPlayer = new Player(
+            this,
+            playerData.x,
+            playerData.y,
+            "idle",
+            ["platformLayer"]
+          );
+          this.otherPlayers.set(playerData.id, newPlayer);
+          this.otherPlayersGroup.add(newPlayer);
+        } else {
+          // 이미 생성된 플레이어인 경우 위치 업데이트
+          const existingPlayer = this.otherPlayers.get(playerData.id);
+          existingPlayer?.setPosition(playerData.x, playerData.y);
+        }
       }
-    });
+    );
 
-    this.events.addListener(STAGE_EVENT.UPDATE_PLAYER_SUCCESS, (playerData: any) => {
-      if (playerData.id !== this.playerId) {
-        this.otherPlayers.get(playerData.id)!.x = playerData.x;
-        this.otherPlayers.get(playerData.id)!.y = playerData.y;
+    this.events.addListener(
+      STAGE_EVENT.UPDATE_PLAYER_SUCCESS,
+      (playerData: any) => {
+        if (playerData.id !== this.playerId) {
+          this.otherPlayers.get(playerData.id)!.x = playerData.x;
+          this.otherPlayers.get(playerData.id)!.y = playerData.y;
+        }
       }
-    });
+    );
 
     this.events.addListener("stageClearSuccess", () => {
       this.scene.start("StageSelect");
     });
 
-    this.events.addListener("cannonShoot", (data: any)=>{
-        const cannonBall = this.physics.add.sprite(this.cannon.x, this.cannon.y, "cannonBall");
-        this.cannonBalls.add(cannonBall);
-        cannonBall.body.allowGravity = false;
-        cannonBall.setVelocityX(-1200);
-        this.physics.add.overlap(this.player, cannonBall, () => {
-          cannonBall.destroy();
-        });
+    this.events.addListener("cannonShoot", (data: any) => {
+      const cannonBall = this.physics.add.sprite(
+        this.cannon.x,
+        this.cannon.y,
+        "cannonBall"
+      );
+      this.cannonBalls.add(cannonBall);
+      cannonBall.body.allowGravity = false;
+      cannonBall.setVelocityX(-1200);
+      this.physics.add.overlap(this.player, cannonBall, () => {
+        cannonBall.destroy();
+      });
 
-        this.physics.add.overlap(this.otherPlayersGroup, cannonBall, () => {
-          cannonBall.destroy();
-        });
-    })
+      this.physics.add.overlap(this.otherPlayersGroup, cannonBall, () => {
+        cannonBall.destroy();
+      });
+    });
   }
 
   create(): void {
     this.isKeyPicked = false;
+    this.doorOpened = false;
+    this.gameClear = false;
+
+    // this.otherPlayersGroup.clear(true, true);
+    // this.otherPlayers.clear();
 
     // add background
     const bg = this.add.image(0, 0, "bg").setOrigin(0).setScale(1);
@@ -194,10 +217,14 @@ export default class Stage01 extends Phaser.Scene {
     this.physics.add.collider(this.cannon, this.platformLayer!);
     this.physics.add.collider(this.walls, this.platformLayer!);
     this.physics.add.collider(this.walls, this.walls);
-    this.physics.add.collider(this.cannonBalls, this.walls, (cannonBall, wall) => {
-      cannonBall.destroy();
-      wall.destroy();
-    });
+    this.physics.add.collider(
+      this.cannonBalls,
+      this.walls,
+      (cannonBall, wall) => {
+        cannonBall.destroy();
+        wall.destroy();
+      }
+    );
 
     this.physics.add.collider(this.otherPlayersGroup, this.player);
     this.physics.add.collider(this.otherPlayersGroup, this.platformLayer!);
@@ -218,6 +245,22 @@ export default class Stage01 extends Phaser.Scene {
       }
     });
 
+    this.domElement = this.add.dom(
+      this.player.x,
+      this.player.y,
+      "video",
+      {
+        style: {
+          width: "200px",
+          height: "100px",
+          backgroundColor: "blue",
+          color: "white",
+          textAlign: "center",
+        },
+      },
+      "Hello, Phaser DOM Element!"
+    );
+
     this.input.keyboard?.on("keydown-R", () => {
       this.scene.start("StageSelect");
     });
@@ -232,13 +275,15 @@ export default class Stage01 extends Phaser.Scene {
 
   update(): void {
     this.player.update();
+    this.domElement.x = this.player.x;
+    this.domElement.y = this.player.y;
     this.game.events.emit(STAGE_EVENT.UPDATE_PLAYER, {
       id: this.playerId,
       x: this.player.x,
       y: this.player.y,
       sceneKey: this.scene.key,
     });
-    
+
     this.otherPlayers.forEach(function (value, key) {
       //console.log(key);
     });
