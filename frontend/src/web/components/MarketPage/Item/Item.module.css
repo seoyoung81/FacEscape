@@ -122,7 +122,7 @@
     width: 800px;
     height: 550px;
     border-radius: 5px;
-    border: 1px solid;
+    background-color: white;
     
     /* 스크롤 */
     overflow: auto;
