@@ -32,6 +32,5 @@ export class TimeGauge extends Phaser.GameObjects.Sprite {
 
 
   update(): void {
-    console.log(this);
   }
 }

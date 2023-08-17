@@ -56,7 +56,12 @@ const GamePage = () => {
               stageName: stageName,
             });
           } else {
-            console.log("방장이 스테이지를 선택할 수 있습니다.");
+            Swal.fire({
+              title: "방장이 스테이지를 선택 할 수 있습니다!",
+              confirmButtonColor: '#3479AD',
+              confirmButtonText: '확인',
+              width: '500px'
+          })
           }
         });
       }

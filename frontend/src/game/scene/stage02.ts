@@ -98,11 +98,10 @@ export default class Stage02 extends Phaser.Scene {
 
     this.events.addListener(STAGE_EVENT.SET_PLAYER_ID_SUCCESS, (data: any) => {
       this.playerId = data.id;
-      console.log(this.playerId);
     });
 
     this.game.events.emit(STAGE_EVENT.SET_PLAYER_ID, this.scene.key);
-    console.log(`current playerId: ${this.playerId}`);
+    // console.log(`current playerId: ${this.playerId}`);
 
     this.otherPlayersGroup = this.physics.add.group();
     this.events.addListener(STAGE_EVENT.CREATE_PLAYER_SUCCESS, (playerData: any) => {
@@ -110,9 +109,10 @@ export default class Stage02 extends Phaser.Scene {
         if (!this.otherPlayers.has(playerData.id)) {
           const newPlayer = new Player(this, playerData.x, playerData.y, "idle", ["platformLayer"]);
           this.otherPlayers.set(playerData.id, newPlayer);
+          this.otherPlayersGroup.add(newPlayer);
 
-          this.physics.add.collider(newPlayer, this.player);
-          this.physics.add.collider(newPlayer, this.platformLayer!);
+          // this.physics.add.collider(newPlayer, this.player);
+          // this.physics.add.collider(newPlayer, this.platformLayer!);
         } else {
           // 이미 생성된 플레이어인 경우 위치 업데이트
           const existingPlayer = this.otherPlayers.get(playerData.id);
@@ -165,7 +165,7 @@ export default class Stage02 extends Phaser.Scene {
     map.setCollisionByExclusion([-1]);
     this.platformLayer = map.createLayer("platformLayer", ["terrain"]);
 
-    this.player = new Player(this, 850, 200, "idle");
+    this.player = new Player(this, (this.playerId % 6) * 50 + 400, 2500, "idle");
 
     this.game.events.emit(STAGE_EVENT.CREATE_PLAYER, {
       id: this.playerId,
@@ -232,8 +232,15 @@ export default class Stage02 extends Phaser.Scene {
     });
 
     this.physics.add.collider(this.player, this.platformLayer!);
-    this.physics.add.collider(this.otherPlayersGroup, this.player);
     this.physics.add.collider(this.otherPlayersGroup, this.platformLayer!);
+    this.physics.add.collider(this.otherPlayersGroup, this.player, () => {
+        if (this.player.body!.touching.down) {
+          setTimeout(() => {
+            this.player.setVelocityY(-150);
+          }, 30);
+        }
+      });    
+
     this.physics.add.collider(this.player, this.key, () => {
       // this.shoot.destroy();
       this.isKeyPicked = true;
@@ -246,14 +253,13 @@ export default class Stage02 extends Phaser.Scene {
 
     this.physics.add.overlap(this.door, this.player, () => {
       if (this.playerId === this.keyPickerId) {
-        console.log("overlapping door");
         this.stageClear();
       }
     });
 
-    this.input.keyboard?.on("keydown-R", () => {
-      this.scene.start("StageSelect");
-    });
+    // this.input.keyboard?.on("keydown-R", () => {
+    //   this.scene.start("StageSelect");
+    // });
   }
 
   stageClear(): void {

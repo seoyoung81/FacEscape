@@ -25,7 +25,6 @@ export class SpikeTrap extends Phaser.Physics.Arcade.Sprite {
   }
 
   update(): void {
-    console.log("SpikeTrap update method called");
 
   }
   

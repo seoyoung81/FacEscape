@@ -13,16 +13,26 @@ const CodeInput :React.FC = () => {
 
     const token = sessionStorage.getItem("accessToken") || "";
     const handleClick = () => {
-        if(codeInput){
-            joinRoom(codeInput, token);
-        }
-        else{
+
+        if(!codeInput){
             Swal.fire({
-                title: "입장 코드를 입력해주세요!",
+                title: "입장 코드를 입력해주세요 !!!",
+                confirmButtonColor: '#3479AD',
+                confirmButtonText: '확인',
+                width: '500px'
+            });
+        }
+        else if(!token){
+            Swal.fire({
+                title: "로그인 후 이용 가능합니다 !!!",
                 confirmButtonColor: '#3479AD',
                 confirmButtonText: '확인',
                 width: '500px'
             })
+        }
+        else{
+            console.log(token);
+            joinRoom(codeInput, token);
         }
     }
 
