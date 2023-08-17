@@ -12,6 +12,7 @@ import BeforeEnteringPage from './web/pages/BeforeEnteringPage';
 import WaitingRoomPage from './web/pages/WaitingRoomPage';
 import GamePage from './web/pages/GamePage';
 import LogInLoading from './web/components/User/LogInLoading';
+import Test from './web/pages/Test';
 
 const App: React.FC = () => {
   return (
@@ -26,6 +27,7 @@ const App: React.FC = () => {
         <Route path='/waiting' element={<WaitingRoomPage />} />
         <Route path='/game' element={<GamePage />} />
         <Route path='/login/oauth2/google' element={<LogInLoading />} />
+        <Route path='/test' element={<Test />} />
       </Routes>
     </div>
   );
