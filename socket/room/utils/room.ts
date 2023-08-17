@@ -1,6 +1,6 @@
 import { Member } from "../../member/utils/member";
 
-const MAX_PLAYER_NUMBER = 2;
+const MAX_PLAYER_NUMBER = 1;
 
 export type RoomState = "PLAY" | "WAITING";
 
@@ -119,5 +119,12 @@ export class Room {
 
     getGameObjectSize() {
         return this._gameObject.length;
+    }
+
+    clearGameObject() {
+        this._gameObject.forEach(gameObj=>{
+          gameObj.stopShoot();
+        })
+        this._gameObject = [];
     }
 }
