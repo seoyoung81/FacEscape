@@ -5,7 +5,7 @@ import styles from './MyPage.module.css';
 
 const MyPage = () => {
     return (
-        <div>
+        <div className={styles['mypage']}>
             <div>
                 <NavBar />
             </div>

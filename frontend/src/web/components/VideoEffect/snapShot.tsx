@@ -89,16 +89,11 @@ const SnapShot = (videoRef: React.RefObject<HTMLVideoElement>, setImageUrl: Reac
                 html: `<img src=${dataURL} alt="" style="width: 100%; max-height: 250px; object-fit: contain;">`
               }).then(async(result) => {
                 if (result.isConfirmed) {
-                  console.log('url', dataURL);              
+                  console.log('url', dataURL);      
+                  sessionStorage.setItem("imageUrl", dataURL);        
             }
-
             }
-     
-
-     
-          
-        )
-        }
+        )}
       
       }});
     }

@@ -12,12 +12,21 @@ import BeforeEnteringPage from './web/pages/BeforeEnteringPage';
 import WaitingRoomPage from './web/pages/WaitingRoomPage';
 import GamePage from './web/pages/GamePage';
 import LogInLoading from './web/components/User/LogInLoading';
-import Test from './web/pages/Test';
+import BackgroundImage from './web/assets/images/backgroundImg.png';
 
 const App: React.FC = () => {
   return (
-    <div className='app-container'>
-      {/* <div className="background-image" style={{ backgroundImage: `url(${BackgroundImage})` }}> */}
+      <div 
+        style={{
+          backgroundImage: `url(${BackgroundImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          height: "100vh",
+          width: "1536px",
+          margin: 0,
+        }}
+      >
       <Routes>
         <Route path='/' element={<MainPage />} />
         <Route path='/rank' element={<RankingPage />} />
@@ -27,7 +36,6 @@ const App: React.FC = () => {
         <Route path='/waiting' element={<WaitingRoomPage />} />
         <Route path='/game' element={<GamePage />} />
         <Route path='/login/oauth2/google' element={<LogInLoading />} />
-        <Route path='/test' element={<Test />} />
       </Routes>
     </div>
   );

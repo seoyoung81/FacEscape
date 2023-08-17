@@ -114,6 +114,9 @@ const WaitingRoomPage: React.FC = () => {
         }
     }, [useSocket.isKick, openVidu])
 
+
+   
+
     return (
         <div className={styles['waitingroom-container']}>
             <div>
