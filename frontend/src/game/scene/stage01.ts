@@ -35,7 +35,6 @@ export default class Stage01 extends Phaser.Scene {
   }
 
   player!: Player;
-  startingPoints!: any;
   otherPlayers: Map<number, Player> = new Map<number, Player>();
   otherPlayersGroup!: Phaser.Physics.Arcade.Group;
   cannon!: Cannon;
@@ -172,13 +171,13 @@ export default class Stage01 extends Phaser.Scene {
     // create layer
     this.platformLayer = map.createLayer("platformLayer", ["terrain"]);
     // create player
-
+    let startingPoint: any;
     userStartPos.forEach((player: any) => {
       if (this.playerId === player.id) {
-        this.startingPoints = player;
+        startingPoint = player;
       }
     });
-    this.player = new Player(this, this.startingPoints.startX, this.startingPoints.startY, "idle");
+    this.player = new Player(this, startingPoint.startX, startingPoint.startY, "idle");
 
     this.game.events.emit(STAGE_EVENT.CREATE_PLAYER, {
       id: this.playerId,
