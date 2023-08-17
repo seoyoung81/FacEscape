@@ -25,6 +25,8 @@ import {
   KeyPickHandler,
   DisconnectPlayerHandler,
 } from "../game/gameEventHandler";
+import { RoomInfoResponse } from "./utils/roomInfoResponse";
+import { RoomMember } from "./utils/roomMember";
 
 
 const socketMapper = (httpServer: any) => {
@@ -141,15 +143,21 @@ const socketMapper = (httpServer: any) => {
       KeyPickHandler(socket, data);
     });
 
-    socket.on("getClearTime", (data: any) => {
+    socket.on("getClearInfo", (data: any) => {
       const room = roomManager.getRoom(data.roomId);
+      let membersArray: RoomMember[] = [];
+      room?.members.forEach((member) => {
+        const roomMember = new RoomMember(member.id, member.nickname);
+        membersArray.push(roomMember);
+    });
 
-      socket.emit("returnClearTime", room?.stageStartTime, data.stageNumber);
+      socket.emit("returnClearInfo", membersArray, room?.stageStartTime, data.stageNumber);
     });
 
     socket.on("stageClear", (data: any) => {
       io.to(data.roomId).emit("stageClearSuccess", data.stageNumber);
     });
+
   });
 
   return io;
