@@ -22,6 +22,10 @@ export const createGame = (canvas: HTMLCanvasElement) => {
         checkCollision: { up: true, down: true, left: true, right: true },
       },
     },
+    parent: "game",
+    dom: {
+      createContainer: true,
+    },
     canvas: canvas,
     scale: scaleObject,
     scene: [StageSelect, Stage01, Stage02, Stage03],
