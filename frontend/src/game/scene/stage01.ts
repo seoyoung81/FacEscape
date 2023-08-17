@@ -95,7 +95,6 @@ export default class Stage01 extends Phaser.Scene {
       frameWidth: 46,
       frameHeight: 56,
     });
-    this.otherPlayersGroup = this.physics.add.group();
 
     this.events.addListener(STAGE_EVENT.SET_PLAYER_ID_SUCCESS, (data: any) => {
       this.playerId = data.id;
@@ -151,7 +150,8 @@ export default class Stage01 extends Phaser.Scene {
   create(userStartPos: any): void {
     // this.otherPlayersGroup!.clear(true, true);
     // this.otherPlayers.clear();
-
+    this.otherPlayersGroup = this.physics.add.group();
+    this.otherPlayers = new Map<number, Player>();
     // add background
     const bg = this.add.image(0, 0, "bg").setOrigin(0).setScale(1);
     bg.displayWidth = this.cameras.main.width;

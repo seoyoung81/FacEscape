@@ -103,7 +103,6 @@ export default class Stage02 extends Phaser.Scene {
     this.game.events.emit(STAGE_EVENT.SET_PLAYER_ID, this.scene.key);
     // console.log(`current playerId: ${this.playerId}`);
 
-    this.otherPlayersGroup = this.physics.add.group();
     this.events.addListener(STAGE_EVENT.CREATE_PLAYER_SUCCESS, (playerData: any) => {
       if (playerData.id !== this.playerId) {
         if (!this.otherPlayers.has(playerData.id)) {
@@ -134,6 +133,8 @@ export default class Stage02 extends Phaser.Scene {
   }
 
   create(userStartPos: any): void {
+    this.otherPlayersGroup = this.physics.add.group();
+    this.otherPlayers = new Map<number, Player>();
     this.isKeyPicked = false;
     const bg = this.add.image(0, 0, "bg").setOrigin(0).setScale(1);
     bg.displayWidth = this.mapWidth * this.tileWidth;
