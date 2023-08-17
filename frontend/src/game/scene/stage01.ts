@@ -266,7 +266,6 @@ export default class Stage01 extends Phaser.Scene {
 
     this.physics.add.overlap(this.door, this.player, () => {
       if (this.playerId === this.keyPickerId) {
-        console.log("overlapping door");
         this.stageClear();
       }
     });
@@ -311,7 +310,6 @@ export default class Stage01 extends Phaser.Scene {
     });
 
     this.otherPlayers.forEach(function (value, key) {
-      //console.log(key);
     });
 
     if (!this.isKeyPicked) {
