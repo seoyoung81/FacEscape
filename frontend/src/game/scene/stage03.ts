@@ -72,8 +72,8 @@ export default class Stage03 extends Phaser.Scene {
     this.load.image("spikeTrap", spikeTrap);
 
     this.load.spritesheet("trafficLight", trafficLight, {
-      frameWidth: 128,
-      frameHeight: 128,
+      frameWidth: 256,
+      frameHeight: 256,
     });
 
     this.load.image("jump", frogJump);
