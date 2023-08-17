@@ -158,7 +158,7 @@ export default class Stage01 extends Phaser.Scene {
     // create layer
     this.platformLayer = map.createLayer("platformLayer", ["terrain"]);
     // create player
-    this.player = new Player(this, this.playerId * 5 + 330, 660, "idle");
+    this.player = new Player(this, this.playerId * 50 + 350, 660, "idle");
 
     this.game.events.emit(STAGE_EVENT.CREATE_PLAYER, {
       id: this.playerId,
@@ -199,7 +199,31 @@ export default class Stage01 extends Phaser.Scene {
       wall.destroy();
     });
 
-    this.physics.add.collider(this.otherPlayersGroup, this.player);
+
+    this.physics.add.collider(this.otherPlayersGroup, this.player, () => {
+    // this.physics.add.collider(this.otherPlayersGroup, this.player, (player, otherPlayer) => {
+      // const collidedPlayer = otherPlayer as Phaser.Physics.Arcade.Sprite;
+      // console.log("Collided with player at x:", collidedPlayer.x);
+      // console.log("this.player at x:", this.player.x);
+
+      // if (this.player.x > collidedPlayer.x && !collidedPlayer.body!.touching.down && !this.player.body!.touching.down) {
+      //   this.player.setPosition(this.player.x + 10, this.player.y)
+      // }
+      
+      // else if (this.player.x < collidedPlayer.x && !collidedPlayer.body!.touching.down && !this.player.body!.touching.down) {
+      //   this.player.setPosition(this.player.x - 10, this.player.y)
+      // }
+
+      if (this.player.body!.touching.down) {
+        setTimeout(() => {
+          this.player.setVelocityY(-150);
+        }, 30);
+      }
+    });
+    
+    
+
+
     this.physics.add.collider(this.otherPlayersGroup, this.platformLayer!);
 
     this.physics.add.collider(this.player, this.key, () => {

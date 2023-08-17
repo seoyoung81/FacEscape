@@ -171,8 +171,8 @@ export default class Stage03 extends Phaser.Scene {
     map.setCollisionByExclusion([-1], true);
     this.platformLayer = map.createLayer("platformLayer", ["terrain"]);
 
-    this.player = new Player(this, 3500, 260, "idle", this.platformLayer);
-
+    this.player = new Player(this, this.playerId * 50 + 50, 660, "idle", this.platformLayer);
+    
     this.game.events.emit(STAGE_EVENT.CREATE_PLAYER, {
       id: this.playerId,
       x: this.player.x,
