@@ -80,6 +80,8 @@ const GamePage = () => {
       useSocket.socket.on(STAGE_EVENT.SELECT_SUCCESS, (sceneKey: any) => {
         const selectScene = game.scene.scenes[0];
         selectScene.events.emit(STAGE_EVENT.SELECT_SUCCESS, sceneKey);
+        
+        console.log(useSocket.roomInfo?.members);
       });
 
       if (!game.events.listeners(STAGE_EVENT.CREATE_PLAYER).length) {
@@ -151,9 +153,9 @@ const GamePage = () => {
       });
 
       game.events.addListener(
-        "getClearTime",
+        "getClearInfo",
         (playerId: number, stageNumber: number) => {
-          useSocket.emitGameEvent("getClearTime", {
+          useSocket.emitGameEvent("getClearInfo", {
             roomId: useSocket.roomId,
             stageNumber: stageNumber,
           });
@@ -162,7 +164,7 @@ const GamePage = () => {
       );
       game.events.addListener(
         "stageClear",
-        async (startTime: number, stageNumber: number) => {
+        async (membersArray:any, startTime: number, stageNumber: number) => {
           const now = new Date();
           const year = now.getFullYear();
           const month = String(now.getMonth() + 1).padStart(2, "0");
@@ -175,7 +177,7 @@ const GamePage = () => {
           const clearTime = Math.floor((now.getTime() - startTime) / 1000);
 
           await defaultInstance.post("/game-record", {
-            members: useSocket.roomInfo?.members,
+            members: membersArray,
             clearDate: clearDate,
             clearTime: clearTime,
             stage: stageNumber,
@@ -188,9 +190,9 @@ const GamePage = () => {
       );
 
       useSocket.socket!.on(
-        "returnClearTime",
-        (startTime: number, stageNumber: number) => {
-          game.events.emit("stageClear", startTime, stageNumber);
+        "returnClearInfo",
+        (membersArray: any, startTime: number, stageNumber: number) => {
+          game.events.emit("stageClear", membersArray, startTime, stageNumber);
         }
       );
 
