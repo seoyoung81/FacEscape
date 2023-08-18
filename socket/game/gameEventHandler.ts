@@ -34,7 +34,6 @@ export const CreatePlayerHandler = async (
 };
 
 export const UpdatePlayerHandler = async (socket: Socket, data: any) => {
-  console.log("updatePlayerHandler");
   playersData.forEach((player) => {
     if (player.id === data.id) {
       player.x = data.x;
