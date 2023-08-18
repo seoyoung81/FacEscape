@@ -113,7 +113,6 @@ const GamePage = () => {
         game.events.addListener(
           STAGE_EVENT.UPDATE_PLAYER,
           (playerData: any) => {
-            console.log("gamePage listen update player");
             useSocket.emitGameEvent(STAGE_EVENT.UPDATE_PLAYER, {
               roomId: useSocket.roomId,
               id: playerData.id,
@@ -128,7 +127,6 @@ const GamePage = () => {
       useSocket.socket.on(
         STAGE_EVENT.UPDATE_PLAYER_SUCCESS,
         (data: any, playersData: any) => {
-          console.log(data);
           game.scene
             .getScene(data.sceneKey)
             .events.emit(STAGE_EVENT.UPDATE_PLAYER_SUCCESS, playersData);
