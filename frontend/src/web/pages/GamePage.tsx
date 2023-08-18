@@ -131,7 +131,7 @@ const GamePage = () => {
         (data: any, playersData: any) => {
           game.scene
             .getScene(data.sceneKey)
-            .events.emit(STAGE_EVENT.UPDATE_PLAYER_SUCCESS, playersData);
+            .events.emit(STAGE_EVENT.UPDATE_PLAYER_SUCCESS, playersData, openVidu.remoteMembers);
         }
       );
 

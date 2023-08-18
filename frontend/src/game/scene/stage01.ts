@@ -116,58 +116,51 @@ export default class Stage01 extends Phaser.Scene {
         video.height = 60;
         video.autoplay = true;
         newPlayer.setStream(this.add.dom(newPlayer.x, newPlayer.y-50, video));
-      } else {
-        // 이미 생성된 플레이어인 경우 위치 업데이트
-        const existingPlayer = this.otherPlayers.get(playerData.id);
-        const existStream = existingPlayer?.getStream();
-        existingPlayer?.setPosition(playerData.x, playerData.y);
-
-        if(existStream) {
-          existStream.x = playerData.x;
-          existStream.y = playerData.y;
-        }
       }
     });
 
     this.events.addListener(
       STAGE_EVENT.UPDATE_PLAYER_SUCCESS,
-      (playersData: any) => {
+      (playersData: any, remotes: any) => {
+        console.log(remotes);
         playersData.forEach((player: any) => {
           if (
             this.otherPlayers.get(player.id) === undefined &&
             this.playerId !== player.id
           ) {
             const newPlayer = new Player(this, player.x, player.y, "idle");
+
+            if(remotes) {
+              const streamManager = (remotes as any[]).filter(remote=>remote.member.id === player.id)[0];
+              if(streamManager) {
+                const video = document.createElement("video");
+                streamManager.addVideoElement(video);
+                video.width= 60;
+                video.height = 60;
+                video.autoplay = true;
+                newPlayer.setStream(this.add.dom(newPlayer.x, newPlayer.y-50, video));
+              }
+            }
+            
             this.otherPlayers.set(player.id, newPlayer);
             this.otherPlayersGroup.add(this.otherPlayers.get(player.id)!);
           }
           if (this.playerId !== player.id) {
-            this.otherPlayers.get(player.id)!.x = player.x;
-            this.otherPlayers.get(player.id)!.y = player.y;
+            const otherPlayer = this.otherPlayers.get(player.id);
+            if(otherPlayer) {
+              otherPlayer.x = player.x;
+              otherPlayer.y = player.y;
+              
+              const memberStream = otherPlayer.getStream()
+              if(memberStream) {
+                memberStream.x = player.x;
+                memberStream.y = player.y;
+              }
+            }
           }
         });
       }
     );
-
-    // this.events.addListener(STAGE_EVENT.UPDATE_PLAYER_SUCCESS, (playerData: any) => {
-    //   if (playerData.id !== this.playerId) {
-    //     if (this.otherPlayers.get(playerData.id) === undefined) {
-    //     }
-    //     this.otherPlayers.get(playerData.id)!.x = playerData.x;
-    //     this.otherPlayers.get(playerData.id)!.y = playerData.y;
-        
-    //     const otherPlayer = this.otherPlayers.get(playerData.id);
-    //     if(otherPlayer) {
-    //       otherPlayer.x = playerData.x;
-    //       otherPlayer.y = playerData.y;
-    //       const stream = otherPlayer.getStream();
-    //       if(stream) {
-    //         stream.x = playerData.x;
-    //         stream.y = playerData.y;
-    //       }
-    //     }
-    //   }}
-    // );
 
     this.events.addListener("stageClearSuccess", () => {
       this.otherPlayers.clear();
