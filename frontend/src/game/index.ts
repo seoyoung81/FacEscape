@@ -18,7 +18,6 @@ export const createGame = (canvas: HTMLCanvasElement) => {
       default: "arcade",
       arcade: {
         gravity: { y: 500 },
-        debug: true,
         checkCollision: { up: true, down: true, left: true, right: true },
       },
     },

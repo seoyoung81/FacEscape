@@ -21,6 +21,7 @@ import { Key } from "../object/key";
 import { Door } from "../object/door";
 
 import { STAGE_EVENT } from "../event";
+import { StreamManager } from "openvidu-browser";
 
 //====== wall setting ==============
 const WALL_START_X = 270;
@@ -118,11 +119,64 @@ export default class Stage01 extends Phaser.Scene {
           );
           this.otherPlayers.set(playerData.id, newPlayer);
           this.otherPlayersGroup.add(newPlayer);
-        } else {
-          // 이미 생성된 플레이어인 경우 위치 업데이트
-          const existingPlayer = this.otherPlayers.get(playerData.id);
-          existingPlayer?.setPosition(playerData.x, playerData.y);
+
+          const video = document.createElement("video");
+          playerData.remote.stream.addVideoElement(video);
+          video.playsInline = true;
+          video.width = 60;
+          video.height = 60;
+          video.autoplay = true;
+          newPlayer.setStream(
+            this.add.dom(newPlayer.x, newPlayer.y - 50, video)
+          );
         }
+      }
+    );
+
+    this.events.addListener(
+      STAGE_EVENT.UPDATE_PLAYER_SUCCESS,
+      (playersData: any, remotes: any) => {
+        console.log(remotes);
+        playersData.forEach((player: any) => {
+          if (
+            this.otherPlayers.get(player.id) === undefined &&
+            this.playerId !== player.id
+          ) {
+            const newPlayer = new Player(this, player.x, player.y, "idle");
+
+            if (remotes) {
+              const streamManager = (remotes as any[]).filter(
+                (remote) => remote.member.id === player.id
+              )[0];
+              if (streamManager) {
+                const video = document.createElement("video");
+                streamManager.addVideoElement(video);
+                video.width = 60;
+                video.height = 60;
+                video.autoplay = true;
+                newPlayer.setStream(
+                  this.add.dom(newPlayer.x, newPlayer.y - 50, video)
+                );
+              }
+            }
+
+            this.otherPlayers.set(player.id, newPlayer);
+            this.otherPlayersGroup.add(this.otherPlayers.get(player.id)!);
+          }
+          if (this.playerId !== player.id) {
+            const otherPlayer = this.otherPlayers.get(player.id);
+            if (otherPlayer) {
+              otherPlayer.x = player.x;
+              otherPlayer.y = player.y;
+
+              const memberStream = otherPlayer.getStream();
+              if (memberStream) {
+                memberStream.x = player.x;
+                memberStream.y = player.y - 50;
+              }
+            }
+          }
+        });
       }
     );
 
@@ -130,7 +184,20 @@ export default class Stage01 extends Phaser.Scene {
       this.otherPlayers.clear();
       this.otherPlayersGroup.clear(false, true);
       this.otherPlayersGroup = this.physics.add.group();
+
+      console.log(this.otherPlayersGroup.getLength());
+
       this.scene.start("StageSelect");
+    });
+
+    this.events.addListener("insertVideo", (data: any) => {
+      const video = document.createElement("video");
+      data.stream.addVideoElement(video);
+      video.playsInline = true;
+      video.width = 60;
+      video.height = 60;
+      video.autoplay = true;
+      this.domElement = this.add.dom(this.player.x, this.player.y - 50, video);
     });
 
     this.events.addListener("cannonShoot", (data: any) => {
@@ -153,8 +220,6 @@ export default class Stage01 extends Phaser.Scene {
   }
 
   create(userStartPos: any): void {
-    // this.otherPlayersGroup!.clear(true, true);
-    // this.otherPlayers.clear();
     this.otherPlayersGroup = this.physics.add.group();
     this.otherPlayers = new Map<number, Player>();
     // add background
@@ -250,51 +315,8 @@ export default class Stage01 extends Phaser.Scene {
       }
     });
 
-    this.domElement = this.add.dom(
-      this.player.x,
-      this.player.y,
-      "video",
-      {
-        style: {
-          width: "200px",
-          height: "100px",
-          backgroundColor: "blue",
-          color: "white",
-          textAlign: "center",
-        },
-      },
-      "Hello, Phaser DOM Element!"
-    );
-
-    this.events.addListener(
-      STAGE_EVENT.UPDATE_PLAYER_SUCCESS,
-      (playersData: any) => {
-        // if (playerData.id !== this.playerId) {
-        //   if (this.otherPlayers.get(playerData.id) === undefined) {
-
-        //   }
-        //   this.otherPlayers.get(playerData.id)!.x = playerData.x;
-        //   this.otherPlayers.get(playerData.id)!.y = playerData.y;
-        // }
-        playersData.forEach((player: any) => {
-          if (
-            this.otherPlayers.get(player.id) === undefined &&
-            this.playerId !== player.id
-          ) {
-            const newPlayer = new Player(this, player.x, player.y, "idle");
-            this.otherPlayers.set(player.id, newPlayer);
-            this.otherPlayersGroup.add(this.otherPlayers.get(player.id)!);
-          }
-          if (this.playerId !== player.id) {
-            this.otherPlayers.get(player.id)!.x = player.x;
-            this.otherPlayers.get(player.id)!.y = player.y;
-          }
-        });
-      }
-    );
-
-    this.input.keyboard?.on("keydown-R", () => {
-      this.scene.start("StageSelect");
+    this.game.events.emit("creatVideoObj", {
+      sceneKey: this.scene.key,
     });
   }
 
@@ -307,8 +329,10 @@ export default class Stage01 extends Phaser.Scene {
 
   update(): void {
     this.player.update();
-    this.domElement.x = this.player.x;
-    this.domElement.y = this.player.y;
+    if (this.domElement) {
+      this.domElement.x = this.player.x;
+      this.domElement.y = this.player.y - 50;
+    }
     this.game.events.emit(STAGE_EVENT.UPDATE_PLAYER, {
       id: this.playerId,
       x: this.player.x,
@@ -325,14 +349,10 @@ export default class Stage01 extends Phaser.Scene {
         this.doorOpened = true;
       }
       if (this.playerId === this.keyPickerId) {
-        // this.key.x = this.player.x;
-        // this.key.y = this.player.y - 60;
         this.key.body!.enable = false;
         Phaser.Display.Align.To.TopCenter(this.key, this.player, 0, -70);
       } else {
         const picker = this.otherPlayers.get(this.keyPickerId);
-        // this.key.x = picker!.x;
-        // this.key.y = picker!.y - 60;
         this.key.body!.enable = false;
         Phaser.Display.Align.To.TopCenter(this.key, picker!, 0, -70);
       }
