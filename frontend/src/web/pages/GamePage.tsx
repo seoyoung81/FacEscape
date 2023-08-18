@@ -21,7 +21,7 @@ const GamePage = () => {
   const token = sessionStorage.getItem("accessToken") || "";
 
   useEffect(() => {
-    if (canvasRef.current && useSocket.socket && openVidu.publisher && openVidu.remoteMembers && openVidu.remoteMembers.length === 1) {
+    if (canvasRef.current && useSocket.socket && openVidu.publisher && openVidu.remoteMembers && openVidu.remoteMembers.length === 2) {
       const game = createGame(canvasRef.current);
       setGame(() => game);
     }
