@@ -17,9 +17,7 @@ export const CreatePlayerHandler = async (
   let newPlayer = new Player(data.id, data.x, data.y, data.sceneKey);
   playersData.push(newPlayer);
 
-  socket.broadcast
-    .to(data.roomId)
-    .emit(GameEventType.createPlayerSuccess, data);
+  socket.to(data.roomId).emit(GameEventType.createPlayerSuccess, data);
 
   const room = roomManager.getRoom(data.roomId);
   if (room?.getGameObjectSize() === 0) {
@@ -41,7 +39,7 @@ export const UpdatePlayerHandler = async (socket: Socket, data: any) => {
       player.stage = data.sceneKey;
     }
   });
-  socket.broadcast
+  socket
     .to(data.roomId)
     .emit(GameEventType.updatePlayerSuccess, data, playersData);
 };
