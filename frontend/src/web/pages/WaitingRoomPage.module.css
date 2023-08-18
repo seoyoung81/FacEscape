@@ -1,0 +1,36 @@
+.top-container {
+  display: flex;
+  width: 1135px;
+  justify-content: center;
+  margin-top: 20px;
+  padding-bottom: 10px;
+}
+
+.waitingroom-container {
+    display: flex;
+    justify-content: center;
+    min-width: 500px;
+
+}
+
+.camera-container {
+    justify-content: center;
+    padding-bottom: 20px;
+}
+
+.box-container {
+  width: 1136px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.action-container {
+  flex-shrink: 1;
+  display: flex;
+  width: 1117px;
+  align-items: center;
+  gap: 30px;
+  margin-left: 10px;
+}

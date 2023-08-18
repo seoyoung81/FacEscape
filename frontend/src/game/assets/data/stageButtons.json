@@ -1,0 +1,100 @@
+{
+  "stages": [
+    {
+      "id": "1",
+      "sceneName": "Stage01",
+      "y": 200,
+      "x": 200,
+      "hasInteract": true,
+      "texture": "stageBtn"
+    },
+    {
+      "id": "2",
+      "sceneName": "Stage02",
+      "y": 200,
+      "x": 400,
+      "hasInteract": true,
+      "texture": "stageBtn"
+    },
+    {
+      "id": "3",
+      "sceneName": "Stage03",
+      "y": 200,
+      "x": 600,
+      "hasInteract": true,
+      "texture": "stageBtn"
+    },
+    {
+      "id": "-1",
+      "sceneName": "Stage04",
+      "y": 200,
+      "x": 800,
+      "hasInteract": false,
+      "texture": "lockBtn"
+    },
+    {
+      "id": "-1",
+      "sceneName": "none",
+      "y": 400,
+      "x": 200,
+      "hasInteract": false,
+      "texture": "lockBtn"
+    },
+    {
+      "id": "-1",
+      "sceneName": "none",
+      "y": 400,
+      "x": 400,
+      "hasInteract": false,
+      "texture": "lockBtn"
+    },
+    {
+      "id": "-1",
+      "sceneName": "none",
+      "y": 400,
+      "x": 600,
+      "hasInteract": false,
+      "texture": "lockBtn"
+    },
+    {
+      "id": "-1",
+      "sceneName": "none",
+      "y": 400,
+      "x": 800,
+      "hasInteract": false,
+      "texture": "lockBtn"
+    },
+    {
+      "id": "-1",
+      "sceneName": "none",
+      "y": 600,
+      "x": 200,
+      "hasInteract": false,
+      "texture": "lockBtn"
+    },
+    {
+      "id": "-1",
+      "sceneName": "none",
+      "y": 600,
+      "x": 400,
+      "hasInteract": false,
+      "texture": "lockBtn"
+    },
+    {
+      "id": "-1",
+      "sceneName": "none",
+      "y": 600,
+      "x": 600,
+      "hasInteract": false,
+      "texture": "lockBtn"
+    },
+    {
+      "id": "-1",
+      "sceneName": "none",
+      "y": 600,
+      "x": 800,
+      "hasInteract": false,
+      "texture": "lockBtn"
+    }
+  ]
+}
