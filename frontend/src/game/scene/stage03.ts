@@ -410,10 +410,6 @@ export default class Stage03 extends Phaser.Scene {
         this.stageClear();
       }
     });
-
-    // this.input.keyboard?.on("keydown-R", () => {
-    //   this.scene.start("StageSelect");
-    // });
   }
 
   stageClear(): void {

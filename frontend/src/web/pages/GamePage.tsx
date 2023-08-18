@@ -21,11 +21,11 @@ const GamePage = () => {
   const token = sessionStorage.getItem("accessToken") || "";
 
   useEffect(() => {
-    if (canvasRef.current && useSocket.socket) {
+    if (canvasRef.current && useSocket.socket && openVidu.publisher && openVidu.remoteMembers && openVidu.remoteMembers.length === 1) {
       const game = createGame(canvasRef.current);
       setGame(() => game);
     }
-  }, [canvasRef, useSocket.socket]);
+  }, [canvasRef, useSocket.socket, openVidu.publisher, openVidu.remoteMembers]);
 
   useEffect(() => {
     if (game && useSocket.socket && useSocket.client) {
@@ -86,28 +86,30 @@ const GamePage = () => {
       );
 
       if (!game.events.listeners(STAGE_EVENT.CREATE_PLAYER).length) {
-        game.events.addListener(
-          STAGE_EVENT.CREATE_PLAYER,
-          (playerData: any) => {
-            useSocket.emitGameEvent(STAGE_EVENT.CREATE_PLAYER, {
-              roomId: useSocket.roomId,
-              id: playerData.id,
-              x: playerData.x,
-              y: playerData.y,
-              sceneKey: playerData.sceneKey,
-            });
-          }
-        );
+        game.events.addListener(STAGE_EVENT.CREATE_PLAYER, (playerData: any) => {
+          useSocket.emitGameEvent(STAGE_EVENT.CREATE_PLAYER, {
+            roomId: useSocket.roomId,
+            id: playerData.id,
+            x: playerData.x,
+            y: playerData.y,
+            sceneKey: playerData.sceneKey,
+          });
+        });
       }
 
-      useSocket.socket.on(
-        STAGE_EVENT.CREATE_PLAYER_SUCCESS,
-        (playerData: any) => {
-          game.scene
-            .getScene(playerData.sceneKey)
-            .events.emit(STAGE_EVENT.CREATE_PLAYER_SUCCESS, playerData);
-        }
-      );
+      useSocket.socket.on(STAGE_EVENT.CREATE_PLAYER_SUCCESS, (playerData: any) => {
+        console.log(`player create success:${playerData.id}`);
+        
+        const remoteMember = openVidu.remoteMembers.filter(remote=>remote.member.id === playerData.id)[0];
+        console.log(remoteMember);
+
+        game.scene
+          .getScene(playerData.sceneKey)
+          .events.emit(STAGE_EVENT.CREATE_PLAYER_SUCCESS, {
+            ...playerData,
+            remote: remoteMember
+          });
+      });
 
       if (!game.events.listeners(STAGE_EVENT.UPDATE_PLAYER).length) {
         game.events.addListener(
@@ -149,12 +151,20 @@ const GamePage = () => {
           .events.emit(STAGE_EVENT.PICKED_KEY_SUCCESS, data);
       });
 
-      game.events.addListener("getClearInfo", (stageNumber: number) => {
-        useSocket.emitGameEvent("getClearInfo", {
-          roomId: useSocket.roomId,
-          stageNumber: stageNumber,
-        });
+      game.events.addListener(
+        "getClearInfo",
+        (stageNumber: number) => {
+          useSocket.emitGameEvent("getClearInfo", {
+            roomId: useSocket.roomId,
+            stageNumber: stageNumber,
+          });
+        }
+      );
+
+      game.events.addListener("creatVideoObj",(data: any)=>{
+        game.scene.getScene(data.sceneKey).events.emit("insertVideo", {stream: openVidu.publisher});
       });
+
       game.events.addListener(
         "stageClear",
         async (membersArray: any, startTime: number, stageNumber: number) => {
@@ -227,6 +237,8 @@ const GamePage = () => {
   }, [roomId, useSocket.socket]);
 
   useEffect(() => {
+    openVidu.setAudioState(sessionStorage.getItem("audioControl")==="true");
+    openVidu.setVideoState(sessionStorage.getItem("videoControl")==="true");
     const leaveSession = openVidu.leaveSession;
     window.addEventListener("beforeunload", leaveSession);
     return () => {

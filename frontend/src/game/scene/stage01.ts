@@ -21,6 +21,7 @@ import { Key } from "../object/key";
 import { Door } from "../object/door";
 
 import { STAGE_EVENT } from "../event";
+import { StreamManager } from "openvidu-browser";
 
 //====== wall setting ==============
 const WALL_START_X = 270;
@@ -57,7 +58,7 @@ export default class Stage01 extends Phaser.Scene {
   stageNumber: number = 1;
 
   domElement!: Phaser.GameObjects.DOMElement;
-
+  
   preload(): void {
     this.isKeyPicked = false;
     this.keyPickerId = -1;
@@ -102,35 +103,90 @@ export default class Stage01 extends Phaser.Scene {
     });
     this.game.events.emit(STAGE_EVENT.SET_PLAYER_ID, this.scene.key);
 
-    this.events.addListener(
-      STAGE_EVENT.CREATE_PLAYER_SUCCESS,
-      (playerData: any) => {
-        if (
-          playerData.id !== this.playerId &&
-          this.otherPlayers.get(playerData.id) === undefined
-        ) {
-          const newPlayer = new Player(
-            this,
-            playerData.x,
-            playerData.y,
-            "idle",
-            ["platformLayer"]
-          );
-          this.otherPlayers.set(playerData.id, newPlayer);
-          this.otherPlayersGroup.add(newPlayer);
-        } else {
-          // 이미 생성된 플레이어인 경우 위치 업데이트
-          const existingPlayer = this.otherPlayers.get(playerData.id);
-          existingPlayer?.setPosition(playerData.x, playerData.y);
+    this.events.addListener(STAGE_EVENT.CREATE_PLAYER_SUCCESS, (playerData: any) => {
+      if (playerData.id !== this.playerId && this.otherPlayers.get(playerData.id) === undefined) {
+        const newPlayer = new Player(this, playerData.x, playerData.y, "idle", ["platformLayer"]);
+        this.otherPlayers.set(playerData.id, newPlayer);
+        this.otherPlayersGroup.add(newPlayer);
+
+        const video = document.createElement("video");
+        playerData.remote.stream.addVideoElement(video);
+        video.playsInline = true;
+        video.width= 60;
+        video.height = 60;
+        video.autoplay = true;
+        newPlayer.setStream(this.add.dom(newPlayer.x, newPlayer.y-50, video));
+      } else {
+        // 이미 생성된 플레이어인 경우 위치 업데이트
+        const existingPlayer = this.otherPlayers.get(playerData.id);
+        const existStream = existingPlayer?.getStream();
+        existingPlayer?.setPosition(playerData.x, playerData.y);
+
+        if(existStream) {
+          existStream.x = playerData.x;
+          existStream.y = playerData.y;
         }
       }
+    });
+
+    this.events.addListener(
+      STAGE_EVENT.UPDATE_PLAYER_SUCCESS,
+      (playersData: any) => {
+        playersData.forEach((player: any) => {
+          if (
+            this.otherPlayers.get(player.id) === undefined &&
+            this.playerId !== player.id
+          ) {
+            const newPlayer = new Player(this, player.x, player.y, "idle");
+            this.otherPlayers.set(player.id, newPlayer);
+            this.otherPlayersGroup.add(this.otherPlayers.get(player.id)!);
+          }
+          if (this.playerId !== player.id) {
+            this.otherPlayers.get(player.id)!.x = player.x;
+            this.otherPlayers.get(player.id)!.y = player.y;
+          }
+        });
+      }
     );
+
+    // this.events.addListener(STAGE_EVENT.UPDATE_PLAYER_SUCCESS, (playerData: any) => {
+    //   if (playerData.id !== this.playerId) {
+    //     if (this.otherPlayers.get(playerData.id) === undefined) {
+    //     }
+    //     this.otherPlayers.get(playerData.id)!.x = playerData.x;
+    //     this.otherPlayers.get(playerData.id)!.y = playerData.y;
+        
+    //     const otherPlayer = this.otherPlayers.get(playerData.id);
+    //     if(otherPlayer) {
+    //       otherPlayer.x = playerData.x;
+    //       otherPlayer.y = playerData.y;
+    //       const stream = otherPlayer.getStream();
+    //       if(stream) {
+    //         stream.x = playerData.x;
+    //         stream.y = playerData.y;
+    //       }
+    //     }
+    //   }}
+    // );
 
     this.events.addListener("stageClearSuccess", () => {
       this.otherPlayers.clear();
       this.otherPlayersGroup.clear(false, true);
       this.otherPlayersGroup = this.physics.add.group();
+      
+      console.log(this.otherPlayersGroup.getLength());
+
       this.scene.start("StageSelect");
+    });
+
+    this.events.addListener("insertVideo", (data: any)=>{
+        const video = document.createElement("video");
+        data.stream.addVideoElement(video);
+        video.playsInline = true;
+        video.width= 60;
+        video.height = 60;
+        video.autoplay = true;
+        this.domElement = this.add.dom(this.player.x, this.player.y-50, video);
     });
 
     this.events.addListener("cannonShoot", (data: any) => {
@@ -153,8 +209,6 @@ export default class Stage01 extends Phaser.Scene {
   }
 
   create(userStartPos: any): void {
-    // this.otherPlayersGroup!.clear(true, true);
-    // this.otherPlayers.clear();
     this.otherPlayersGroup = this.physics.add.group();
     this.otherPlayers = new Map<number, Player>();
     // add background
@@ -250,51 +304,8 @@ export default class Stage01 extends Phaser.Scene {
       }
     });
 
-    this.domElement = this.add.dom(
-      this.player.x,
-      this.player.y,
-      "video",
-      {
-        style: {
-          width: "200px",
-          height: "100px",
-          backgroundColor: "blue",
-          color: "white",
-          textAlign: "center",
-        },
-      },
-      "Hello, Phaser DOM Element!"
-    );
-
-    this.events.addListener(
-      STAGE_EVENT.UPDATE_PLAYER_SUCCESS,
-      (playersData: any) => {
-        // if (playerData.id !== this.playerId) {
-        //   if (this.otherPlayers.get(playerData.id) === undefined) {
-
-        //   }
-        //   this.otherPlayers.get(playerData.id)!.x = playerData.x;
-        //   this.otherPlayers.get(playerData.id)!.y = playerData.y;
-        // }
-        playersData.forEach((player: any) => {
-          if (
-            this.otherPlayers.get(player.id) === undefined &&
-            this.playerId !== player.id
-          ) {
-            const newPlayer = new Player(this, player.x, player.y, "idle");
-            this.otherPlayers.set(player.id, newPlayer);
-            this.otherPlayersGroup.add(this.otherPlayers.get(player.id)!);
-          }
-          if (this.playerId !== player.id) {
-            this.otherPlayers.get(player.id)!.x = player.x;
-            this.otherPlayers.get(player.id)!.y = player.y;
-          }
-        });
-      }
-    );
-
-    this.input.keyboard?.on("keydown-R", () => {
-      this.scene.start("StageSelect");
+    this.game.events.emit("creatVideoObj", {
+      sceneKey: this.scene.key
     });
   }
 
@@ -307,8 +318,10 @@ export default class Stage01 extends Phaser.Scene {
 
   update(): void {
     this.player.update();
-    this.domElement.x = this.player.x;
-    this.domElement.y = this.player.y;
+    if(this.domElement) {
+      this.domElement.x = this.player.x;
+      this.domElement.y = this.player.y-50;
+    }
     this.game.events.emit(STAGE_EVENT.UPDATE_PLAYER, {
       id: this.playerId,
       x: this.player.x,
@@ -325,14 +338,10 @@ export default class Stage01 extends Phaser.Scene {
         this.doorOpened = true;
       }
       if (this.playerId === this.keyPickerId) {
-        // this.key.x = this.player.x;
-        // this.key.y = this.player.y - 60;
         this.key.body!.enable = false;
         Phaser.Display.Align.To.TopCenter(this.key, this.player, 0, -70);
       } else {
         const picker = this.otherPlayers.get(this.keyPickerId);
-        // this.key.x = picker!.x;
-        // this.key.y = picker!.y - 60;
         this.key.body!.enable = false;
         Phaser.Display.Align.To.TopCenter(this.key, picker!, 0, -70);
       }
