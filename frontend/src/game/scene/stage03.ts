@@ -111,10 +111,20 @@ export default class Stage03 extends Phaser.Scene {
     });
 
     this.game.events.emit(STAGE_EVENT.SET_PLAYER_ID, this.scene.key);
-    this.events.addListener(STAGE_EVENT.CREATE_PLAYER_SUCCESS, (playerData: any) => {
-      if (playerData.id !== this.playerId) {
-        if (!this.otherPlayers.has(playerData.id)) {
-          const newPlayer = new Player(this, playerData.x, playerData.y, "idle", ["platformLayer"]);
+    this.events.addListener(
+      STAGE_EVENT.CREATE_PLAYER_SUCCESS,
+      (playerData: any) => {
+        if (
+          playerData.id !== this.playerId &&
+          this.otherPlayers.get(playerData.id) === undefined
+        ) {
+          const newPlayer = new Player(
+            this,
+            playerData.x,
+            playerData.y,
+            "idle",
+            ["platformLayer"]
+          );
           this.otherPlayers.set(playerData.id, newPlayer);
           this.otherPlayersGroup.add(newPlayer);
         } else {
@@ -123,14 +133,27 @@ export default class Stage03 extends Phaser.Scene {
           existingPlayer?.setPosition(playerData.x, playerData.y);
         }
       }
-    });
+    );
 
-    this.events.addListener(STAGE_EVENT.UPDATE_PLAYER_SUCCESS, (playerData: any) => {
-      if (playerData.id !== this.playerId) {
-        this.otherPlayers.get(playerData.id)!.setX(playerData.x);
-        this.otherPlayers.get(playerData.id)!.setY(playerData.y);
+    this.events.addListener(
+      STAGE_EVENT.UPDATE_PLAYER_SUCCESS,
+      (playersData: any) => {
+        playersData.forEach((player: any) => {
+          if (
+            this.otherPlayers.get(player.id) === undefined &&
+            this.playerId !== player.id
+          ) {
+            const newPlayer = new Player(this, player.x, player.y, "idle");
+            this.otherPlayers.set(player.id, newPlayer);
+            this.otherPlayersGroup.add(this.otherPlayers.get(player.id)!);
+          }
+          if (this.playerId !== player.id) {
+            this.otherPlayers.get(player.id)!.x = player.x;
+            this.otherPlayers.get(player.id)!.y = player.y;
+          }
+        });
       }
-    });
+    );
 
     this.events.addListener("stageClearSuccess", () => {
       this.scene.start("StageSelect");
@@ -204,9 +227,13 @@ export default class Stage03 extends Phaser.Scene {
     ).setScrollFactor(0);
 
     // create key
-    this.key = new Key(this, 4500, 490, "key", [this.platformLayer]).setScale(0.09);
+    this.key = new Key(this, 4500, 490, "key", [this.platformLayer]).setScale(
+      0.09
+    );
     // create door
-    this.door = new Door(this, 4700, 470, "doorIdle", [this.platformLayer]).setDepth(-1);
+    this.door = new Door(this, 4700, 470, "doorIdle", [
+      this.platformLayer,
+    ]).setDepth(-1);
 
     // 트램펄린 배치
     const trampolinePositions = [
@@ -315,16 +342,29 @@ export default class Stage03 extends Phaser.Scene {
       (spikeTrap.body as Phaser.Physics.Arcade.Body).setAllowGravity(false);
       (spikeTrap.body as Phaser.Physics.Arcade.Body).setImmovable(true);
       this.physics.add.collider(spikeTrap, this.platformLayer);
-      this.physics.add.collider(this.player, spikeTrap, this.gameOver, undefined, this);
+      this.physics.add.collider(
+        this.player,
+        spikeTrap,
+        this.gameOver,
+        undefined,
+        this
+      );
     });
 
-    this.cannon = new Cannon(this, 4500, 420, "cannon", [this.platformLayer, this.player]);
+    this.cannon = new Cannon(this, 4500, 420, "cannon", [
+      this.platformLayer,
+      this.player,
+    ]);
 
     this.cannonBalls = this.physics.add.group();
     this.time.addEvent({
       delay: 2100,
       callback: () => {
-        const cannonBall = this.physics.add.sprite(this.cannon.x, this.cannon.y, "cannonBall");
+        const cannonBall = this.physics.add.sprite(
+          this.cannon.x,
+          this.cannon.y,
+          "cannonBall"
+        );
         this.cannonBalls.add(cannonBall);
         cannonBall.body.allowGravity = false;
         cannonBall.setVelocityX(-500);
@@ -407,17 +447,22 @@ export default class Stage03 extends Phaser.Scene {
     });
 
     if (this.trafficLight.getTrafficLightState() === "red") {
-      if (this.player.x !== this.prevPlayerX || this.player.y !== this.prevPlayerY) {
+      if (
+        this.player.x !== this.prevPlayerX ||
+        this.player.y !== this.prevPlayerY
+      ) {
         this.gameOver();
       }
     }
 
-    this.cannonBalls.getChildren().forEach((cannonBall: Phaser.GameObjects.GameObject) => {
-      const sprite = cannonBall as Phaser.Physics.Arcade.Sprite;
-      if (sprite.x < 3000) {
-        sprite.destroy();
-      }
-    });
+    this.cannonBalls
+      .getChildren()
+      .forEach((cannonBall: Phaser.GameObjects.GameObject) => {
+        const sprite = cannonBall as Phaser.Physics.Arcade.Sprite;
+        if (sprite.x < 3000) {
+          sprite.destroy();
+        }
+      });
 
     this.prevPlayerX = this.player.x;
     this.prevPlayerY = this.player.y;
