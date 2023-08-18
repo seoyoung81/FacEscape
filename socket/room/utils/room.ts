@@ -1,6 +1,6 @@
 import { Member } from "../../member/utils/member";
 
-const MAX_PLAYER_NUMBER = 2;
+const MAX_PLAYER_NUMBER = 3;
 
 export type RoomState = "PLAY" | "WAITING";
 
