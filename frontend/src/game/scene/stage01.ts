@@ -58,7 +58,7 @@ export default class Stage01 extends Phaser.Scene {
   stageNumber: number = 1;
 
   domElement!: Phaser.GameObjects.DOMElement;
-  
+
   preload(): void {
     this.isKeyPicked = false;
     this.keyPickerId = -1;
@@ -103,21 +103,35 @@ export default class Stage01 extends Phaser.Scene {
     });
     this.game.events.emit(STAGE_EVENT.SET_PLAYER_ID, this.scene.key);
 
-    this.events.addListener(STAGE_EVENT.CREATE_PLAYER_SUCCESS, (playerData: any) => {
-      if (playerData.id !== this.playerId && this.otherPlayers.get(playerData.id) === undefined) {
-        const newPlayer = new Player(this, playerData.x, playerData.y, "idle", ["platformLayer"]);
-        this.otherPlayers.set(playerData.id, newPlayer);
-        this.otherPlayersGroup.add(newPlayer);
+    this.events.addListener(
+      STAGE_EVENT.CREATE_PLAYER_SUCCESS,
+      (playerData: any) => {
+        if (
+          playerData.id !== this.playerId &&
+          this.otherPlayers.get(playerData.id) === undefined
+        ) {
+          const newPlayer = new Player(
+            this,
+            playerData.x,
+            playerData.y,
+            "idle",
+            ["platformLayer"]
+          );
+          this.otherPlayers.set(playerData.id, newPlayer);
+          this.otherPlayersGroup.add(newPlayer);
 
-        const video = document.createElement("video");
-        playerData.remote.stream.addVideoElement(video);
-        video.playsInline = true;
-        video.width= 60;
-        video.height = 60;
-        video.autoplay = true;
-        newPlayer.setStream(this.add.dom(newPlayer.x, newPlayer.y-50, video));
+          const video = document.createElement("video");
+          playerData.remote.stream.addVideoElement(video);
+          video.playsInline = true;
+          video.width = 60;
+          video.height = 60;
+          video.autoplay = true;
+          newPlayer.setStream(
+            this.add.dom(newPlayer.x, newPlayer.y - 50, video)
+          );
+        }
       }
-    });
+    );
 
     this.events.addListener(
       STAGE_EVENT.UPDATE_PLAYER_SUCCESS,
@@ -130,31 +144,35 @@ export default class Stage01 extends Phaser.Scene {
           ) {
             const newPlayer = new Player(this, player.x, player.y, "idle");
 
-            if(remotes) {
-              const streamManager = (remotes as any[]).filter(remote=>remote.member.id === player.id)[0];
-              if(streamManager) {
+            if (remotes) {
+              const streamManager = (remotes as any[]).filter(
+                (remote) => remote.member.id === player.id
+              )[0];
+              if (streamManager) {
                 const video = document.createElement("video");
                 streamManager.addVideoElement(video);
-                video.width= 60;
+                video.width = 60;
                 video.height = 60;
                 video.autoplay = true;
-                newPlayer.setStream(this.add.dom(newPlayer.x, newPlayer.y-50, video));
+                newPlayer.setStream(
+                  this.add.dom(newPlayer.x, newPlayer.y - 50, video)
+                );
               }
             }
-            
+
             this.otherPlayers.set(player.id, newPlayer);
             this.otherPlayersGroup.add(this.otherPlayers.get(player.id)!);
           }
           if (this.playerId !== player.id) {
             const otherPlayer = this.otherPlayers.get(player.id);
-            if(otherPlayer) {
+            if (otherPlayer) {
               otherPlayer.x = player.x;
               otherPlayer.y = player.y;
-              
-              const memberStream = otherPlayer.getStream()
-              if(memberStream) {
+
+              const memberStream = otherPlayer.getStream();
+              if (memberStream) {
                 memberStream.x = player.x;
-                memberStream.y = player.y;
+                memberStream.y = player.y - 50;
               }
             }
           }
@@ -166,20 +184,20 @@ export default class Stage01 extends Phaser.Scene {
       this.otherPlayers.clear();
       this.otherPlayersGroup.clear(false, true);
       this.otherPlayersGroup = this.physics.add.group();
-      
+
       console.log(this.otherPlayersGroup.getLength());
 
       this.scene.start("StageSelect");
     });
 
-    this.events.addListener("insertVideo", (data: any)=>{
-        const video = document.createElement("video");
-        data.stream.addVideoElement(video);
-        video.playsInline = true;
-        video.width= 60;
-        video.height = 60;
-        video.autoplay = true;
-        this.domElement = this.add.dom(this.player.x, this.player.y-50, video);
+    this.events.addListener("insertVideo", (data: any) => {
+      const video = document.createElement("video");
+      data.stream.addVideoElement(video);
+      video.playsInline = true;
+      video.width = 60;
+      video.height = 60;
+      video.autoplay = true;
+      this.domElement = this.add.dom(this.player.x, this.player.y - 50, video);
     });
 
     this.events.addListener("cannonShoot", (data: any) => {
@@ -298,7 +316,7 @@ export default class Stage01 extends Phaser.Scene {
     });
 
     this.game.events.emit("creatVideoObj", {
-      sceneKey: this.scene.key
+      sceneKey: this.scene.key,
     });
   }
 
@@ -311,9 +329,9 @@ export default class Stage01 extends Phaser.Scene {
 
   update(): void {
     this.player.update();
-    if(this.domElement) {
+    if (this.domElement) {
       this.domElement.x = this.player.x;
-      this.domElement.y = this.player.y-50;
+      this.domElement.y = this.player.y - 50;
     }
     this.game.events.emit(STAGE_EVENT.UPDATE_PLAYER, {
       id: this.playerId,
