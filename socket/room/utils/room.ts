@@ -1,6 +1,6 @@
 import { Member } from "../../member/utils/member";
 
-const MAX_PLAYER_NUMBER = 6;
+const MAX_PLAYER_NUMBER = 2;
 
 export type RoomState = "PLAY" | "WAITING";
 
@@ -83,9 +83,6 @@ export class Room {
 
     removeMember(member: Member) {
         this._members.delete(member.id);
-        if(this._hostId === member.id){
-            this.changehostUUID();
-        }
     }
 
     getMemberSize() {
@@ -98,15 +95,6 @@ export class Room {
 
     isEmpty() {
         return this._members.size === 0;
-    }
-
-    changehostUUID(){
-        this._members.forEach((member) => {
-            if(this._hostId != member.id) {
-                this.hostId = member.id;
-                return; 
-            }
-        })
     }
 
     setStartStageTime() {
