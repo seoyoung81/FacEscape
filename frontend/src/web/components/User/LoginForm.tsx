@@ -2,10 +2,10 @@ import GoogleLogin from './GoogleLogin';
 
 import { useForm, Controller } from 'react-hook-form';
 
-import { defaultInstance } from '../../services/api';
+import { defaultInstance } from '../../api/instance';
 
 import { useDispatch } from 'react-redux';
-import { setIsLogIn } from '../../store/authSlice';
+import { setIsLogIn } from '../../stores/authSlice';
 
 import styles from './User.module.css';
 import Swal from 'sweetalert2';

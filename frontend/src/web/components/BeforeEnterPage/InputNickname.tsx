@@ -1,6 +1,6 @@
 import styles from './BeforeEnter.module.css';
 import { useState, ChangeEvent, useEffect } from 'react';
-import { authInstance } from '../../services/api';
+import { authInstance } from '../../api/instance';
 import { memberService } from '../../services/member'
 import Swal from 'sweetalert2';
 

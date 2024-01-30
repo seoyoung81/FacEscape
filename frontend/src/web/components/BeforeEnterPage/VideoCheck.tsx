@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import styles from './BeforeEnter.module.css';
 import SnapShot from '../VideoEffect/snapShot';
 import { UseSelector, useSelector } from 'react-redux/es/hooks/useSelector';
-import { RootState } from '../../store/store';
+import { RootState } from '../../stores/store';
 
 type VideoCheckProps = {
   videoIsActive: boolean,

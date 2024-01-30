@@ -3,9 +3,9 @@ import styles from "./RankingPage.module.css";
 import { useState, useEffect } from 'react';
 import RankingView from "../components/RankingPage/RankingView";
 import type {Rankings} from '../services/ranking';
-import { defaultInstance } from "../services/api";
+import { defaultInstance } from "../api/instance";
 import { useSelector } from "react-redux";
-import { RootState } from "../store/store";
+import { RootState } from "../stores/store";
 
 const RankingPage :React.FC = () => {
     const [currentStage, setCurrentStage] = useState<number>(1);

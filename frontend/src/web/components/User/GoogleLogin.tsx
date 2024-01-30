@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import styles from './User.module.css'
 import { useLocation } from 'react-router';
 import { useNavigate } from 'react-router-dom';
-import { defaultInstance } from '../../services/api';
+import { defaultInstance } from '../../api/instance';
 
 const GoogleLogin: React.FC = () => {
 

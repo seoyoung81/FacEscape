@@ -2,7 +2,7 @@ import UserResignation from './UserResignation';
 import styles from './UserInfo.module.css';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
-import { authInstance } from '../../../services/api';
+import { authInstance } from '../../../api/instance';
 
 interface UserProps {
     nickName: string | null,

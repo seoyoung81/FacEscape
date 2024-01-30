@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { authInstance } from '../../../services/api';
+import { authInstance } from '../../../api/instance';
 import { UseSelector, useSelector } from 'react-redux/es/hooks/useSelector';
-import { RootState } from '../../../store/store';
+import { RootState } from '../../../stores/store';
 import styles from './MyMilage.module.css';
 
 

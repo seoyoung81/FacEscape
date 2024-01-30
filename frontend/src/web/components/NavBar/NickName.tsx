@@ -1,6 +1,6 @@
 import styles from './NavBar.module.css';
 import { useNavigate } from 'react-router-dom';
-import { authInstance } from '../../services/api';
+import { authInstance } from '../../api/instance';
 import { useState, useEffect } from 'react';
 import Icon from '../Common/userIcon';
 

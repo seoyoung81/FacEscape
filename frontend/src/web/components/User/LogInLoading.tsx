@@ -1,7 +1,7 @@
-import { defaultInstance } from "../../services/api";
+import { defaultInstance } from "../../api/instance";
 import { useEffect } from 'react';
 import { useDispatch } from "react-redux";
-import { setIsLogIn } from "../../store/authSlice";
+import { setIsLogIn } from "../../stores/authSlice";
 import { useNavigate } from "react-router-dom";
 
 import styles from './User.module.css';

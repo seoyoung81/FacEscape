@@ -1,10 +1,10 @@
 import { useForm, Controller } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
-import { setUserNickName } from '../../store/userInfoSlice';
-import { todaySignUpUser } from '../../store/signUpUser';
+import { setUserNickName } from '../../stores/userInfoSlice';
+import { todaySignUpUser } from '../../stores/signUpUser';
 
 // api
-import { defaultInstance } from '../../services/api';
+import { defaultInstance } from '../../api/instance';
 
 // css
 import styles from './User.module.css';

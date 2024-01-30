@@ -9,7 +9,7 @@ import MyPage from "./MyPage";
 import NickName from "./NickName";
 
 import { useSelector } from 'react-redux';
-import { RootState } from '../../store/store';
+import { RootState } from '../../stores/store';
 
 // css
 import styles from './NavBar.module.css';

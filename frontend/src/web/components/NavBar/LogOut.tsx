@@ -1,8 +1,8 @@
 import { useDispatch } from 'react-redux';
-import { setIsLogIn } from '../../store/authSlice';
+import { setIsLogIn } from '../../stores/authSlice';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../store/store';
+import { RootState } from '../../stores/store';
 
 import styles from './NavBar.module.css';
 import Swal from 'sweetalert2';

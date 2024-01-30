@@ -1,7 +1,7 @@
-import { authInstance } from "../../services/api";
+import { authInstance } from "../../api/instance";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "../../store/store";
+import { RootState } from "../../stores/store";
 
 const Icon = () => {
     const [img, setImg] = useState<string>("");

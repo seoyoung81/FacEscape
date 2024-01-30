@@ -1,7 +1,7 @@
 import styles from './UserItem.module.css';
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { setMyItemType } from '../../../store/myItemCategorySlice';
+import { setMyItemType } from '../../../stores/myItemCategorySlice';
 
 
 const MyItemCategory: React.FC = () => {

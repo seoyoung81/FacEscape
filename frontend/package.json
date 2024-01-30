@@ -23,6 +23,7 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.45.2",
     "react-icons": "^4.10.1",
+    "react-query": "^3.39.3",
     "react-redux": "^8.1.1",
     "react-router-dom": "^6.14.2",
     "react-scripts": "5.0.1",
@@ -39,7 +40,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "commit": "./node_modules/cz-customizable/standalone.js"
   },
   "eslintConfig": {
     "extends": [
@@ -62,6 +64,7 @@
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@types/file-saver": "^2.0.5",
+    "cz-customizable": "^7.0.0",
     "file-loader": "^6.2.0",
     "msw": "^1.2.3",
     "tailwindcss": "^3.3.3",
@@ -69,5 +72,10 @@
   },
   "msw": {
     "workerDirectory": "public"
+  },
+  "config": {
+    "cz-customizable": {
+      "config": "cz-config.js"
+    }
   }
 }

@@ -1,10 +1,10 @@
 import MyItemImg from './MyItemImg';
 import MyItemName from './MyItemName';
 import { BsCheck } from 'react-icons/bs';
-import { authInstance } from '../../../services/api';
+import { authInstance } from '../../../api/instance';
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { toggleIconRender } from '../../../store/iconRenderSlice';
+import { toggleIconRender } from '../../../stores/iconRenderSlice';
 
 import styles from './UserItem.module.css';
 import Swal from 'sweetalert2';

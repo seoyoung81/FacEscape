@@ -1,4 +1,4 @@
-import { expressAxios } from "../api";
+import { expressAxios } from "../../api/instance";
 
 export const memberService = {
     updateInGameMemberInfo: async(memberId: number, nickname: string) => {

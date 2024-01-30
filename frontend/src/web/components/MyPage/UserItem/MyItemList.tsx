@@ -1,11 +1,11 @@
 import MyItem from './MyItem';
 import { useState, useEffect } from 'react';
 import styles from './UserItem.module.css';
-import { authInstance } from '../../../services/api';
+import { authInstance } from '../../../api/instance';
 import { useNavigate } from 'react-router-dom';
 
 import { useSelector } from 'react-redux';
-import { RootState } from '../../../store/store';
+import { RootState } from '../../../stores/store';
 
 const MyItemList: React.FC = () => {
     const [itemList, setItemList] = useState<any[]>([]);

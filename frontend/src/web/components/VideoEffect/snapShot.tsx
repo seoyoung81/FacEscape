@@ -3,10 +3,10 @@ import flipVertical from "./flipVertical";
 import convertToGrayscale from "./convertToGray";
 import React from "react";
 import { useEffect, useState } from 'react';
-import { authInstance } from "../../services/api";
+import { authInstance } from "../../api/instance";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
-import { RootState } from "../../store/store";
+import { RootState } from "../../stores/store";
 
 const SnapShot = (videoRef: React.RefObject<HTMLVideoElement>, setImageUrl: React.Dispatch<React.SetStateAction<string>>) => {
   const [videoEffectId, setVideoEffectId] = useState<number>(0);

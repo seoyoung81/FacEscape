@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://i9a305.p.ssafy.io/api/backend';
+const BASE_URL = 'http://localhost:3000'; // TODO: 백엔드 URL 변경 및 환경변수로 관리
+
 
 interface AxiosOptions {
   [key: string]: any; 

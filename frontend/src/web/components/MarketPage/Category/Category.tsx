@@ -3,7 +3,7 @@ import styles from './Category.module.css';
 
 // redux
 import { useDispatch } from 'react-redux';
-import { setItemType } from '../../../store/categorySlice'; 
+import { setItemType } from '../../../stores/categorySlice'; 
 
 const Category: React.FC = () => {
     const dispatch = useDispatch();

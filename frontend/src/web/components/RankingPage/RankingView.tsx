@@ -4,7 +4,7 @@ import DropDownIcon from '../../assets/images/i-dropdown.svg'
 import type {Rankings} from '../../services/ranking';
 
 import { useDispatch } from 'react-redux';
-import { setStage } from '../../store/stageSlice';
+import { setStage } from '../../stores/stageSlice';
 
 
 type RankingViewProps = {

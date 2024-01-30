@@ -3,7 +3,7 @@ import UserEmail from './UserEmail';
 import UserMilage from './UserMileage';
 import EditInfo from './EditInfo';
 
-import { authInstance } from '../../../services/api';
+import { authInstance } from '../../../api/instance';
 
 import { useEffect, useState } from 'react';
 

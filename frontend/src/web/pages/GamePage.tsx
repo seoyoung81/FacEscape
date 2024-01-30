@@ -6,7 +6,7 @@ import { STAGE_EVENT } from "../../game/event";
 
 import Phaser from "phaser";
 import Swal from "sweetalert2";
-import { defaultInstance } from "../services/api";
+import { defaultInstance } from "../api/instance";
 
 const GamePage = () => {
   const [roomId] = useState<string>(

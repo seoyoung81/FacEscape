@@ -1,7 +1,7 @@
 import styles from './Modal.module.css';
-import { authInstance } from '../../services/api';
+import { authInstance } from '../../api/instance';
 import { useDispatch } from 'react-redux';
-import { toggleMileageRender } from '../../store/mileageRender';
+import { toggleMileageRender } from '../../stores/mileageRender';
 import Swal from 'sweetalert2';
 
 interface purchaseProps {
