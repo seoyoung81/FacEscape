@@ -12,7 +12,6 @@
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "axios": "^1.4.0",
-    "bootstrap": "^5.3.0",
     "echarts": "^5.4.3",
     "file-saver": "^2.0.5",
     "html2canvas": "^1.4.1",
@@ -61,14 +60,9 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-<<<<<<< HEAD
-=======
     "@types/css-modules": "^1.0.5",
->>>>>>> frontend
     "@types/file-saver": "^2.0.5",
     "file-loader": "^6.2.0",
-    "msw": "^1.2.3",
-    "tailwindcss": "^3.3.3",
     "url-loader": "^4.1.1"
   },
   "msw": {
