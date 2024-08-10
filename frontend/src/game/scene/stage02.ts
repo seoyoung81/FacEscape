@@ -102,6 +102,7 @@ export default class Stage02 extends Phaser.Scene {
 
     this.game.events.emit(STAGE_EVENT.SET_PLAYER_ID, this.scene.key);
 
+<<<<<<< HEAD
     this.events.addListener(STAGE_EVENT.CREATE_PLAYER_SUCCESS, (playerData: any) => {
       if (playerData.id !== this.playerId) {
         if (!this.otherPlayers.has(playerData.id)) {
@@ -111,12 +112,51 @@ export default class Stage02 extends Phaser.Scene {
 
           // this.physics.add.collider(newPlayer, this.player);
           // this.physics.add.collider(newPlayer, this.platformLayer!);
+=======
+    this.events.addListener(
+      STAGE_EVENT.UPDATE_PLAYER_SUCCESS,
+      (playersData: any) => {
+        playersData.forEach((player: any) => {
+          if (
+            this.otherPlayers.get(player.id) === undefined &&
+            this.playerId !== player.id
+          ) {
+            const newPlayer = new Player(this, player.x, player.y, "idle");
+            this.otherPlayers.set(player.id, newPlayer);
+            this.otherPlayersGroup.add(this.otherPlayers.get(player.id)!);
+          }
+          if (this.playerId !== player.id) {
+            this.otherPlayers.get(player.id)!.x = player.x;
+            this.otherPlayers.get(player.id)!.y = player.y;
+          }
+        });
+      }
+    );
+
+    this.events.addListener(
+      STAGE_EVENT.CREATE_PLAYER_SUCCESS,
+      (playerData: any) => {
+        if (
+          playerData.id !== this.playerId &&
+          this.otherPlayers.get(playerData.id) === undefined
+        ) {
+          const newPlayer = new Player(
+            this,
+            playerData.x,
+            playerData.y,
+            "idle",
+            ["platformLayer"]
+          );
+          this.otherPlayers.set(playerData.id, newPlayer);
+          this.otherPlayersGroup.add(newPlayer);
+>>>>>>> frontend
         } else {
           // 이미 생성된 플레이어인 경우 위치 업데이트
           const existingPlayer = this.otherPlayers.get(playerData.id);
           existingPlayer?.setPosition(playerData.x, playerData.y);
         }
       }
+<<<<<<< HEAD
     });
 
     this.events.addListener(STAGE_EVENT.UPDATE_PLAYER_SUCCESS, (playerData: any) => {
@@ -125,6 +165,9 @@ export default class Stage02 extends Phaser.Scene {
         this.otherPlayers.get(playerData.id)!.y = playerData.y;
       }
     });
+=======
+    );
+>>>>>>> frontend
 
     this.events.addListener("stageClearSuccess", () => {
       this.scene.start("StageSelect");
@@ -198,6 +241,7 @@ export default class Stage02 extends Phaser.Scene {
       this.isKeyPicked = true;
     });
     // create key
+<<<<<<< HEAD
     this.key = new Key(this, 1200, 270, "key", [this.platformLayer]).setScale(0.09);
     // create door
     this.door = new Door(this, 1300, 270, "doorIdle", [this.platformLayer]).setDepth(-1);
@@ -215,6 +259,41 @@ export default class Stage02 extends Phaser.Scene {
     this.cannons.push(cannon3);
 
     const cannon4 = new Cannon(this, 90, 750, "cannon", [this.platformLayer, this.player]);
+=======
+    this.key = new Key(this, 1200, 270, "key", [this.platformLayer]).setScale(
+      0.09
+    );
+    // create door
+    this.door = new Door(this, 1300, 270, "doorIdle", [
+      this.platformLayer,
+    ]).setDepth(-1);
+
+    const cannon1 = new Cannon(this, 120, 2020, "cannon", [
+      this.platformLayer,
+      this.player,
+    ]);
+    cannon1.flipX = true;
+    this.cannons.push(cannon1);
+
+    const cannon2 = new Cannon(this, 170, 1300, "cannon", [
+      this.platformLayer,
+      this.player,
+    ]);
+    cannon2.flipX = true;
+    this.cannons.push(cannon2);
+
+    const cannon3 = new Cannon(this, 90, 550, "cannon", [
+      this.platformLayer,
+      this.player,
+    ]);
+    cannon3.flipX = true;
+    this.cannons.push(cannon3);
+
+    const cannon4 = new Cannon(this, 90, 750, "cannon", [
+      this.platformLayer,
+      this.player,
+    ]);
+>>>>>>> frontend
     cannon4.flipX = true;
     this.cannons.push(cannon4);
 
@@ -225,7 +304,15 @@ export default class Stage02 extends Phaser.Scene {
       this.time.addEvent({
         delay: 2100, // 대포 발사 간격
         callback: () => {
+<<<<<<< HEAD
           const cannonBall = this.physics.add.sprite(cannon.x, cannon.y, "cannonBall");
+=======
+          const cannonBall = this.physics.add.sprite(
+            cannon.x,
+            cannon.y,
+            "cannonBall"
+          );
+>>>>>>> frontend
           this.cannonBalls.add(cannonBall);
           cannonBall.body.allowGravity = false;
           cannonBall.setVelocityX(300);
@@ -268,10 +355,13 @@ export default class Stage02 extends Phaser.Scene {
         this.stageClear();
       }
     });
+<<<<<<< HEAD
 
     // this.input.keyboard?.on("keydown-R", () => {
     //   this.scene.start("StageSelect");
     // });
+=======
+>>>>>>> frontend
   }
 
   stageClear(): void {

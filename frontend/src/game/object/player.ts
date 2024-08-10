@@ -1,6 +1,10 @@
 import * as Phaser from "phaser";
 export class Player extends Phaser.Physics.Arcade.Sprite {
   private playerState: number = 0;
+<<<<<<< HEAD
+=======
+  private stream: Phaser.GameObjects.DOMElement | undefined
+>>>>>>> frontend
 
   constructor(
     scene: Phaser.Scene,
@@ -108,4 +112,15 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   setPlayerState(stateNumber: number) {
     this.playerState = stateNumber;
   }
+<<<<<<< HEAD
+=======
+
+  setStream(domElement: any) {
+    this.stream = domElement;
+  }
+
+  getStream() {
+    return this.stream;
+  }
+>>>>>>> frontend
 }

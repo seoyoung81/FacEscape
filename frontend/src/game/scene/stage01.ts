@@ -21,6 +21,10 @@ import { Key } from "../object/key";
 import { Door } from "../object/door";
 
 import { STAGE_EVENT } from "../event";
+<<<<<<< HEAD
+=======
+import { StreamManager } from "openvidu-browser";
+>>>>>>> frontend
 
 //====== wall setting ==============
 const WALL_START_X = 270;
@@ -102,6 +106,7 @@ export default class Stage01 extends Phaser.Scene {
     });
     this.game.events.emit(STAGE_EVENT.SET_PLAYER_ID, this.scene.key);
 
+<<<<<<< HEAD
     this.events.addListener(STAGE_EVENT.CREATE_PLAYER_SUCCESS, (playerData: any) => {
       if (playerData.id !== this.playerId && this.otherPlayers.get(playerData.id) === undefined) {
         const newPlayer = new Player(this, playerData.x, playerData.y, "idle", ["platformLayer"]);
@@ -122,16 +127,119 @@ export default class Stage01 extends Phaser.Scene {
         this.otherPlayers.get(playerData.id)!.y = playerData.y;
       }
     });
+=======
+    this.events.addListener(
+      STAGE_EVENT.CREATE_PLAYER_SUCCESS,
+      (playerData: any) => {
+        if (
+          playerData.id !== this.playerId &&
+          this.otherPlayers.get(playerData.id) === undefined
+        ) {
+          const newPlayer = new Player(
+            this,
+            playerData.x,
+            playerData.y,
+            "idle",
+            ["platformLayer"]
+          );
+          this.otherPlayers.set(playerData.id, newPlayer);
+          this.otherPlayersGroup.add(newPlayer);
+
+          const video = document.createElement("video");
+          playerData.remote.stream.addVideoElement(video);
+          video.playsInline = true;
+          video.width = 60;
+          video.height = 60;
+          video.autoplay = true;
+          newPlayer.setStream(
+            this.add.dom(newPlayer.x, newPlayer.y - 50, video)
+          );
+        }
+      }
+    );
+
+    this.events.addListener(
+      STAGE_EVENT.UPDATE_PLAYER_SUCCESS,
+      (playersData: any, remotes: any) => {
+        console.log(remotes);
+        playersData.forEach((player: any) => {
+          if (
+            this.otherPlayers.get(player.id) === undefined &&
+            this.playerId !== player.id
+          ) {
+            const newPlayer = new Player(this, player.x, player.y, "idle");
+
+            if (remotes) {
+              const streamManager = (remotes as any[]).filter(
+                (remote) => remote.member.id === player.id
+              )[0];
+              if (streamManager) {
+                const video = document.createElement("video");
+                streamManager.addVideoElement(video);
+                video.width = 60;
+                video.height = 60;
+                video.autoplay = true;
+                newPlayer.setStream(
+                  this.add.dom(newPlayer.x, newPlayer.y - 50, video)
+                );
+              }
+            }
+
+            this.otherPlayers.set(player.id, newPlayer);
+            this.otherPlayersGroup.add(this.otherPlayers.get(player.id)!);
+          }
+          if (this.playerId !== player.id) {
+            const otherPlayer = this.otherPlayers.get(player.id);
+            if (otherPlayer) {
+              otherPlayer.x = player.x;
+              otherPlayer.y = player.y;
+
+              const memberStream = otherPlayer.getStream();
+              if (memberStream) {
+                memberStream.x = player.x;
+                memberStream.y = player.y - 50;
+              }
+            }
+          }
+        });
+      }
+    );
+>>>>>>> frontend
 
     this.events.addListener("stageClearSuccess", () => {
       this.otherPlayers.clear();
       this.otherPlayersGroup.clear(false, true);
       this.otherPlayersGroup = this.physics.add.group();
+<<<<<<< HEAD
       this.scene.start("StageSelect");
     });
 
     this.events.addListener("cannonShoot", (data: any) => {
       const cannonBall = this.physics.add.sprite(this.cannon.x, this.cannon.y, "cannonBall");
+=======
+
+      console.log(this.otherPlayersGroup.getLength());
+
+      this.scene.start("StageSelect");
+    });
+
+    this.events.addListener("insertVideo", (data: any) => {
+      const video = document.createElement("video");
+      data.stream.addVideoElement(video);
+      video.playsInline = true;
+      video.width = 60;
+      video.height = 60;
+      video.autoplay = true;
+      this.domElement = this.add.dom(this.player.x, this.player.y - 50, video);
+    });
+
+    this.events.addListener("cannonShoot", (data: any) => {
+      const cannonBall = this.physics.add.sprite(
+        this.cannon.x,
+        this.cannon.y,
+        "cannonBall"
+      );
+>>>>>>> frontend
       this.cannonBalls.add(cannonBall);
       cannonBall.body.allowGravity = false;
       cannonBall.setVelocityX(-1200);
@@ -146,8 +254,11 @@ export default class Stage01 extends Phaser.Scene {
   }
 
   create(userStartPos: any): void {
+<<<<<<< HEAD
     // this.otherPlayersGroup!.clear(true, true);
     // this.otherPlayers.clear();
+=======
+>>>>>>> frontend
     this.otherPlayersGroup = this.physics.add.group();
     this.otherPlayers = new Map<number, Player>();
     // add background
@@ -175,7 +286,16 @@ export default class Stage01 extends Phaser.Scene {
         startingPoint = player;
       }
     });
+<<<<<<< HEAD
     this.player = new Player(this, startingPoint.startX, startingPoint.startY, "idle");
+=======
+    this.player = new Player(
+      this,
+      startingPoint.startX,
+      startingPoint.startY,
+      "idle"
+    );
+>>>>>>> frontend
 
     this.game.events.emit(STAGE_EVENT.CREATE_PLAYER, {
       id: this.playerId,
@@ -197,9 +317,19 @@ export default class Stage01 extends Phaser.Scene {
     // create cannonBall
     this.cannonBalls = this.physics.add.group();
     // create key
+<<<<<<< HEAD
     this.key = new Key(this, 50, 660, "key", [this.platformLayer]).setScale(0.09);
     // create doorc
     this.door = new Door(this, 700, 660, "doorIdle", [this.platformLayer]).setDepth(-1);
+=======
+    this.key = new Key(this, 50, 660, "key", [this.platformLayer]).setScale(
+      0.09
+    );
+    // create doorc
+    this.door = new Door(this, 700, 660, "doorIdle", [
+      this.platformLayer,
+    ]).setDepth(-1);
+>>>>>>> frontend
 
     // colliders
     this.physics.add.collider(this.player, this.platformLayer!);
@@ -207,10 +337,21 @@ export default class Stage01 extends Phaser.Scene {
     this.physics.add.collider(this.cannon, this.platformLayer!);
     this.physics.add.collider(this.walls, this.platformLayer!);
     this.physics.add.collider(this.walls, this.walls);
+<<<<<<< HEAD
     this.physics.add.collider(this.cannonBalls, this.walls, (cannonBall, wall) => {
       cannonBall.destroy();
       wall.destroy();
     });
+=======
+    this.physics.add.collider(
+      this.cannonBalls,
+      this.walls,
+      (cannonBall, wall) => {
+        cannonBall.destroy();
+        wall.destroy();
+      }
+    );
+>>>>>>> frontend
 
     this.physics.add.collider(this.otherPlayersGroup!, this.player);
     this.physics.add.collider(this.otherPlayersGroup!, this.platformLayer!);
@@ -230,6 +371,7 @@ export default class Stage01 extends Phaser.Scene {
       }
     });
 
+<<<<<<< HEAD
     this.domElement = this.add.dom(
       this.player.x,
       this.player.y,
@@ -248,20 +390,35 @@ export default class Stage01 extends Phaser.Scene {
 
     this.input.keyboard?.on("keydown-R", () => {
       this.scene.start("StageSelect");
+=======
+    this.game.events.emit("creatVideoObj", {
+      sceneKey: this.scene.key,
+>>>>>>> frontend
     });
   }
 
   stageClear(): void {
     if (!this.gameClear) {
       this.gameClear = true;
+<<<<<<< HEAD
       this.game.events.emit("getClearInfo",this.stageNumber);
+=======
+      this.game.events.emit("getClearInfo", this.stageNumber);
+>>>>>>> frontend
     }
   }
 
   update(): void {
     this.player.update();
+<<<<<<< HEAD
     this.domElement.x = this.player.x;
     this.domElement.y = this.player.y;
+=======
+    if (this.domElement) {
+      this.domElement.x = this.player.x;
+      this.domElement.y = this.player.y - 50;
+    }
+>>>>>>> frontend
     this.game.events.emit(STAGE_EVENT.UPDATE_PLAYER, {
       id: this.playerId,
       x: this.player.x,
@@ -269,8 +426,11 @@ export default class Stage01 extends Phaser.Scene {
       sceneKey: this.scene.key,
     });
 
+<<<<<<< HEAD
     this.otherPlayers.forEach(function (value, key) {});
 
+=======
+>>>>>>> frontend
     if (!this.isKeyPicked) {
       this.cannon.update();
     } else {
@@ -280,14 +440,20 @@ export default class Stage01 extends Phaser.Scene {
         this.doorOpened = true;
       }
       if (this.playerId === this.keyPickerId) {
+<<<<<<< HEAD
         // this.key.x = this.player.x;
         // this.key.y = this.player.y - 60;
+=======
+>>>>>>> frontend
         this.key.body!.enable = false;
         Phaser.Display.Align.To.TopCenter(this.key, this.player, 0, -70);
       } else {
         const picker = this.otherPlayers.get(this.keyPickerId);
+<<<<<<< HEAD
         // this.key.x = picker!.x;
         // this.key.y = picker!.y - 60;
+=======
+>>>>>>> frontend
         this.key.body!.enable = false;
         Phaser.Display.Align.To.TopCenter(this.key, picker!, 0, -70);
       }

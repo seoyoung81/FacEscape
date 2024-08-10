@@ -17,8 +17,7 @@ export const createGame = (canvas: HTMLCanvasElement) => {
     physics: {
       default: "arcade",
       arcade: {
-        gravity: { y: 500 },
-        debug: true,
+        gravity: { x: 0, y: 500 },
         checkCollision: { up: true, down: true, left: true, right: true },
       },
     },
